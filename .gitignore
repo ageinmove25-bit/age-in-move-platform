@@ -1,0 +1,15 @@
+# Sistema
+Thumbs.db
+.DS_Store
+desktop.ini
+
+# Backups automáticos
+*.bak
+*.tmp
+backups/auto-*
+
+# Dados sensíveis (NUNCA commitar)
+*.env
+patients-real.json
+clinical-data/
+exports/real/
