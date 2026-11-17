@@ -889,22 +889,16 @@ function makePDF(mod, singleEx){
 
   // ── Rodapé de cada página ─────────────────────────────────────────────────
   const footer=()=>{
-    doc.setFillColor(238,241,255); // azul muito suave
-    doc.rect(0,H-9,W,9,'F');
-    doc.setDrawColor(...BRAND_L);
-    doc.setLineWidth(0.4);
-    doc.line(0,H-9,W,H-9);
-    // Logo mini no rodapé
-    try{ doc.addImage(logo,'PNG',ML-1,H-8.5,7,7); }catch(e){}
+    // Rodapé igual ao cabeçalho: sem faixa, logo + nome à esquerda, slogan + @ à direita
+    try{ doc.addImage(logo,'PNG',ML-1,H-11.8,10,10); }catch(e){}
     doc.setTextColor(...BRAND);
-    doc.setFontSize(7);
+    doc.setFontSize(11);
     doc.setFont('helvetica','bold');
-    doc.text('Age in Move',ML+8,H-4);
+    doc.text('Age in Move',ML+11,H-5.4);
     doc.setFont('helvetica','italic');
-    doc.setFontSize(6.5);
+    doc.setFontSize(8);
     doc.setTextColor(...CG);
-    doc.text('idade em movimento  |  @age_in_move  |  Age in Move (c) 2026  |  '+new Date().toLocaleDateString('pt-PT'),
-      ML+42,H-4);
+    doc.text('idade em movimento  |  @age_in_move',W-MR,H-5.4,{align:'right'});
   };
 
   // ── Nova página ───────────────────────────────────────────────────────────
