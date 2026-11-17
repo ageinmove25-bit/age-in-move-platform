@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Age in Move — idade em movimento</title>
 <meta name="description" content="Age in Move — idade em movimento. Plataforma clínica de exercício físico e estimulação cognitiva."/>
-<meta name="theme-color" content="#FF6200"/>
+<meta name="theme-color" content="#4361EE"/>
 <link rel="preconnect" href="https://unpkg.com"/>
 <link rel="preconnect" href="https://cdnjs.cloudflare.com"/>
 <script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js"></script>
@@ -15,19 +15,19 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Segoe UI',sans-serif;background:#f0f4f8;color:#1a202c}
-:root{--primary:#FF6200;--primary-dark:#EE2800;--secondary:#EE2800;--primary-light:#fff4ec;--success:#16a34a;--warning:#d97706;--danger:#dc2626;--sidebar-w:240px}
-.sidebar{position:fixed;left:0;top:0;bottom:0;width:var(--sidebar-w);background:#1e293b;color:#e2e8f0;display:flex;flex-direction:column;z-index:100}
-.sidebar-logo{padding:20px 16px;border-bottom:1px solid #334155;display:flex;align-items:center;gap:10px}
-.sidebar-logo .logo-icon{width:36px;height:36px;background:linear-gradient(135deg,#FF6200,#EE2800);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px}
+:root{--primary:#4361EE;--primary-dark:#3448C5;--secondary:#6D4CE0;--primary-light:#eef1ff;--accent:#E58BD3;--success:#16a34a;--warning:#d97706;--danger:#dc2626;--sidebar-w:240px}
+.sidebar{position:fixed;left:0;top:0;bottom:0;width:var(--sidebar-w);background:#141c3d;color:#e2e8f0;display:flex;flex-direction:column;z-index:100}
+.sidebar-logo{padding:20px 16px;border-bottom:1px solid #26305c;display:flex;align-items:center;gap:10px}
+.sidebar-logo .logo-icon{width:36px;height:36px;background:linear-gradient(135deg,#4361EE,#6D4CE0);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px}
 .sidebar-logo span{font-weight:700;font-size:17px;color:#fff}
 .sidebar-nav{flex:1;padding:12px 8px;overflow-y:auto}
 .nav-section{font-size:10px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.08em;padding:12px 8px 4px}
 .nav-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:8px;cursor:pointer;color:#94a3b8;font-size:14px;transition:all .15s;margin-bottom:2px}
-.nav-item:hover{background:#334155;color:#e2e8f0}
-.nav-item.active{background:#FF6200;color:#fff}
+.nav-item:hover{background:#232d5c;color:#e2e8f0}
+.nav-item.active{background:#4361EE;color:#fff}
 .nav-item .icon{font-size:17px;width:22px;text-align:center}
 .nav-item .badge{margin-left:auto;background:#ef4444;color:#fff;font-size:10px;padding:1px 6px;border-radius:10px}
-.sidebar-footer{padding:12px 8px;border-top:1px solid #334155}
+.sidebar-footer{padding:12px 8px;border-top:1px solid #26305c}
 .main{margin-left:var(--sidebar-w);min-height:100vh;display:flex;flex-direction:column}
 .topbar{background:#fff;border-bottom:1px solid #e2e8f0;padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
 .topbar-title{font-weight:700;font-size:18px;color:#0f172a}
@@ -60,7 +60,7 @@ body{font-family:'Segoe UI',sans-serif;background:#f0f4f8;color:#1a202c}
 .badge-purple{background:#faf5ff;color:#6d28d9}
 .badge-gray{background:#f1f5f9;color:#475569}
 input,select,textarea{width:100%;padding:9px 12px;border:1px solid #e2e8f0;border-radius:8px;font-size:14px;color:#1a202c;outline:none;transition:border .15s}
-input:focus,select:focus,textarea:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(255,98,0,.15)}
+input:focus,select:focus,textarea:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(67,97,238,.15)}
 label{display:block;font-size:13px;font-weight:600;color:#374151;margin-bottom:5px}
 .form-group{margin-bottom:14px}
 .tab-bar{display:flex;border-bottom:2px solid #e2e8f0;margin-bottom:20px;gap:4px}
@@ -85,33 +85,33 @@ label{display:block;font-size:13px;font-weight:600;color:#374151;margin-bottom:5
 .alert-info{background:#eff6ff;color:#1d4ed8;border:1px solid #bfdbfe}
 .alert-success{background:#f0fdf4;color:#15803d;border:1px solid #bbf7d0}
 .alert-warning{background:#fffbeb;color:#92400e;border:1px solid #fde68a}
-.landing{min-height:100vh;background:linear-gradient(135deg,#1a0a00 0%,#3a1400 50%,#5a1e00 100%)}
+.landing{min-height:100vh;background:linear-gradient(135deg,#16224f 0%,#25357f 50%,#4f3c94 100%)}
 .landing-nav{padding:20px 60px;display:flex;align-items:center;justify-content:space-between}
 .landing-hero{padding:90px 60px 70px;text-align:center;color:#fff}
-.landing-pill{display:inline-flex;align-items:center;gap:8px;background:rgba(255,98,0,.2);border:1px solid rgba(255,98,0,.5);border-radius:40px;padding:8px 20px;font-size:13px;font-weight:600;color:#ffb37a;margin-bottom:28px;letter-spacing:.03em}
-.landing-pill .dot{width:7px;height:7px;border-radius:50%;background:#FF6200;animation:pulse-dot 1.8s ease-in-out infinite}
+.landing-pill{display:inline-flex;align-items:center;gap:8px;background:rgba(67,97,238,.2);border:1px solid rgba(67,97,238,.5);border-radius:40px;padding:8px 20px;font-size:13px;font-weight:600;color:#E9A6D6;margin-bottom:28px;letter-spacing:.03em}
+.landing-pill .dot{width:7px;height:7px;border-radius:50%;background:#4361EE;animation:pulse-dot 1.8s ease-in-out infinite}
 @keyframes pulse-dot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.7)}}
 .landing-hero h1{font-size:64px;font-weight:900;line-height:1.05;margin-bottom:0;letter-spacing:-.02em}
 .landing-hero h1 .line-plain{display:block;color:#fff}
-.landing-hero h1 .line-grad{display:block;background:linear-gradient(100deg,#FFB070 0%,#FF6200 50%,#EE2800 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.landing-hero h1 .line-grad{display:block;background:linear-gradient(100deg,#6FA3F2 0%,#A98BEA 55%,#E38AD6 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 .landing-hero h1 .line-accent{display:block;font-size:42px;font-weight:700;color:rgba(255,255,255,.45);margin-top:6px;letter-spacing:.01em}
-.landing-hero .hero-sub{font-size:18px;color:#ffc89a;max-width:560px;margin:24px auto 36px;line-height:1.65}
-.landing-hero .hero-sub strong{color:#fff1e6;font-weight:600}
+.landing-hero .hero-sub{font-size:18px;color:#b8c6f5;max-width:560px;margin:24px auto 36px;line-height:1.65}
+.landing-hero .hero-sub strong{color:#eef2ff;font-weight:600}
 .landing-features{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;padding:0 60px 80px;max-width:1200px;margin:0 auto}
 .feature-card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:28px;color:#fff}
 .feature-card .fi{font-size:36px;margin-bottom:14px}
 .feature-card h3{font-size:18px;font-weight:700;margin-bottom:8px}
-.feature-card p{font-size:14px;color:#ffc89a;line-height:1.6}
-.auth-page{min-height:100vh;background:linear-gradient(135deg,#1a0a00,#5a1e00);display:flex;align-items:center;justify-content:center}
+.feature-card p{font-size:14px;color:#b8c6f5;line-height:1.6}
+.auth-page{min-height:100vh;background:linear-gradient(135deg,#16224f,#4f3c94);display:flex;align-items:center;justify-content:center}
 .auth-card{background:#fff;border-radius:20px;padding:40px;width:100%;max-width:420px}
 .auth-logo{text-align:center;margin-bottom:28px}
-.auth-logo .icon{width:56px;height:56px;background:linear-gradient(135deg,#FF6200,#EE2800);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:26px;margin:0 auto 12px}
+.auth-logo .icon{width:56px;height:56px;background:linear-gradient(135deg,#4361EE,#6D4CE0);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:26px;margin:0 auto 12px}
 .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
 .cal-header{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:4px}
 .cal-dow{text-align:center;font-size:12px;font-weight:700;color:#64748b;padding:6px}
 .cal-day{min-height:80px;background:#f8fafc;border-radius:8px;padding:6px;cursor:pointer;transition:background .15s;border:1px solid #e2e8f0}
 .cal-day:hover{background:#eff6ff}
-.cal-day.today{border:2px solid var(--primary);background:#fff4ec}
+.cal-day.today{border:2px solid var(--primary);background:#eef1ff}
 .cal-day.other-month{opacity:.35}
 .cal-day .day-num{font-size:12px;font-weight:700;color:#475569;margin-bottom:3px}
 .cal-event{font-size:10px;padding:2px 5px;border-radius:4px;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600}
@@ -120,18 +120,18 @@ label{display:block;font-size:13px;font-weight:600;color:#374151;margin-bottom:5
 @media(max-width:900px){.grid-4{grid-template-columns:1fr 1fr}.grid-3{grid-template-columns:1fr 1fr}}
 .pricing-section{padding:60px 60px 80px;max-width:1200px;margin:0 auto}
 .pricing-section h2{text-align:center;color:#fff;font-size:36px;font-weight:900;margin-bottom:8px}
-.pricing-section .sub{text-align:center;color:#ffc89a;font-size:16px;margin-bottom:48px}
+.pricing-section .sub{text-align:center;color:#b8c6f5;font-size:16px;margin-bottom:48px}
 .pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
 .pricing-card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:32px;color:#fff;position:relative;transition:transform .2s,box-shadow .2s}
 .pricing-card:hover{transform:translateY(-4px);box-shadow:0 16px 40px rgba(0,0,0,.3)}
 .pricing-card.featured{background:linear-gradient(135deg,rgba(37,99,235,.5),rgba(124,58,237,.4));border:2px solid rgba(99,102,241,.6);transform:scale(1.04)}
 .pricing-card.featured:hover{transform:scale(1.04) translateY(-4px)}
-.pricing-badge{position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#FF6200,#EE2800);color:#fff;font-size:12px;font-weight:700;padding:4px 16px;border-radius:20px;white-space:nowrap}
-.pricing-name{font-size:14px;font-weight:700;color:#ffc89a;text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px}
+.pricing-badge{position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#4361EE,#6D4CE0);color:#fff;font-size:12px;font-weight:700;padding:4px 16px;border-radius:20px;white-space:nowrap}
+.pricing-name{font-size:14px;font-weight:700;color:#b8c6f5;text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px}
 .pricing-price{display:flex;align-items:flex-end;gap:4px;margin-bottom:6px}
 .pricing-price .amount{font-size:48px;font-weight:900;line-height:1}
-.pricing-price .period{font-size:14px;color:#ffc89a;margin-bottom:8px}
-.pricing-desc{font-size:13px;color:#ffc89a;margin-bottom:24px;line-height:1.5}
+.pricing-price .period{font-size:14px;color:#b8c6f5;margin-bottom:8px}
+.pricing-desc{font-size:13px;color:#b8c6f5;margin-bottom:24px;line-height:1.5}
 .pricing-features{list-style:none;margin-bottom:28px}
 .pricing-features li{padding:7px 0;font-size:13px;color:#e2e8f0;border-bottom:1px solid rgba(255,255,255,.07);display:flex;align-items:center;gap:8px}
 .pricing-features li:last-child{border-bottom:none}
@@ -143,7 +143,7 @@ label{display:block;font-size:13px;font-weight:600;color:#374151;margin-bottom:5
 </style>
 </head>
 <body>
-<div id="root"><div style="min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(135deg,#1a0a00,#5a1e00);color:#fff;font-family:'Segoe UI',sans-serif"><div style="font-size:26px;font-weight:800">Age in Move</div><div style="color:#FF9040;font-style:italic;margin-top:4px">idade em movimento</div><div style="margin-top:18px;font-size:13px;color:#ffc89a">A carregar a plataforma…</div></div></div>
+<div id="root"><div style="min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(135deg,#16224f,#4f3c94);color:#fff;font-family:'Segoe UI',sans-serif"><div style="font-size:26px;font-weight:800">Age in Move</div><div style="color:#E9A6D6;font-style:italic;margin-top:4px">idade em movimento</div><div style="margin-top:18px;font-size:13px;color:#b8c6f5">A carregar a plataforma…</div></div></div>
 <script type="text/babel">
 const {useState,useEffect,useContext,createContext,useCallback}=React;
 
@@ -727,7 +727,7 @@ body{font-family:Arial,sans-serif;color:#1a202c;font-size:10pt;line-height:1.5;b
 </style></head><body>
 <div class="no-print">
   <span style="flex:1">📄 <strong>Age in Move</strong> — ${mod.name} &nbsp;·&nbsp; Prima <strong>Ctrl+P</strong> ou o botão para guardar como PDF</span>
-  <button onclick="window.print()" style="background:#FF6200;color:#fff;border:none;padding:7px 18px;border-radius:6px;cursor:pointer;font-weight:700;font-size:13px">🖨 Imprimir / Guardar PDF</button>
+  <button onclick="window.print()" style="background:#4361EE;color:#fff;border:none;padding:7px 18px;border-radius:6px;cursor:pointer;font-weight:700;font-size:13px">🖨 Imprimir / Guardar PDF</button>
   <button onclick="window.close()" style="background:#475569;color:#fff;border:none;padding:7px 12px;border-radius:6px;cursor:pointer">✕</button>
 </div>
 <div class="page-wrap">
@@ -769,133 +769,45 @@ body{font-family:Arial,sans-serif;color:#1a202c;font-size:10pt;line-height:1.5;b
 
 // Gera o logótipo Age in Move — versão melhorada
 function getAgeInMoveLogo(size=320){
+  // Logótipo Age in Move — círculo azul-violeta, anel rosa-lilás e figura branca de braços no ar
   const c=document.createElement('canvas');
   c.width=c.height=size;
   const ctx=c.getContext('2d');
-  const s=size, cx=s/2, cy=s/2+s*.02;
+  const s=size, cx=s/2, cy=s/2;
   ctx.clearRect(0,0,s,s);
 
-  // ── Blob orgânico (forma cérebro) com 80 pontos + ondas seno ──────────────
-  const blobPath=()=>{
-    ctx.beginPath();
-    const pts=90, baseR=s*.41;
-    for(let i=0;i<=pts;i++){
-      const a=(i/pts)*Math.PI*2 - Math.PI/2;
-      // Múltiplas ondas para textura orgânica
-      const bump=
-        Math.sin(a*3+0.5)*s*.042 +
-        Math.sin(a*5+1.4)*s*.022 +
-        Math.sin(a*7-0.9)*s*.014 +
-        Math.sin(a*2+0.3)*s*.028 +
-        Math.sin(a*4+2.1)*s*.016;
-      const r=baseR+bump;
-      const x=cx+r*Math.cos(a), y=cy+r*Math.sin(a);
-      i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
-    }
-    ctx.closePath();
-  };
+  // Disco principal (degradé azul → violeta)
+  const gDisk=ctx.createLinearGradient(s*.12,s*.08,s*.88,s*.92);
+  gDisk.addColorStop(0,'#3F6BE8');
+  gDisk.addColorStop(.55,'#4B55E0');
+  gDisk.addColorStop(1,'#6E45DA');
+  ctx.beginPath();ctx.arc(cx,cy,s*.49,0,Math.PI*2);ctx.fillStyle=gDisk;ctx.fill();
 
-  // Sombra exterior suave
-  ctx.save();
-  ctx.shadowColor='rgba(30,30,140,.32)';
-  ctx.shadowBlur=s*.07;
-  ctx.shadowOffsetX=s*.025;
-  ctx.shadowOffsetY=s*.035;
+  // Brilho suave no topo
+  const gHL=ctx.createRadialGradient(cx-s*.12,cy-s*.18,0,cx-s*.12,cy-s*.18,s*.42);
+  gHL.addColorStop(0,'rgba(255,255,255,.16)');
+  gHL.addColorStop(1,'rgba(255,255,255,0)');
+  ctx.beginPath();ctx.arc(cx,cy,s*.49,0,Math.PI*2);ctx.fillStyle=gHL;ctx.fill();
 
-  // Gradiente principal azul → violeta (degradé azul-violeta da v1.0: #2563EB → #7C3AED)
-  const gMain=ctx.createRadialGradient(cx-s*.12,cy-s*.14,s*.01, cx+s*.04,cy+s*.06,s*.52);
-  gMain.addColorStop(0.00,'#BFD4FF'); // azul muito claro (brilho)
-  gMain.addColorStop(0.18,'#6E9BFF'); // azul claro
-  gMain.addColorStop(0.50,'#2563EB'); // azul principal
-  gMain.addColorStop(0.82,'#5B3FE0'); // azul-violeta
-  gMain.addColorStop(1.00,'#7C3AED'); // violeta borda
-  ctx.fillStyle=gMain;
-  blobPath();
-  ctx.fill();
-  ctx.restore();
+  // Anel rosa-lilás, aberto em cima à direita (onde passa o braço)
+  const gRing=ctx.createLinearGradient(s*.15,s*.15,s*.85,s*.85);
+  gRing.addColorStop(0,'#C7A2F2');
+  gRing.addColorStop(.5,'#E58BD3');
+  gRing.addColorStop(1,'#F3B0DC');
+  const deg=d=>d*Math.PI/180;
+  ctx.beginPath();ctx.arc(cx,cy,s*.405,deg(-38),deg(-82),false);
+  ctx.strokeStyle=gRing;ctx.lineWidth=s*.042;ctx.lineCap='round';ctx.stroke();
 
-  // Brilho interno (reflexo luz — canto superior esquerdo)
-  blobPath();
-  ctx.save();
-  ctx.clip();
-  const gHL=ctx.createRadialGradient(cx-s*.20,cy-s*.22,0, cx-s*.06,cy-s*.10,s*.42);
-  gHL.addColorStop(0.00,'rgba(235,242,255,.60)');
-  gHL.addColorStop(0.30,'rgba(190,210,255,.20)');
-  gHL.addColorStop(0.70,'rgba(160,185,255,.06)');
-  gHL.addColorStop(1.00,'rgba(255,255,255,.00)');
-  ctx.fillStyle=gHL;
-  ctx.fillRect(0,0,s,s);
-  ctx.restore();
-
-  // Bordadura suave (claridade na borda interior)
-  blobPath();
-  ctx.save();
-  ctx.clip();
-  const gEdge=ctx.createRadialGradient(cx,cy,s*.28,cx,cy,s*.44);
-  gEdge.addColorStop(0,'rgba(0,0,0,.00)');
-  gEdge.addColorStop(1,'rgba(0,0,0,.18)');
-  ctx.fillStyle=gEdge;
-  ctx.fillRect(0,0,s,s);
-  ctx.restore();
-
-  // ── Figura humana dançante ────────────────────────────────────────────────
-  const lw=s*.046;
-  const fy=cy-s*.06; // centro vertical da figura
-
-  ctx.lineCap='round';
-  ctx.lineJoin='round';
-  ctx.lineWidth=lw;
-
-  // Cabeça (círculo sólido negro)
-  ctx.fillStyle='#0A0A0A';
-  ctx.strokeStyle='#0A0A0A';
-  ctx.beginPath();
-  ctx.arc(cx, fy-s*.20, s*.082, 0, Math.PI*2);
-  ctx.fill();
-
-  // Pescoço + torso
-  ctx.beginPath();
-  ctx.moveTo(cx, fy-s*.118);
-  ctx.lineTo(cx+s*.010, fy+s*.088);
-  ctx.stroke();
-
-  // Braço esquerdo — levantado e aberto (pose vitória)
-  ctx.beginPath();
-  ctx.moveTo(cx-s*.005, fy-s*.022);
-  ctx.lineTo(cx-s*.265, fy-s*.195);
-  ctx.stroke();
-
-  // Braço direito — levantado, ligeiramente assimétrico (pose dinâmica)
-  ctx.beginPath();
-  ctx.moveTo(cx-s*.005, fy-s*.022);
-  ctx.lineTo(cx+s*.245, fy-s*.168);
-  ctx.stroke();
-
-  // Perna esquerda — passada aberta para baixo-esquerda
-  ctx.beginPath();
-  ctx.moveTo(cx+s*.010, fy+s*.088);
-  ctx.lineTo(cx-s*.225, fy+s*.375);
-  ctx.stroke();
-
-  // Perna direita — passada aberta para baixo-direita
-  ctx.beginPath();
-  ctx.moveTo(cx+s*.010, fy+s*.088);
-  ctx.lineTo(cx+s*.245, fy+s*.348);
-  ctx.stroke();
-
-  // ── Coração no peito (elemento identitário da marca) ──────────────────────
-  const hx=cx+s*.004, hy2=fy-s*.010;
-  const hr=s*.048;
-  ctx.fillStyle='#0A0A0A';
-  ctx.beginPath();
-  // Coração via 2 semicírculos + ponto em baixo
-  ctx.moveTo(hx, hy2+hr*.75);
-  ctx.bezierCurveTo(hx-hr*.05, hy2+hr*.30, hx-hr*1.20, hy2+hr*.20, hx-hr*1.20, hy2-hr*.42);
-  ctx.bezierCurveTo(hx-hr*1.20, hy2-hr*1.10, hx-hr*.10, hy2-hr*1.20, hx, hy2-hr*.55);
-  ctx.bezierCurveTo(hx+hr*.10, hy2-hr*1.20, hx+hr*1.20, hy2-hr*1.10, hx+hr*1.20, hy2-hr*.42);
-  ctx.bezierCurveTo(hx+hr*1.20, hy2+hr*.20, hx+hr*.05, hy2+hr*.30, hx, hy2+hr*.75);
-  ctx.closePath();
-  ctx.fill();
+  // Figura branca
+  ctx.strokeStyle='#FFFFFF';ctx.fillStyle='#FFFFFF';
+  ctx.lineWidth=s*.058;ctx.lineCap='round';ctx.lineJoin='round';
+  const P=(x,y)=>[s*x,s*y];
+  ctx.beginPath();ctx.arc(...P(.50,.355),s*.058,0,Math.PI*2);ctx.fill();          // cabeça
+  ctx.beginPath();ctx.moveTo(...P(.50,.445));ctx.lineTo(...P(.50,.60));ctx.stroke(); // tronco
+  ctx.beginPath();ctx.moveTo(...P(.49,.47));ctx.quadraticCurveTo(...P(.40,.43),...P(.37,.30));ctx.stroke(); // braço esquerdo
+  ctx.beginPath();ctx.moveTo(...P(.51,.47));ctx.quadraticCurveTo(...P(.61,.42),...P(.665,.215));ctx.stroke(); // braço direito (sobe pela abertura)
+  ctx.beginPath();ctx.moveTo(...P(.50,.60));ctx.lineTo(...P(.395,.755));ctx.stroke(); // perna esquerda
+  ctx.beginPath();ctx.moveTo(...P(.50,.60));ctx.lineTo(...P(.605,.755));ctx.stroke(); // perna direita
 
   return c.toDataURL('image/png');
 }
@@ -950,9 +862,9 @@ function makePDF(mod, singleEx){
   const CB=[226,232,240]; // borda
   let y=0;
 
-  // Cores da marca AGE IN MOVE (sempre laranja, independente do módulo)
-  const BRAND=[232,80,0];      // laranja escuro #E85000
-  const BRAND_L=[255,140,30];  // laranja claro
+  // Cores da marca AGE IN MOVE (sempre azul-violeta, independente do módulo)
+  const BRAND=[52,72,197];     // azul Age in Move #3448C5
+  const BRAND_L=[169,139,234]; // lilás #A98BEA
   const logo=getLogo();
 
   // ── Cabeçalho de cada página ──────────────────────────────────────────────
@@ -960,7 +872,7 @@ function makePDF(mod, singleEx){
     // Gradiente simulado com dois rectângulos
     doc.setFillColor(...BRAND);
     doc.rect(0,0,W,12,'F');
-    doc.setFillColor(255,165,30);
+    doc.setFillColor(109,76,224);
     doc.rect(0,0,W*0.4,12,'F');
     doc.setFillColor(...BRAND);
     doc.rect(0,0,W*0.4,12,'F'); // overlay para suavizar
@@ -990,7 +902,7 @@ function makePDF(mod, singleEx){
 
   // ── Rodapé de cada página ─────────────────────────────────────────────────
   const footer=()=>{
-    doc.setFillColor(255,245,235); // laranja muito suave
+    doc.setFillColor(238,241,255); // azul muito suave
     doc.rect(0,H-9,W,9,'F');
     doc.setDrawColor(...BRAND_L);
     doc.setLineWidth(0.4);
@@ -1046,8 +958,8 @@ function makePDF(mod, singleEx){
     header();
 
     // ── Logo grande centrado ─────────────────────────────────
-    try{ doc.addImage(logo,'PNG',W/2-18,y,36,36); }catch(e){}
-    y+=40;
+    try{ doc.addImage(logo,'PNG',W/2-16,y,32,32); }catch(e){}
+    y+=42;
 
     // Nome da marca
     doc.setTextColor(...BRAND);
@@ -1290,7 +1202,7 @@ function makePDF(mod, singleEx){
     // Marca final com logo
     y+=8;
     try{ doc.addImage(logo,'PNG',W/2-5,y,10,10); }catch(e){}
-    y+=13;
+    y+=15;
     doc.setFontSize(10);doc.setFont('helvetica','bold');doc.setTextColor(...BRAND);
     doc.text('Age in Move',W/2,y,{align:'center'});
     doc.setFont('helvetica','italic');doc.setFontSize(8.5);doc.setTextColor(...CG);
@@ -1356,7 +1268,7 @@ body{font-family:Arial,sans-serif;color:#1a202c;font-size:10.5pt;line-height:1.5
 </style></head><body>
 <div class="no-print">
   <span style="flex:1">📄 Ficha: <strong>${ex.name}</strong></span>
-  <button onclick="window.print()" style="background:#FF6200;color:#fff;border:none;padding:7px 18px;border-radius:6px;cursor:pointer;font-weight:700">🖨 Imprimir / PDF</button>
+  <button onclick="window.print()" style="background:#4361EE;color:#fff;border:none;padding:7px 18px;border-radius:6px;cursor:pointer;font-weight:700">🖨 Imprimir / PDF</button>
   <button onclick="window.close()" style="background:#475569;color:#fff;border:none;padding:7px 12px;border-radius:6px;cursor:pointer">✕</button>
 </div>
 <div class="wrap">
@@ -1381,7 +1293,7 @@ function LandingPage({onEnter}){
       <nav className="landing-nav">
         <div style={{display:'flex',alignItems:'center',gap:10}}>
           <LogoPreview size={42}/>
-          <div><div style={{color:'#fff',fontWeight:800,fontSize:18,lineHeight:1.1}}>Age in Move</div><div style={{color:'#FF9040',fontSize:11,fontStyle:'italic'}}>idade em movimento</div></div>
+          <div><div style={{color:'#fff',fontWeight:800,fontSize:18,lineHeight:1.1}}>Age in Move</div><div style={{color:'#E9A6D6',fontSize:11,fontStyle:'italic'}}>idade em movimento</div></div>
         </div>
         <button className="btn btn-primary" onClick={onEnter}>Entrar na Plataforma</button>
       </nav>
@@ -1543,7 +1455,7 @@ function AuthPage({onLogin}){
         <div className="auth-logo">
           <div style={{display:'flex',justifyContent:'center',marginBottom:10}}><LogoPreview size={64}/></div>
           <div style={{fontSize:22,fontWeight:800,color:'#0f172a'}}>Age in Move</div>
-          <div style={{fontSize:13,color:'#FF6200',fontStyle:'italic',marginTop:2}}>idade em movimento</div>
+          <div style={{fontSize:13,color:'#4361EE',fontStyle:'italic',marginTop:2}}>idade em movimento</div>
           <div style={{fontSize:12,color:'#64748b',marginTop:4}}>Plataforma Clínica Geriátrica</div>
         </div>
         <form onSubmit={handle}>
@@ -1577,11 +1489,11 @@ function Sidebar({page,setPage,onLogout}){
   ];
   return(
     <div className="sidebar">
-      <div className="sidebar-logo" style={{background:'linear-gradient(135deg,#1a0a00,#2d1000)',borderBottom:'1px solid #3d1800'}}>
+      <div className="sidebar-logo" style={{background:'linear-gradient(135deg,#16224f,#1d2a63)',borderBottom:'1px solid #2c3a78'}}>
         <LogoPreview size={38}/>
         <div>
           <div style={{fontWeight:800,fontSize:13,color:'#fff',lineHeight:1.2}}>Age in Move</div>
-          <div style={{fontSize:9,color:'#FF9040',fontStyle:'italic',letterSpacing:'.02em'}}>idade em movimento</div>
+          <div style={{fontSize:9,color:'#E9A6D6',fontStyle:'italic',letterSpacing:'.02em'}}>idade em movimento</div>
         </div>
       </div>
       <nav className="sidebar-nav">
@@ -2033,11 +1945,11 @@ function ScaleChart({points,scale}){
             </g>
           ))}
           {xLabels.map(p=><text key={'x'+p.id} x={xp(p)} y={H-10} textAnchor="middle" fontSize="11" fill="#94a3b8">{fmtDate(p.date).slice(0,5)}/{p.date.slice(2,4)}</text>)}
-          {points.length>1&&<path d={path} fill="none" stroke="#FF6200" strokeWidth="2" strokeLinejoin="round" strokeLinecap="round"/>}
+          {points.length>1&&<path d={path} fill="none" stroke="#4361EE" strokeWidth="2" strokeLinejoin="round" strokeLinecap="round"/>}
           {points.map((p,i)=>(
             <g key={p.id} onMouseEnter={()=>setHover(i)} onMouseLeave={()=>setHover(null)} style={{cursor:'default'}}>
               <circle cx={xp(p)} cy={y(p.value)} r="12" fill="transparent"/>
-              <circle cx={xp(p)} cy={y(p.value)} r={hover===i?5:3.5} fill="#FF6200" stroke="#fff" strokeWidth="2" style={{pointerEvents:'none'}}/>
+              <circle cx={xp(p)} cy={y(p.value)} r={hover===i?5:3.5} fill="#4361EE" stroke="#fff" strokeWidth="2" style={{pointerEvents:'none'}}/>
             </g>
           ))}
           {points.length<=8&&points.map(p=><text key={'v'+p.id} x={xp(p)} y={y(p.value)-10} textAnchor="middle" fontSize="11" fontWeight="700" fill="#334155" style={{pointerEvents:'none'}}>{p.value}</text>)}
@@ -2152,7 +2064,7 @@ function PatientProfile({patient,setPage}){
               <div style={{display:'flex',justifyContent:'space-around'}}>
                 <div style={{textAlign:'center'}}><div style={{fontSize:28,fontWeight:800}}>{patient.sessions||0}</div><div style={{fontSize:12,color:'#64748b'}}>Sessões</div></div>
                 <div style={{textAlign:'center'}}><div style={{fontSize:28,fontWeight:800,color:'#16a34a'}}>{pSessions.length?Math.round(goodPerf/pSessions.length*100)+'%':'—'}</div><div style={{fontSize:12,color:'#64748b'}}>Desempenho bom+</div></div>
-                <div style={{textAlign:'center'}}><div style={{fontSize:22,fontWeight:800,color:'#FF6200'}}>{nx?fmtDate(nx.date).slice(0,5):'—'}</div><div style={{fontSize:12,color:'#64748b'}}>Próxima</div></div>
+                <div style={{textAlign:'center'}}><div style={{fontSize:22,fontWeight:800,color:'#4361EE'}}>{nx?fmtDate(nx.date).slice(0,5):'—'}</div><div style={{fontSize:12,color:'#64748b'}}>Próxima</div></div>
               </div>
             </div>
             <div style={{textAlign:'right'}}><button className="btn btn-danger btn-sm" onClick={remove}>Eliminar paciente</button></div>
@@ -2169,7 +2081,7 @@ function PatientProfile({patient,setPage}){
             <thead><tr><th>Data</th><th>Avaliação</th><th>Resultado</th><th>Terapeuta</th><th>Notas</th></tr></thead>
             <tbody>
               {pAssess.map(a=>(
-                <tr key={a.id}><td>{fmtDate(a.date)}</td><td style={{fontWeight:600}}>{SCALES[a.scale]?.name||a.scale}</td><td style={{fontWeight:700,color:'#FF6200'}}>{a.value}/{SCALES[a.scale]?.max}</td><td>{a.therapist||profile.name}</td><td style={{fontSize:13,color:'#64748b'}}>{a.notes||'—'}</td></tr>
+                <tr key={a.id}><td>{fmtDate(a.date)}</td><td style={{fontWeight:600}}>{SCALES[a.scale]?.name||a.scale}</td><td style={{fontWeight:700,color:'#4361EE'}}>{a.value}/{SCALES[a.scale]?.max}</td><td>{a.therapist||profile.name}</td><td style={{fontSize:13,color:'#64748b'}}>{a.notes||'—'}</td></tr>
               ))}
             </tbody>
           </table>)}
@@ -2238,7 +2150,7 @@ function NewPatientPage({setPage,openPatient}){
         {steps.map((s,i)=>(
           <React.Fragment key={s.n}>
             <div style={{display:'flex',flexDirection:'column',alignItems:'center',flex:1}}>
-              <div style={{width:32,height:32,borderRadius:'50%',display:'flex',alignItems:'center',justifyContent:'center',fontWeight:700,fontSize:14,background:step>s.n?'#16a34a':step===s.n?'#FF6200':'#e2e8f0',color:step>=s.n?'#fff':'#64748b'}}>{step>s.n?'✓':s.n}</div>
+              <div style={{width:32,height:32,borderRadius:'50%',display:'flex',alignItems:'center',justifyContent:'center',fontWeight:700,fontSize:14,background:step>s.n?'#16a34a':step===s.n?'#4361EE':'#e2e8f0',color:step>=s.n?'#fff':'#64748b'}}>{step>s.n?'✓':s.n}</div>
               <div style={{fontSize:11,marginTop:4,fontWeight:step===s.n?700:400,color:step===s.n?'#0f172a':'#64748b'}}>{s.label}</div>
             </div>
             {i<steps.length-1&&<div style={{flex:1,height:2,background:step>s.n?'#16a34a':'#e2e8f0',marginTop:16,alignSelf:'flex-start'}}/>}
@@ -2373,7 +2285,7 @@ function CalendarPage(){
             return(
               <div key={i} className={`cal-day${isToday?' today':''}${!c.cur?' other-month':''}`}
                 onClick={()=>{if(c.cur){setSelDate(`${cur.y}-${String(cur.m+1).padStart(2,'0')}-${String(c.day).padStart(2,'0')}`);setShowModal(true);}}}>
-                <div className="day-num" style={{color:isToday?'#FF6200':'#475569',fontWeight:isToday?800:700}}>{c.day}</div>
+                <div className="day-num" style={{color:isToday?'#4361EE':'#475569',fontWeight:isToday?800:700}}>{c.day}</div>
                 {evs.map(e=><div key={e.id} className="cal-event" title={e.title} onClick={ev=>{ev.stopPropagation();setSelEvent(e);}} style={{cursor:'pointer',background:typeColors[e.type]||'#f1f5f9',color:typeText[e.type]||'#475569'}}>{e.time?`${e.time} `:''}{e.title}</div>)}
               </div>
             );
@@ -2427,7 +2339,7 @@ function CalendarPage(){
 
 function ForumPage(){
   const {posts,setPosts,profile}=useStore();
-  const me={author:profile.name,role:profile.role,avatar:'#FF6200',initials:initialsOf(profile.name.replace(/^(Dra?|Enf|Prof)\.?\s+/i,''))};
+  const me={author:profile.name,role:profile.role,avatar:'#4361EE',initials:initialsOf(profile.name.replace(/^(Dra?|Enf|Prof)\.?\s+/i,''))};
   const timeLabel=p=>p.createdAt?new Date(p.createdAt).toLocaleString('pt-PT',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'}):p.time;
   const [showNew,setShowNew]=useState(false);
   const [reply,setReply]=useState({});
@@ -2547,7 +2459,7 @@ function SettingsPage(){
       {tab==='profile'&&(
         <div className="card">
           <div style={{display:'flex',gap:16,alignItems:'center',marginBottom:20,padding:'0 0 16px',borderBottom:'1px solid #f1f5f9'}}>
-            <div className="avatar" style={{background:'#FF6200',width:64,height:64,fontSize:22}}>{initialsOf(profile.name.replace(/^(Dra?|Enf|Prof)\.?\s+/i,''))}</div>
+            <div className="avatar" style={{background:'#4361EE',width:64,height:64,fontSize:22}}>{initialsOf(profile.name.replace(/^(Dra?|Enf|Prof)\.?\s+/i,''))}</div>
             <div><div style={{fontWeight:700,fontSize:16}}>{profile.name}</div><div style={{color:'#64748b',fontSize:13}}>{profile.role} · {profile.license}</div></div>
           </div>
           <div className="grid-2">
@@ -2636,7 +2548,7 @@ function DashboardLayout({children,page,setPage,onLogout,title}){
           <div className="topbar-actions">
             <button className="btn btn-secondary btn-sm">🔔</button>
             <button className="btn btn-secondary btn-sm">❓</button>
-            <div className="avatar" style={{background:'#FF6200',cursor:'pointer'}} title="Definições" onClick={()=>setPage('settings')}>{initialsOf(profile.name.replace(/^(Dra?|Enf|Prof)\.?\s+/i,''))}</div>
+            <div className="avatar" style={{background:'#4361EE',cursor:'pointer'}} title="Definições" onClick={()=>setPage('settings')}>{initialsOf(profile.name.replace(/^(Dra?|Enf|Prof)\.?\s+/i,''))}</div>
           </div>
         </div>
         {children}

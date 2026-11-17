@@ -54,7 +54,8 @@ age-in-move-platform/
 - **Marca:** Age in Move
 - **Slogan:** idade em movimento
 - **Handle:** @age_in_move
-- **Cores:** Laranja (#FF6200) · Vermelho-laranja (#EE2800)
+- **Cores:** Azul-noite (#16224F) · Azul (#4361EE) · Violeta (#6D4CE0) · Rosa-lilás (#E58BD3)
+- **Logótipo:** círculo azul-violeta com anel rosa-lilás e figura branca de braços no ar
 
 ## Conformidade RGPD
 

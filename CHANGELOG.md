@@ -1,9 +1,17 @@
 # Changelog — Age in Move Platform
 
+## [1.3.0] — 2026-11-17
+
+### Identidade visual azul-noite (alinhada com o Instagram @age_in_move)
+- **Novo logótipo**: círculo azul-violeta, anel rosa-lilás aberto e figura branca de braços no ar — em todas as vistas e nos PDFs
+- Interface passa do laranja para **azul-noite / azul-violeta**: landing, login, menu lateral, botões, separadores, calendário e gráficos
+- "Despertar a Mente." em degradé azul → lilás → rosa; "idade em movimento" em rosa-lilás
+- PDFs com cabeçalho e rodapé azul Age in Move
+
 ## [1.2.1] — 2026-11-17
 
 ### Logótipo
-- Logótipo Age in Move passa ao degradé **azul-violeta** estabelecido (azul #2563EB → violeta #7C3AED), em todas as vistas e nos PDFs
+- Logótipo passa ao degradé azul-violeta (substituído na 1.3.0 pelo logótipo do Instagram)
 
 ## [1.2.0] — 2026-11-17
 
