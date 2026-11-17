@@ -22,6 +22,11 @@ module.exports = {
   cor: '#0F766E', corClara: '#CCFBF1', corEscura: '#134E4A',
   paraQue: 'Uma bola pequena e macia fica no assento da cadeira. A pessoa baixa-se até quase lhe tocar — sem se sentar e sem a esmagar — e aguenta aí uns segundos. Fortalece as pernas e as ancas, que são os músculos que usamos para levantar e sentar, subir escadas e evitar quedas. A bola dá uma referência fácil de sentir e torna o exercício num pequeno desafio.',
   duracao: '10 a 15 min, com pausas', grupo: 'Individual ou até 8 pessoas', custo: '0 a 10 € (bola pequena macia ou almofada)',
+  paraGrupos: {
+    fisico: 'Grupo 1 (os 3 passos). Grupo 2: só o nível 1, sentado, ou "Levantar e Sentar com Apoio". Grupo 3: não indicado.',
+    cognitivo: 'Só exercício: todos os grupos que o possam fazer. Com contagens: Grupo A (e Grupo B com contagens simples).',
+    ebook: 'Física em "Corpo em Movimento" (Grupo 2, versão com apoio); combinada em "Corpo e Mente" (Grupo 1).'
+  },
   materiais: [
     'Uma cadeira firme com braços, sem rodas, encostada à parede para não deslizar',
     'Uma bola pequena e macia (20 a 25 cm) — ou uma almofada pequena dobrada',

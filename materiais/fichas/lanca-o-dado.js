@@ -8,6 +8,11 @@ module.exports = {
   cor: '#1D4ED8', corClara: '#DBEAFE', corEscura: '#1E3A8A',
   paraQue: 'O dado decide o exercício, e isso transforma a ginástica num jogo. Ninguém sabe o que vem a seguir, todos ficam atentos e o grupo ri-se junto. Treina a força das pernas e dos braços, o equilíbrio sentado, a atenção e — com o segundo dado — a memória e a linguagem.',
   duracao: '20 a 30 min', grupo: '4 a 12 pessoas', custo: '5 a 15 € (dado de espuma + elásticos opcionais)',
+  paraGrupos: {
+    fisico: 'Grupo 1 e Grupo 2 (tudo sentado). Grupo 3: o animador lança e a pessoa faz só o movimento que conseguir.',
+    cognitivo: 'Só exercícios: todos os grupos. Com o Dado das Palavras: Grupo A (e Grupo B com categorias fáceis).',
+    ebook: 'Física em "Corpo em Movimento" (Grupo 2); com o Dado das Palavras, combinada em "Corpo e Mente" (Grupo 1).'
+  },
   materiais: [
     '1 dado grande de espuma (15 a 20 cm) — ou uma caixa de cartão forrada com pintas desenhadas',
     'Cadeiras firmes, sem rodas, de preferência com braços',

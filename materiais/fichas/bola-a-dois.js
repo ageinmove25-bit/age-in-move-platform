@@ -13,6 +13,11 @@ module.exports = {
   cor: '#EA580C', corClara: '#FFEDD5', corEscura: '#7C2D12',
   paraQue: 'Duas pessoas seguram uma bola entre as palmas das mãos e movem-na juntas, sem a deixar cair. Para isso, têm de olhar uma para a outra, combinar o ritmo e ajustar a força. Treina os braços e os ombros, a coordenação, o equilíbrio sentado, a atenção e a comunicação — e é muito divertido.',
   duracao: '15 a 20 min', grupo: 'Pares (2 pessoas ou 1 pessoa + animador)', custo: '3 a 15 € (balão grande ou bola leve)',
+  paraGrupos: {
+    fisico: 'Grupo 1 e Grupo 2, sentados. Grupo 3: com o animador como par e um balão.',
+    cognitivo: 'Só movimentos: todos os grupos. Letras no ar: Grupo A (e Grupo B com letras simples).',
+    ebook: 'Física em "Corpo em Movimento" (Grupo 2); com letras no ar, combinada em "Corpo e Mente" (Grupo 1).'
+  },
   materiais: [
     'Uma bola grande e leve (de praia, de espuma ou de pilates mal cheia) — ou um balão grande, bem cheio',
     '2 cadeiras firmes, sem rodas, colocadas frente a frente, joelhos a cerca de um palmo',

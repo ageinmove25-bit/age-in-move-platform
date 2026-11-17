@@ -66,7 +66,7 @@ ul.dots li:before{content:'';position:absolute;left:0;top:2.1mm;width:2.4mm;heig
 .warn .s{background:#F5F3FF}.warn .s b{color:#6D28D9}
 .warn b{display:block;font-size:8.5pt;text-transform:uppercase;letter-spacing:.08em;margin-bottom:1mm}
 /* tabuleiros */
-table.reg{width:100%;border-collapse:collapse;font-size:10pt;margin-top:1mm}table.reg th{background:var(--c);color:#fff;text-align:left;padding:2mm 2.5mm}table.reg td{border:1px solid var(--line);height:10mm}
+table.reg{width:100%;border-collapse:collapse;font-size:10pt;margin-top:1mm}table.reg th{background:var(--c);color:#fff;text-align:left;padding:2mm 2.5mm}table.reg td{border:1px solid var(--line);height:13mm}
 .board{padding:14mm 14mm 18mm;display:flex;flex-direction:column}
 .board .frame{flex:1;border:5mm solid var(--c);border-radius:8mm;padding:9mm 11mm;display:flex;flex-direction:column}
 .board h2{font-size:38pt;text-align:center;color:var(--ce);margin-bottom:2mm;letter-spacing:.02em}
@@ -84,6 +84,16 @@ table.reg{width:100%;border-collapse:collapse;font-size:10pt;margin-top:1mm}tabl
 .row.pas .fig{width:52mm;height:52mm;flex:none}
 .row.pas .e{font-size:12pt}
 .lembrar{margin-top:5mm;background:var(--cl);border-radius:4mm;padding:4mm 5mm;font-size:14pt;color:var(--ce);text-align:center}
+.pg{background:var(--cl);border-radius:4mm;padding:4mm 5mm;font-size:10.5pt}
+.pg b{display:block;color:var(--ce);font-size:11pt;margin-bottom:1.5mm}
+.pg div{margin-bottom:1mm}.pg span{display:inline-block;min-width:32mm;font-weight:800;color:var(--c)}
+.card.cut{border:2px dashed #9CA3AF;border-radius:4mm}
+.card .num{width:56mm;height:56mm;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:64pt;color:#fff;letter-spacing:-.02em}
+table.placar{width:100%;border-collapse:collapse;font-size:16pt;margin-top:4mm}
+table.placar th{background:var(--c);color:#fff;padding:3mm;font-size:15pt}
+table.placar td{border:1.5px solid #D1D5DB;height:21mm}
+table.placar td.t{background:var(--cl)}
+table.placar th:first-child{width:38%}
 .board .foot{bottom:6mm;left:14mm;right:14mm}
 `;
 
@@ -104,13 +114,21 @@ function build(f) {
   pg++;
   pages.push(`<section class="page">
     <div class="kicker">${esc(f.titulo)} · continuação</div>
-    <h3 style="margin-top:0">Adaptar a cada pessoa</h3>
+    ${f.paraGrupos ? `<div class="pg"><b>Para que grupos de dependência</b><div><span>Físico (Barthel)</span>${esc(f.paraGrupos.fisico)}</div><div><span>Cognitivo</span>${esc(f.paraGrupos.cognitivo)}</div><div><span>Coleção</span>${esc(f.paraGrupos.ebook)}</div></div>` : ''}
+    <h3 style="margin-top:${f.paraGrupos ? 4 : 0}mm">Adaptar a cada pessoa</h3>
     <div class="lv3">${NIVEIS.map(n => `<div style="background:${n.fundo}"><b style="color:${n.cor}">${n.nome}</b>${esc(f.niveis[n.k])}</div>`).join('')}</div>
     <div class="warn"><div class="a"><b>Atenção</b>${esc(f.atencao)}</div><div class="s"><b>Se não correr bem</b>${esc(f.seCorrerMal)}</div></div>
     ${f.variantes ? `<h3>Variantes</h3><ul class="dots">${f.variantes.map(v => `<li>${esc(v)}</li>`).join('')}</ul>` : ''}
-    ${f.registo ? `<h3>Registo rápido</h3><table class="reg"><tr><th>Data</th><th>Nº de pessoas</th><th>Nível</th><th>${f.exercicios ? 'Exercícios que saíram' : f.cartoesPassos ? 'Passos e segundos' : 'Movimentos feitos'}</th><th>Observações</th></tr>${'<tr><td></td><td></td><td></td><td></td><td></td></tr>'.repeat(4)}</table>` : ''}
     ${foot()}</section>`);
   pg++;
+  if (f.registo) {
+    pages.push(`<section class="page">
+    <div class="kicker">${esc(f.titulo)} · para fotocopiar</div><h2 style="font-family:Fraunces,serif;font-size:24pt;color:var(--ce);margin-bottom:4mm">Registo rápido</h2>
+    <table class="reg"><tr><th style="width:22mm">Data</th><th style="width:26mm">Nº de pessoas</th><th style="width:18mm">Nível</th><th>${f.exercicios ? 'Exercícios que saíram' : f.cartoesPassos ? 'Passos e segundos' : 'Movimentos feitos'}</th><th>Observações</th></tr>${'<tr><td></td><td></td><td></td><td></td><td></td></tr>'.repeat(14)}</table>
+    <p style="font-size:10.5pt;color:var(--muted);margin-top:4mm">Anote mudanças que notar (dor, cansaço, mais ou menos autonomia) e avise a equipa se a pessoa parecer ter mudado de grupo de dependência.</p>
+    ${foot()}</section>`);
+    pg++;
+  }
   if (f.exercicios) {
     pages.push(`<section class="page board"><div class="frame">
     <h2>LANÇA O DADO!</h2><div class="sub">Dado dos Exercícios · tudo sentado</div>
@@ -131,6 +149,25 @@ function build(f) {
     <h2>${esc(c.titulo)}</h2><div class="sub">${esc(c.sub)}</div>
     <div class="rows">${c.itens.map(it => `<div class="row pas"><div class="fig" style="color:var(--c)">${it.svg}</div><div><div class="t">${esc(it.nome)}</div><div class="d">${esc(it.desc)}</div><span class="e">⏱ ${esc(it.tempo)}</span></div></div>`).join('')}</div>
     <div class="lembrar"><b>Lembrar sempre:</b> ${c.lembrar.map(esc).join(' · ')}</div>
+    </div>${foot()}</section>`);
+    pg++;
+  }
+  if (f.etiquetas) {
+    const e = f.etiquetas;
+    for (let i = 0; i < e.valores.length; i += 6) {
+      pages.push(`<section class="page board"><div class="frame">
+      <h2>${esc(e.titulo)}</h2><div class="sub">${esc(e.sub)}</div>
+      <div class="cards">${e.valores.slice(i, i + 6).map(x => `<div class="card cut"><div class="num" style="background:${x.cor}">${x.v}</div></div>`).join('')}</div>
+      </div>${foot()}</section>`);
+      pg++;
+    }
+  }
+  if (f.placar) {
+    const pl = f.placar;
+    pages.push(`<section class="page board"><div class="frame">
+    <h2>${esc(pl.titulo)}</h2><div class="sub">Escreva os pontos de cada lançamento e some no fim</div>
+    <table class="placar"><tr><th>Nome</th>${[...Array(pl.rondas)].map((_, i) => `<th>${i + 1}.º</th>`).join('')}<th>Total</th></tr>
+    ${'<tr><td></td>' + '<td></td>'.repeat(pl.rondas) + '<td class="t"></td></tr>'.repeat(1)}${('<tr><td></td>' + '<td></td>'.repeat(pl.rondas) + '<td class="t"></td></tr>').repeat(pl.jogadores - 1)}</table>
     </div>${foot()}</section>`);
     pg++;
   }

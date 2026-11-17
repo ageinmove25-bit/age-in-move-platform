@@ -78,6 +78,11 @@ Para trocar uma fotografia: `node fotos/procurar.js <pasta> "chave|pesquisa"`, e
 - `sem-esmagar-a-bola.pdf` — **Sem Esmagar a Bola**: força das pernas junto à cadeira (pairar, subir e descer, um pé à frente),
   com bola pequena no assento como referência. Guia (2 páginas, nível 1 totalmente sentado) + cartão "Os 3 passos" com desenhos.
 
+- `pista-dos-pontos.pdf` — **A Pista dos Pontos** (combinada): pista de esparguetes de piscina com pratos numerados (10–100); rolar a bola com o pé ou a mão e somar os pontos.
+  Inclui números para colar nos pratos e placar.
+
+Todas as fichas indicam **para que grupos de dependência** se adequam (físico e cognitivo) e em que ebook da coleção encaixam. O registo está numa página própria.
+
 Regra destes materiais: **nenhuma atividade usa alimentos**.
 
 ## 📚 Versão 3 (atual): ebooks por tipo de atividade e grau de dependência
