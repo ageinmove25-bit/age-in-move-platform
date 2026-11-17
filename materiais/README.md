@@ -97,6 +97,7 @@ Para trocar uma fotografia: `node fotos/procurar.js <pasta> "chave|pesquisa"`, e
 - `tronco-forte-deitado.pdf` — **Tronco Forte, Deitado** (física): 5 exercícios de tronco na cama ou colchão — báscula + marcha, deslizar o calcanhar, cortar lenha, rodar os joelhos, tocar nos alvos. Indicada também para acamados.
 - `coordenacao-parkinson.pdf` — **Coordenação em Parkinson** (física): em pares — passar a bola, duas bolas, rodar e pôr no poste, bola nos pés, a estrela de obstáculos.
 - `demencia-em-acao.pdf` — **Demência em Ação** (combinada): 4 estações — cartas partidas, bola ao cone numerado, sopa de letras de pé, pedalar pelo alfabeto — cada uma com versão mais fácil e mais difícil. Inclui sopa de letras para imprimir.
+- `nao-cair-para-tras.pdf` — **Não Cair para Trás** (retropulsão, só com fisioterapeuta): alcançar sentado, rolar a bola e levantar, descolar da parede, levantar contra o elástico, anca à frente ajoelhado.
 
 Todas as fichas indicam **para que grupos de dependência** se adequam (físico e cognitivo) e em que ebook da coleção encaixam. O registo está numa página própria.
 
