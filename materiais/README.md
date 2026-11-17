@@ -96,6 +96,7 @@ Para trocar uma fotografia: `node fotos/procurar.js <pasta> "chave|pesquisa"`, e
 - `roda-dos-baloes.pdf` — **A Roda dos Balões** (combinada, residentes + colaboradores): roda ligada por balões entre as mãos, seguir instruções sem deixar cair (ninguém é eliminado). 6 cartões de instruções.
 - `tronco-forte-deitado.pdf` — **Tronco Forte, Deitado** (física): 5 exercícios de tronco na cama ou colchão — báscula + marcha, deslizar o calcanhar, cortar lenha, rodar os joelhos, tocar nos alvos. Indicada também para acamados.
 - `coordenacao-parkinson.pdf` — **Coordenação em Parkinson** (física): em pares — passar a bola, duas bolas, rodar e pôr no poste, bola nos pés, a estrela de obstáculos.
+- `demencia-em-acao.pdf` — **Demência em Ação** (combinada): 4 estações — cartas partidas, bola ao cone numerado, sopa de letras de pé, pedalar pelo alfabeto — cada uma com versão mais fácil e mais difícil. Inclui sopa de letras para imprimir.
 
 Todas as fichas indicam **para que grupos de dependência** se adequam (físico e cognitivo) e em que ebook da coleção encaixam. O registo está numa página própria.
 
