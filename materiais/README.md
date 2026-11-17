@@ -94,6 +94,7 @@ Para trocar uma fotografia: `node fotos/procurar.js <pasta> "chave|pesquisa"`, e
 - `trave-do-equilibrio.pdf` — **A Trave do Equilíbrio** (física): equilíbrio dinâmico numa "trave" de fita-cola ou toalha — andar com garrafas, rolar a bola aos cones, apanhar cones.
 - `pe-que-nao-arrasta.pdf` — **O Pé que Não Arrasta** (pé pendente, só com fisioterapeuta): passar cones e bloco, joelho à frente, pontas para cima na parede, descolar da parede.
 - `roda-dos-baloes.pdf` — **A Roda dos Balões** (combinada, residentes + colaboradores): roda ligada por balões entre as mãos, seguir instruções sem deixar cair (ninguém é eliminado). 6 cartões de instruções.
+- `tronco-forte-deitado.pdf` — **Tronco Forte, Deitado** (física): 5 exercícios de tronco na cama ou colchão — báscula + marcha, deslizar o calcanhar, cortar lenha, rodar os joelhos, tocar nos alvos. Indicada também para acamados.
 
 Todas as fichas indicam **para que grupos de dependência** se adequam (físico e cognitivo) e em que ebook da coleção encaixam. O registo está numa página própria.
 
