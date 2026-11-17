@@ -65,7 +65,7 @@ async function build(d) {
           ['Durante', 'Leia as notas de cada diapositivo (o que dizer e como adaptar). Avance só quando todos tiverem respondido.'],
           ['Respostas', 'Ninguém "falha": se alguém não souber, diga a resposta com naturalidade e passe à frente.'],
           ['Adaptar', 'MAIS FÁCIL = pessoas com demência ou em lar. MAIS DIFÍCIL = pessoas autónomas. Pode usar os dois no mesmo grupo.'],
-          ['Extra', 'Se quiser dar a provar um doce de Natal, confirme antes dietas, diabetes e dificuldades em engolir.']
+          ['Materiais', 'Opcional: um sino, um postal e um cachecol verdadeiros, para passar de mão em mão durante a sessão.']
         ];
         for (const [i, [a, b]] of itens.entries()) {
           const y = 1.3 + i * 0.75;
