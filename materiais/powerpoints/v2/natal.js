@@ -10,6 +10,7 @@ module.exports = {
   paleta: { escuro: '14532D', primaria: 'B91C1C', acento: 'D97706', claro: 'FEF2F2', texto: '1F2937' },
   fontes: { titulo: 'Century Schoolbook', corpo: 'Arial' },
   capaFoto: 'pinheiro',
+  numeros: { velasN: 2 }, // número de velas acesas na fotografia "velas"
   diapositivos: [
     { tipo: 'guia' },
     { tipo: 'boasvindas', titulo: 'O Natal está a chegar!', foto: 'presepio',
