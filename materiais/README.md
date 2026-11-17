@@ -75,4 +75,7 @@ Para trocar uma fotografia: `node fotos/procurar.js <pasta> "chave|pesquisa"`, e
 - `bola-a-dois.pdf` — **Bola a Dois**: em pares, sentados frente a frente, segurar uma bola leve (ou balão) entre as palmas e movê-la juntos.
   Guia do animador (2 páginas) + cartão "Movimentos" (6 trajetórias desenhadas) + cartão "Letras no ar".
 
+- `sem-esmagar-a-bola.pdf` — **Sem Esmagar a Bola**: força das pernas junto à cadeira (pairar, subir e descer, um pé à frente),
+  com bola pequena no assento como referência. Guia (2 páginas, nível 1 totalmente sentado) + cartão "Os 3 passos" com desenhos.
+
 Regra destes materiais: **nenhuma atividade usa alimentos**.

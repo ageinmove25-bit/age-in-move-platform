@@ -81,6 +81,9 @@ table.reg{width:100%;border-collapse:collapse;font-size:10pt;margin-top:1mm}tabl
 .card .art{width:36mm;height:36mm}
 .card .nm{margin-top:3mm;font-size:19pt;font-weight:800;color:var(--ink);text-align:center;line-height:1.1}
 .card .letra{font-family:Nunito,sans-serif;font-weight:800;font-size:120pt;line-height:1;color:var(--c)}
+.row.pas .fig{width:52mm;height:52mm;flex:none}
+.row.pas .e{font-size:12pt}
+.lembrar{margin-top:5mm;background:var(--cl);border-radius:4mm;padding:4mm 5mm;font-size:14pt;color:var(--ce);text-align:center}
 .board .foot{bottom:6mm;left:14mm;right:14mm}
 `;
 
@@ -105,7 +108,7 @@ function build(f) {
     <div class="lv3">${NIVEIS.map(n => `<div style="background:${n.fundo}"><b style="color:${n.cor}">${n.nome}</b>${esc(f.niveis[n.k])}</div>`).join('')}</div>
     <div class="warn"><div class="a"><b>Atenção</b>${esc(f.atencao)}</div><div class="s"><b>Se não correr bem</b>${esc(f.seCorrerMal)}</div></div>
     ${f.variantes ? `<h3>Variantes</h3><ul class="dots">${f.variantes.map(v => `<li>${esc(v)}</li>`).join('')}</ul>` : ''}
-    ${f.registo ? `<h3>Registo rápido</h3><table class="reg"><tr><th>Data</th><th>Nº de pessoas</th><th>Nível</th><th>${f.exercicios ? 'Exercícios que saíram' : 'Movimentos feitos'}</th><th>Observações</th></tr>${'<tr><td></td><td></td><td></td><td></td><td></td></tr>'.repeat(4)}</table>` : ''}
+    ${f.registo ? `<h3>Registo rápido</h3><table class="reg"><tr><th>Data</th><th>Nº de pessoas</th><th>Nível</th><th>${f.exercicios ? 'Exercícios que saíram' : f.cartoesPassos ? 'Passos e segundos' : 'Movimentos feitos'}</th><th>Observações</th></tr>${'<tr><td></td><td></td><td></td><td></td><td></td></tr>'.repeat(4)}</table>` : ''}
     ${foot()}</section>`);
   pg++;
   if (f.exercicios) {
@@ -119,6 +122,15 @@ function build(f) {
     pages.push(`<section class="page board" style="--c:#7C3AED;--cl:#EDE9FE;--ce:#4C1D95"><div class="frame">
     <h2>DADO DAS PALAVRAS</h2><div class="sub">Diga uma palavra a cada repetição do exercício</div>
     <div class="rows">${f.palavras.map(e => `<div class="row">${dado(e.n, e.cor, 118)}<div><div class="t">${esc(e.t)}</div></div></div>`).join('')}</div>
+    </div>${foot()}</section>`);
+    pg++;
+  }
+  if (f.cartoesPassos) {
+    const c = f.cartoesPassos;
+    pages.push(`<section class="page board"><div class="frame">
+    <h2>${esc(c.titulo)}</h2><div class="sub">${esc(c.sub)}</div>
+    <div class="rows">${c.itens.map(it => `<div class="row pas"><div class="fig" style="color:var(--c)">${it.svg}</div><div><div class="t">${esc(it.nome)}</div><div class="d">${esc(it.desc)}</div><span class="e">⏱ ${esc(it.tempo)}</span></div></div>`).join('')}</div>
+    <div class="lembrar"><b>Lembrar sempre:</b> ${c.lembrar.map(esc).join(' · ')}</div>
     </div>${foot()}</section>`);
     pg++;
   }
