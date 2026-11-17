@@ -72,4 +72,7 @@ Para trocar uma fotografia: `node fotos/procurar.js <pasta> "chave|pesquisa"`, e
   Guia do animador (2 páginas, com 3 níveis, variantes e registo) + tabuleiro "Dado dos Exercícios" + tabuleiro "Dado das Palavras"
   para dupla tarefa. Imprimir os tabuleiros em A3 se possível. Conteúdo em `fichas/lanca-o-dado.js`; gerar com `node fichas/gerar.js`.
 
+- `bola-a-dois.pdf` — **Bola a Dois**: em pares, sentados frente a frente, segurar uma bola leve (ou balão) entre as palmas e movê-la juntos.
+  Guia do animador (2 páginas) + cartão "Movimentos" (6 trajetórias desenhadas) + cartão "Letras no ar".
+
 Regra destes materiais: **nenhuma atividade usa alimentos**.

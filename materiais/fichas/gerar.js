@@ -76,6 +76,11 @@ table.reg{width:100%;border-collapse:collapse;font-size:10pt;margin-top:1mm}tabl
 .row .t{font-size:27pt;font-weight:800;line-height:1.1}
 .row .d{font-size:13.5pt;color:#374151;margin-top:1mm}
 .row .e{display:inline-block;margin-top:1.5mm;font-size:10pt;font-weight:700;color:var(--c);background:var(--cl);border-radius:10mm;padding:.5mm 3mm}
+.cards{flex:1;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:repeat(3,1fr);gap:6mm}
+.card{border:1.5px solid var(--line);border-radius:6mm;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:4mm;color:var(--c);background:#fff}
+.card .art{width:36mm;height:36mm}
+.card .nm{margin-top:3mm;font-size:19pt;font-weight:800;color:var(--ink);text-align:center;line-height:1.1}
+.card .letra{font-family:Nunito,sans-serif;font-weight:800;font-size:120pt;line-height:1;color:var(--c)}
 .board .foot{bottom:6mm;left:14mm;right:14mm}
 `;
 
@@ -84,7 +89,7 @@ function build(f) {
   const foot = () => `<div class="foot"><span><b>Age in Move</b> · Ficha de atividade · ${esc(f.titulo)}</span><span><b>${pg}</b></span></div>`;
   const pages = [];
   pages.push(`<section class="page">
-    <div class="kicker">Ficha de atividade · jogo de grupo · sentados</div><h1>${esc(f.titulo)}</h1>
+    <div class="kicker">${esc(f.kicker || "Ficha de atividade · jogo de grupo · sentados")}</div><h1>${esc(f.titulo)}</h1>
     <p class="lead">${esc(f.paraQue)}</p>
     <div class="info"><div><small>Duração</small><b>${esc(f.duracao)}</b></div><div><small>Grupo</small><b>${esc(f.grupo)}</b></div><div><small>Custo</small><b>${esc(f.custo)}</b></div></div>
     <div class="grid2"><div class="box"><h3>Materiais</h3><ul class="dots">${f.materiais.map(m => `<li>${esc(m)}</li>`).join('')}</ul></div>
@@ -100,18 +105,33 @@ function build(f) {
     <div class="lv3">${NIVEIS.map(n => `<div style="background:${n.fundo}"><b style="color:${n.cor}">${n.nome}</b>${esc(f.niveis[n.k])}</div>`).join('')}</div>
     <div class="warn"><div class="a"><b>Atenção</b>${esc(f.atencao)}</div><div class="s"><b>Se não correr bem</b>${esc(f.seCorrerMal)}</div></div>
     ${f.variantes ? `<h3>Variantes</h3><ul class="dots">${f.variantes.map(v => `<li>${esc(v)}</li>`).join('')}</ul>` : ''}
-    ${f.registo ? `<h3>Registo rápido</h3><table class="reg"><tr><th>Data</th><th>Nº de pessoas</th><th>Nível</th><th>Exercícios que saíram</th><th>Observações</th></tr>${'<tr><td></td><td></td><td></td><td></td><td></td></tr>'.repeat(4)}</table>` : ''}
+    ${f.registo ? `<h3>Registo rápido</h3><table class="reg"><tr><th>Data</th><th>Nº de pessoas</th><th>Nível</th><th>${f.exercicios ? 'Exercícios que saíram' : 'Movimentos feitos'}</th><th>Observações</th></tr>${'<tr><td></td><td></td><td></td><td></td><td></td></tr>'.repeat(4)}</table>` : ''}
     ${foot()}</section>`);
   pg++;
-  pages.push(`<section class="page board"><div class="frame">
+  if (f.exercicios) {
+    pages.push(`<section class="page board"><div class="frame">
     <h2>LANÇA O DADO!</h2><div class="sub">Dado dos Exercícios · tudo sentado</div>
     <div class="rows">${f.exercicios.map(e => `<div class="row">${dado(e.n, e.cor, 118)}<div><div class="t">${esc(e.nome)}</div><div class="d">${esc(e.como)}</div>${e.elastico !== 'Sem elástico' ? `<span class="e">${esc(e.elastico)}</span>` : ''}</div></div>`).join('')}</div>
     </div>${foot()}</section>`);
-  pg++;
-  pages.push(`<section class="page board" style="--c:#7C3AED;--cl:#EDE9FE;--ce:#4C1D95"><div class="frame">
+    pg++;
+  }
+  if (f.palavras) {
+    pages.push(`<section class="page board" style="--c:#7C3AED;--cl:#EDE9FE;--ce:#4C1D95"><div class="frame">
     <h2>DADO DAS PALAVRAS</h2><div class="sub">Diga uma palavra a cada repetição do exercício</div>
     <div class="rows">${f.palavras.map(e => `<div class="row">${dado(e.n, e.cor, 118)}<div><div class="t">${esc(e.t)}</div></div></div>`).join('')}</div>
     </div>${foot()}</section>`);
+    pg++;
+  }
+  for (const c of f.cartoes || []) {
+    const cards = c.itens
+      ? c.itens.map(it => `<div class="card"><div class="art">${it.svg}</div><div class="nm">${esc(it.nome)}</div></div>`).join('')
+      : c.letras.map(l => `<div class="card"><div class="letra">${esc(l)}</div></div>`).join('');
+    pages.push(`<section class="page board"><div class="frame">
+    <h2>${esc(c.titulo)}</h2><div class="sub">${esc(c.sub)}</div>
+    <div class="cards">${cards}</div>
+    </div>${foot()}</section>`);
+    pg++;
+  }
   return `<!doctype html><html lang="pt-PT"><head><meta charset="utf-8"><title>${esc(f.titulo)} — Age in Move</title><style>${css(f)}</style></head><body>${pages.join('\n')}</body></html>`;
 }
 
