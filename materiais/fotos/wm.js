@@ -26,8 +26,8 @@ async function get(url) {
   }
   throw new Error('demasiadas tentativas ' + url);
 }
-const dec = s => s.replace(/&#95;/g, '_').replace(/&amp;/g, '&').replace(/&#039;|&#39;/g, "'").replace(/&quot;/g, '"').replace(/&#160;/g, ' ').replace(/&#58;/g, ':');
-const strip = s => dec((s || '').replace(/<[^>]+>/g, ' ')).replace(/\s+/g, ' ').trim();
+const dec = s => s.replace(/&#8211;/g, '–').replace(/&#95;/g, '_').replace(/&amp;/g, '&').replace(/&#039;|&#39;/g, "'").replace(/&quot;/g, '"').replace(/&#160;/g, ' ').replace(/&#58;/g, ':');
+const strip = s => dec((s || '').replace(/<style[\s\S]*?<\/style>/g, ' ').replace(/<[^>]+>/g, ' ')).replace(/\s+/g, ' ').trim();
 
 // "File:Nome do ficheiro.jpg" -> URL da miniatura com a largura pedida
 function thumb(title, w) {

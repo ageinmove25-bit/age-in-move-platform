@@ -50,7 +50,7 @@ async function build(d) {
   // Capa
   { const s = pres.addSlide(); s.background = { color: P.escuro };
     await img(s, use(d.capaFoto), 5.2, 0, 4.8, H);
-    txt(s, 'AGE IN MOVE · IDADE EM MOVIMENTO', { x: M, y: 0.55, w: 4.4, h: 0.35, fontSize: 12, bold: true, color: P.acento, charSpacing: 3 });
+    txt(s, 'AGE IN MOVE', { x: M, y: 0.55, w: 4.4, h: 0.35, fontSize: 12, bold: true, color: P.acento, charSpacing: 3 });
     s.addText(d.titulo, { isTextBox: true, x: M, y: 1.4, w: 4.5, h: 1.9, fontFace: F.titulo, fontSize: 46, bold: true, color: 'FFFFFF', margin: 0, valign: 'bottom' });
     txt(s, d.subtitulo, { x: M, y: 3.45, w: 4.4, h: 0.9, fontSize: 20, color: 'FFFFFF', valign: 'top' });
     txt(s, 'Sessão de grupo · cerca de 45 minutos · sentados', { x: M, y: 4.75, w: 4.4, h: 0.35, fontSize: 12, color: 'FFFFFF' });
@@ -97,7 +97,7 @@ async function build(d) {
           const x = M + i * 3.075;
           await img(s, use(it.foto), x, y0, 2.85, 2.6);
           const show = sl.tipo === 'memorizar' || sl.revelar;
-          txt(s, show ? it.t : '?', { x, y: y0 + 2.7, w: 2.85, h: 0.6, fontSize: 28, bold: true, color: show ? P.escuro : P.acento, align: show ? 'left' : 'center' });
+          txt(s, show ? it.t : '?', { x, y: y0 + 2.7, w: 2.85, h: 0.6, fontSize: 26, bold: true, color: show ? P.escuro : P.acento, align: show ? 'left' : 'center' });
         }
         break; }
       case 'escolha': case 'reconhecer': {
@@ -182,6 +182,8 @@ async function build(d) {
   fs.mkdirSync(OUT, { recursive: true });
   const file = path.join(OUT, `${d.slug}.pptx`);
   await pres.writeFile({ fileName: file });
+  // Remove entradas de pastas do ZIP (impedem abrir o ficheiro em alguns serviços na nuvem)
+  require('child_process').execFileSync('zip', ['-dq', file, '*/'], { stdio: 'ignore' });
   return file;
 }
 

@@ -71,7 +71,7 @@ ul.check li:before{content:'';position:absolute;left:0;top:1mm;width:4.2mm;heigh
 .rules li:before{content:counter(r);position:absolute;left:0;top:0;width:7.5mm;height:7.5mm;border-radius:50%;background:var(--c);color:#fff;font-weight:800;font-size:10.5pt;display:flex;align-items:center;justify-content:center}
 .rules b{color:var(--ce)}
 /* atividade */
-.ph-act{height:72mm;border-radius:5mm;background-size:cover;background-position:center;margin:4mm 0 4mm}
+.ph-act{height:92mm;border-radius:5mm;background-size:cover;background-position:center;margin:4mm 0 4mm}
 .lead{font-size:13pt;color:#374151}
 .info{display:grid;grid-template-columns:repeat(4,1fr);gap:3mm;margin-bottom:5mm}
 .info div{background:#F9FAFB;border:1px solid var(--line);border-radius:3mm;padding:2.5mm 3mm}
@@ -181,7 +181,7 @@ function build(f) {
   pages.push(`<section class="page">
     <div class="kicker">Para fotocopiar</div><h2>Registo simples</h2>
     <div class="fields"><div>Nome:</div><div>Mês:</div></div>
-    <table class="reg"><thead><tr><th>Atividade</th><th style="width:16mm">Data</th><th style="width:17mm">Nível</th><th style="width:18mm">Sozinho</th><th style="width:18mm">Com ajuda</th><th style="width:16mm">Não quis</th><th style="width:16mm">Gostou?</th></tr></thead>
+    <table class="reg"><thead><tr><th>Atividade</th><th style="width:16mm">Data</th><th style="width:24mm">Nível</th><th style="width:18mm">Sozinho</th><th style="width:18mm">Com ajuda</th><th style="width:16mm">Não quis</th><th style="width:16mm">Gostou?</th></tr></thead>
     <tbody>${f.atividades.map(a => `<tr><td class="a">${esc(a.nome)}</td><td></td><td class="o">1 · 2 · 3</td><td class="o">○</td><td class="o">○</td><td class="o">○</td><td class="o">○</td></tr>`).join('')}</tbody></table>
     <h3>Notas para a equipa</h3>
     <p style="font-size:11pt;color:#4B5563">O que correu bem, o que foi difícil, mudanças que notou (dor, cansaço, mais confusão, mais alegria…).</p>

@@ -47,3 +47,22 @@ npm install
 node ebooks/gerar-ebooks.js          # todos os ebooks (ou: node ebooks/gerar-ebooks.js tonicidade)
 node powerpoints/gerar-powerpoints.js  # todos os PowerPoints (ou: ... natal-em-familia)
 ```
+
+## ✨ Versão 2 (em teste): fotografias reais e três níveis
+
+Novo modelo, para **animadores e auxiliares**, adaptado a pessoas autónomas, com défice cognitivo ligeiro,
+com demência ligeira a moderada e residentes em lar (tudo sentado).
+
+- `ebooks/pdf/v2/Vol7-praxia-fina.pdf` — **Mãos Ativas** (Praxia Fina): 6 atividades com materiais de casa
+  (feijão, molas, panos, moedas, massa, frascos), cada uma com fotografia, custo, o que preparar, passo a passo
+  com **o que fazer** e **o que dizer**, 3 níveis (mais apoio / algum apoio / autónomos), segurança e o que fazer se correr mal.
+- `powerpoints/pptx/v2/natal-em-familia.pptx` — **Natal em Família**: fotografias reais grandes, uma ideia por diapositivo,
+  2–3 opções no máximo, resposta mostrada logo a seguir, notas com o que dizer e como adaptar,
+  diapositivo oculto "Para o animador" e créditos das fotografias.
+
+Conteúdos: `ebooks/v2/*.js` e `powerpoints/v2/*.js`. Gerar: `node ebooks/v2/gerar.js` e `node powerpoints/v2/gerar.js`.
+
+### Fotografias
+Fotografias do Wikimedia Commons com licenças livres (CC0, CC BY, CC BY-SA), em `fotos/img/`.
+Autor e licença de cada uma em `fotos/creditos.json`; os créditos aparecem no fim de cada ebook e PowerPoint e **não devem ser removidos**.
+Para trocar uma fotografia: `node fotos/procurar.js <pasta> "chave|pesquisa"`, escolher, editar `fotos/escolhidas.json` e correr `node fotos/descarregar.js`.
