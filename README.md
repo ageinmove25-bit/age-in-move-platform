@@ -74,4 +74,4 @@ Para uso clínico real, ver secção **Segurança** abaixo.
 
 ---
 
-*GeroCare Pro © 2026 · gerocarepro.pt*
+*Age in Move © 2026 · idade em movimento · @age_in_move*
