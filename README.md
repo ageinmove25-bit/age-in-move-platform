@@ -21,6 +21,14 @@ Abrir `index.html` diretamente no browser (Chrome/Edge recomendado).
 
 Não requer instalação, servidor ou base de dados.
 
+### Onde ficam os dados
+
+Tudo o que é registado (pacientes, sessões, avaliações, calendário, fórum, perfil) fica guardado **automaticamente no browser**, neste computador (localStorage). Nada é enviado para servidores.
+
+- Limpar o histórico/dados do browser **apaga** os registos — exporte um backup regularmente em **Definições → Dados & Backup**.
+- O ficheiro de backup (`.json`) também serve para passar os dados para outro computador ou browser.
+- Para começar com dados reais: **Definições → Dados & Backup → Apagar todos os dados**.
+
 ## Estrutura
 
 ```

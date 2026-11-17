@@ -141,7 +141,7 @@ label{display:block;font-size:13px;font-weight:600;color:#374151;margin-bottom:5
 <body>
 <div id="root"></div>
 <script type="text/babel">
-const {useState,useEffect}=React;
+const {useState,useEffect,useContext,createContext,useCallback}=React;
 
 const MODULES=[
   {id:1,name:'Memória e Atenção',icon:'🧠',color:'#4f46e5',bg:'#ede9fe',exercises:8,duration:'45 min',difficulty:'Moderado',type:'cognitivo',
@@ -282,13 +282,13 @@ const SAMPLE_PATIENTS=[
 ];
 
 const SAMPLE_EVENTS=[
-  {id:1,date:'2026-06-08',title:'Maria Silva - Sessão',type:'session',color:'#4f46e5'},
+  {id:1,date:'2026-06-08',title:'Maria Silva - Sessão',type:'session',color:'#4f46e5',patientId:1},
   {id:2,date:'2026-06-09',title:'Reunião Equipa',type:'meeting',color:'#0891b2'},
-  {id:3,date:'2026-06-10',title:'António Costa - Sessão',type:'session',color:'#0891b2'},
-  {id:4,date:'2026-06-12',title:'Rosa Nunes - Sessão',type:'session',color:'#059669'},
-  {id:5,date:'2026-06-14',title:'Fernanda Martins - Sessão',type:'session',color:'#7c3aed'},
+  {id:3,date:'2026-06-10',title:'António Costa - Sessão',type:'session',color:'#0891b2',patientId:2},
+  {id:4,date:'2026-06-12',title:'Rosa Nunes - Sessão',type:'session',color:'#059669',patientId:3},
+  {id:5,date:'2026-06-14',title:'Fernanda Martins - Sessão',type:'session',color:'#7c3aed',patientId:5},
   {id:6,date:'2026-06-15',title:'Formação Contínua',type:'training',color:'#d97706'},
-  {id:7,date:'2026-06-07',title:'José Rodrigues - Sessão',type:'session',color:'#d97706'},
+  {id:7,date:'2026-06-07',title:'José Rodrigues - Sessão',type:'session',color:'#d97706',patientId:4},
   {id:8,date:'2026-06-20',title:'Supervisão Clínica',type:'meeting',color:'#0891b2'},
 ];
 
@@ -333,6 +333,151 @@ const INITIAL_POSTS=[
     {author:'Dr. Pedro Alves',initials:'PA',avatar:'#059669',text:'Não esquecer a avaliação do cuidador com a Escala de Zarit (sobrecarga) nas nossas consultas. Score > 56 indica sobrecarga intensa e deve acionar encaminhamento urgente para apoio psicológico.',time:'há 2 dias'},
   ]},
 ];
+
+// ─── PERSISTÊNCIA LOCAL (localStorage) ─────────────────────────────────────
+// Todos os dados ficam guardados apenas neste browser, neste computador.
+const STORAGE_PREFIX='aim_v1_';
+const STORE_KEYS=['patients','sessions','assessments','events','posts','profile','prefs'];
+const AVATAR_COLORS=['#4f46e5','#0891b2','#059669','#d97706','#7c3aed','#e11d48','#0d9488','#ea580c'];
+const SCALES={
+  mmse:{name:'MMSE',max:30},
+  gds:{name:'GDS-15',max:15},
+  barthel:{name:'Índice de Barthel',max:100},
+  moca:{name:'MoCA',max:30},
+};
+const DEFAULT_PROFILE={name:'Dra. Ana Santos',license:'CRP 12345',email:'ana.santos@gerocare.pt',phone:'+351 912 345 678',specialty:'Neuropsicologia Geriátrica',role:'Neuropsicóloga',institution:'Centro de Saúde Lisboa Norte'};
+const DEFAULT_PREFS={duration:'45',scale:'mmse',reminders:true,declineAlerts:true,monthlyReports:false,nSessions:true,nRisk:true,nForum:false,nUpdates:true};
+
+function storageRead(key,fallback){
+  try{const raw=localStorage.getItem(STORAGE_PREFIX+key);return raw==null?fallback:JSON.parse(raw);}
+  catch(e){return fallback;}
+}
+function storageWrite(key,value){
+  try{localStorage.setItem(STORAGE_PREFIX+key,JSON.stringify(value));return true;}
+  catch(e){console.warn('Não foi possível guardar',key,e);return false;}
+}
+function usePersistentState(key,initial){
+  const [value,setValue]=useState(()=>storageRead(key,typeof initial==='function'?initial():initial));
+  useEffect(()=>{storageWrite(key,value);},[key,value]);
+  return [value,setValue];
+}
+
+const todayISO=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;};
+const fmtDate=iso=>{if(!iso)return '—';const [y,m,d]=iso.split('-');return `${d}/${m}/${y}`;};
+const initialsOf=name=>name.trim().split(/\s+/).filter(Boolean).map(w=>w[0]).filter((_,i,a)=>i===0||i===a.length-1).join('').toUpperCase()||'?';
+const ageFromDob=dob=>{if(!dob)return null;const b=new Date(dob),n=new Date();let a=n.getFullYear()-b.getFullYear();if(n.getMonth()<b.getMonth()||(n.getMonth()===b.getMonth()&&n.getDate()<b.getDate()))a--;return a;};
+const numOrNull=v=>v===''||v==null||isNaN(+v)?null:+v;
+function computeRisk(p){
+  const {mmse,gds,barthel}=p;
+  if((mmse!=null&&mmse<20)||(gds!=null&&gds>10)||(barthel!=null&&barthel<70)) return 'high';
+  if((mmse!=null&&mmse<25)||(gds!=null&&gds>5)||(barthel!=null&&barthel<90)) return 'medium';
+  return 'low';
+}
+const mmseColor=v=>v==null?'#94a3b8':v<20?'#dc2626':v<25?'#d97706':'#16a34a';
+const nextId=list=>list.reduce((m,x)=>Math.max(m,+x.id||0),0)+1;
+
+function seedSessions(){
+  const perfs=['Excelente','Bom','Bom','Razoável','Bom'];
+  const out=[];let id=1;
+  SAMPLE_PATIENTS.forEach(p=>perfs.forEach((perf,i)=>{
+    out.push({id:id++,patientId:p.id,date:`2026-${String(6-Math.floor(i/2)).padStart(2,'0')}-${String(Math.max(1,30-i*7)).padStart(2,'0')}`,moduleId:p.module,exercises:3,duration:45,performance:perf,notes:''});
+  }));
+  return out;
+}
+function seedAssessments(){
+  const out=[];let id=1;
+  SAMPLE_PATIENTS.forEach(p=>{
+    out.push({id:id++,patientId:p.id,date:'2026-04-10',scale:'mmse',value:Math.min(30,p.mmse+1),notes:'Ligeira descida face ao mês anterior'});
+    out.push({id:id++,patientId:p.id,date:'2026-05-15',scale:'mmse',value:p.mmse,notes:'Aplicado em condições standard'});
+    out.push({id:id++,patientId:p.id,date:'2026-05-15',scale:'gds',value:p.gds,notes:'Humor estável'});
+    out.push({id:id++,patientId:p.id,date:'2026-05-15',scale:'barthel',value:p.barthel,notes:'AVDs preservadas'});
+  });
+  return out;
+}
+const SEED={
+  patients:()=>SAMPLE_PATIENTS,
+  sessions:seedSessions,
+  assessments:seedAssessments,
+  events:()=>SAMPLE_EVENTS,
+  posts:()=>INITIAL_POSTS,
+  profile:()=>DEFAULT_PROFILE,
+  prefs:()=>DEFAULT_PREFS,
+};
+
+const StoreContext=createContext(null);
+const useStore=()=>useContext(StoreContext);
+
+function StoreProvider({children}){
+  const [patients,setPatients]=usePersistentState('patients',SEED.patients);
+  const [sessions,setSessions]=usePersistentState('sessions',SEED.sessions);
+  const [assessments,setAssessments]=usePersistentState('assessments',SEED.assessments);
+  const [events,setEvents]=usePersistentState('events',SEED.events);
+  const [posts,setPosts]=usePersistentState('posts',SEED.posts);
+  const [profile,setProfile]=usePersistentState('profile',SEED.profile);
+  const [prefs,setPrefs]=usePersistentState('prefs',SEED.prefs);
+  const setters={patients:setPatients,sessions:setSessions,assessments:setAssessments,events:setEvents,posts:setPosts,profile:setProfile,prefs:setPrefs};
+
+  const addPatient=data=>{
+    const id=nextId(patients);
+    const created={...data,id,initials:initialsOf(data.name),avatar:AVATAR_COLORS[id%AVATAR_COLORS.length],sessions:0,createdAt:todayISO()};
+    created.risk=computeRisk(created);
+    setPatients(ps=>[...ps,created]);
+    return created;
+  };
+  const updatePatient=useCallback((id,patch)=>{
+    setPatients(ps=>ps.map(p=>{if(p.id!==id)return p;const n={...p,...patch};n.risk=computeRisk(n);return n;}));
+  },[]);
+  const deletePatient=useCallback(id=>{
+    setPatients(ps=>ps.filter(p=>p.id!==id));
+    setSessions(ss=>ss.filter(s=>s.patientId!==id));
+    setAssessments(as=>as.filter(a=>a.patientId!==id));
+    setEvents(es=>es.filter(e=>e.patientId!==id));
+  },[]);
+  const addSession=useCallback(s=>{
+    setSessions(ss=>[...ss,{...s,id:nextId(ss)}]);
+    setPatients(ps=>ps.map(p=>p.id===s.patientId?{...p,sessions:(p.sessions||0)+1}:p));
+  },[]);
+  const deleteSession=useCallback(s=>{
+    setSessions(ss=>ss.filter(x=>x.id!==s.id));
+    setPatients(ps=>ps.map(p=>p.id===s.patientId?{...p,sessions:Math.max(0,(p.sessions||0)-1)}:p));
+  },[]);
+  const addAssessments=useCallback((patientId,date,values,notes)=>{
+    const entries=Object.entries(values).filter(([,v])=>v!=null);
+    if(!entries.length) return;
+    setAssessments(as=>{let id=nextId(as);return [...as,...entries.map(([scale,value])=>({id:id++,patientId,date,scale,value,notes}))];});
+    // Atualiza os valores atuais do paciente se esta for a avaliação mais recente
+    setPatients(ps=>ps.map(p=>{
+      if(p.id!==patientId) return p;
+      const n={...p};
+      entries.forEach(([scale,value])=>{if(!p.lastAssessed||!p.lastAssessed[scale]||date>=p.lastAssessed[scale]){n[scale]=value;n.lastAssessed={...(n.lastAssessed||{}),[scale]:date};}});
+      n.risk=computeRisk(n);
+      return n;
+    }));
+  },[]);
+
+  const exportData=()=>({app:'age-in-move',version:1,exportedAt:new Date().toISOString(),data:{patients,sessions,assessments,events,posts,profile,prefs}});
+  const importData=json=>{
+    const d=json&&json.data;
+    if(!d||json.app!=='age-in-move') throw new Error('Ficheiro não reconhecido como backup Age in Move.');
+    ['patients','sessions','assessments','events','posts'].forEach(k=>{if(d[k]!=null&&!Array.isArray(d[k]))throw new Error(`Campo "${k}" inválido.`);});
+    STORE_KEYS.forEach(k=>{if(d[k]!=null)setters[k](d[k]);});
+  };
+  const resetDemo=()=>STORE_KEYS.forEach(k=>setters[k](SEED[k]()));
+  const clearAll=()=>{['patients','sessions','assessments','events'].forEach(k=>setters[k]([]));setPosts(SEED.posts());};
+
+  const value={patients,sessions,assessments,events,posts,profile,prefs,
+    setEvents,setPosts,setProfile,setPrefs,
+    addPatient,updatePatient,deletePatient,addSession,deleteSession,addAssessments,
+    exportData,importData,resetDemo,clearAll};
+  return <StoreContext.Provider value={value}>{children}</StoreContext.Provider>;
+}
+
+function downloadJSON(obj,filename){
+  const blob=new Blob([JSON.stringify(obj,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download=filename;document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
 
 // ─── VARIANTES SIMPLES → CRIATIVAS ─────────────────────────────────────────
 function getVariants(ex, mod){
@@ -1413,14 +1558,15 @@ function AuthPage({onLogin}){
 }
 
 function Sidebar({page,setPage,onLogout}){
+  const {patients,posts,profile}=useStore();
   const nav=[
     {section:'Principal'},
     {id:'dashboard',label:'Dashboard',icon:'📊'},
     {id:'modules',label:'Módulos',icon:'📚'},
-    {id:'patients',label:'Pacientes',icon:'👥',badge:'5'},
+    {id:'patients',label:'Pacientes',icon:'👥',badge:patients.length?String(patients.length):null},
     {section:'Gestão'},
     {id:'calendar',label:'Calendário',icon:'📅'},
-    {id:'forum',label:'Fórum Clínico',icon:'💬',badge:'3'},
+    {id:'forum',label:'Fórum Clínico',icon:'💬',badge:posts.length?String(posts.length):null},
     {section:'Configuração'},
     {id:'settings',label:'Definições',icon:'⚙️'},
   ];
@@ -1448,8 +1594,8 @@ function Sidebar({page,setPage,onLogout}){
         <div className="nav-item" style={{marginBottom:4}}>
           <span className="icon">👤</span>
           <div>
-            <div style={{fontSize:13,fontWeight:600,color:'#e2e8f0'}}>Dra. Ana Santos</div>
-            <div style={{fontSize:11,color:'#64748b'}}>Neuropsicóloga</div>
+            <div style={{fontSize:13,fontWeight:600,color:'#e2e8f0'}}>{profile.name}</div>
+            <div style={{fontSize:11,color:'#64748b'}}>{profile.role}</div>
           </div>
         </div>
         <div className="nav-item" onClick={onLogout}><span className="icon">🚪</span><span>Sair</span></div>
@@ -1458,18 +1604,35 @@ function Sidebar({page,setPage,onLogout}){
   );
 }
 
-function DashboardHome({setPage}){
+function DashboardHome({setPage,openPatient}){
+  const {patients,sessions,events,profile}=useStore();
+  const now=new Date();
+  const today=todayISO();
+  const monthKey=today.slice(0,7);
+  const prevMonth=new Date(now.getFullYear(),now.getMonth()-1,1);
+  const prevKey=`${prevMonth.getFullYear()}-${String(prevMonth.getMonth()+1).padStart(2,'0')}`;
+  const sessMonth=sessions.filter(s=>s.date.startsWith(monthKey)).length;
+  const sessPrev=sessions.filter(s=>s.date.startsWith(prevKey)).length;
+  const newThisMonth=patients.filter(p=>(p.createdAt||'').startsWith(monthKey)).length;
+  const atRisk=patients.filter(p=>p.risk!=='low');
+  const highRisk=patients.filter(p=>p.risk==='high').length;
+  const upcoming=events.filter(e=>e.date>=today).sort((a,b)=>a.date.localeCompare(b.date)).slice(0,6);
+  const todayCount=events.filter(e=>e.date===today&&e.type==='session').length;
+  const exCount=MODULES.reduce((n,m)=>n+(m.exercises_list?m.exercises_list.length:(+m.exercises||0)),0);
   const stats=[
-    {label:'Pacientes Ativos',value:'5',sub:'+1 este mês',icon:'👥',bg:'#eff6ff',ic:'#1d4ed8'},
-    {label:'Sessões este Mês',value:'24',sub:'↑ 12% vs anterior',icon:'📋',bg:'#f0fdf4',ic:'#15803d'},
-    {label:'Módulos',value:'6',sub:'40 exercícios',icon:'📚',bg:'#faf5ff',ic:'#6d28d9'},
-    {label:'Alertas',value:'2',sub:'Revisão necessária',icon:'⚠️',bg:'#fffbeb',ic:'#b45309'},
+    {label:'Pacientes Ativos',value:String(patients.length),sub:newThisMonth?`+${newThisMonth} este mês`:'Sem novos este mês',icon:'👥',bg:'#eff6ff',ic:'#1d4ed8'},
+    {label:'Sessões este Mês',value:String(sessMonth),sub:`${sessPrev} no mês anterior`,icon:'📋',bg:'#f0fdf4',ic:'#15803d'},
+    {label:'Módulos',value:String(MODULES.length),sub:`${exCount} exercícios`,icon:'📚',bg:'#faf5ff',ic:'#6d28d9'},
+    {label:'Alertas',value:String(highRisk),sub:highRisk?'Risco alto — rever':'Sem alertas',icon:'⚠️',bg:'#fffbeb',ic:'#b45309'},
   ];
+  const hour=now.getHours();
+  const greet=hour<12?'Bom dia':hour<20?'Boa tarde':'Boa noite';
+  const dateStr=now.toLocaleDateString('pt-PT',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
   return(
     <div className="page">
       <div style={{marginBottom:20}}>
-        <h2 style={{fontSize:22,fontWeight:800,color:'#0f172a'}}>Bom dia, Dra. Ana! 👋</h2>
-        <p style={{color:'#64748b',fontSize:14}}>Quinta-feira, 5 de junho de 2026 · 4 sessões hoje</p>
+        <h2 style={{fontSize:22,fontWeight:800,color:'#0f172a'}}>{greet}, {profile.name.split(' ').slice(0,2).join(' ')}! 👋</h2>
+        <p style={{color:'#64748b',fontSize:14}}>{dateStr.charAt(0).toUpperCase()+dateStr.slice(1)} · {todayCount} {todayCount===1?'sessão':'sessões'} hoje</p>
       </div>
       <div className="grid-4" style={{marginBottom:20}}>
         {stats.map(s=>(
@@ -1481,23 +1644,28 @@ function DashboardHome({setPage}){
       </div>
       <div className="grid-2">
         <div className="card">
-          <div className="card-header"><div className="card-title">Sessões de Hoje</div><button className="btn btn-sm btn-secondary" onClick={()=>setPage('calendar')}>Ver calendário</button></div>
-          {[{time:'09:00',patient:'Maria Silva',module:'Memória',dur:'45min',status:'done'},{time:'10:30',patient:'António Costa',module:'Linguagem',dur:'40min',status:'next'},{time:'14:00',patient:'Rosa Nunes',module:'Executivas',dur:'50min',status:'upcoming'},{time:'16:00',patient:'José Rodrigues',module:'Memória',dur:'45min',status:'upcoming'}].map(s=>(
-            <div key={s.time} style={{display:'flex',alignItems:'center',gap:12,padding:'10px 0',borderBottom:'1px solid #f1f5f9'}}>
-              <div style={{width:52,fontSize:13,fontWeight:700,color:'#64748b'}}>{s.time}</div>
-              <div style={{flex:1}}><div style={{fontWeight:600,fontSize:14}}>{s.patient}</div><div style={{fontSize:12,color:'#64748b'}}>{s.module} · {s.dur}</div></div>
-              <span className={`badge badge-${s.status==='done'?'green':s.status==='next'?'blue':'gray'}`}>{s.status==='done'?'Concluída':s.status==='next'?'A seguir':'Agendada'}</span>
-            </div>
-          ))}
+          <div className="card-header"><div className="card-title">Próximos Eventos</div><button className="btn btn-sm btn-secondary" onClick={()=>setPage('calendar')}>Ver calendário</button></div>
+          {upcoming.length===0&&<p style={{fontSize:14,color:'#64748b',padding:'10px 0'}}>Sem eventos agendados. Adicione sessões no calendário.</p>}
+          {upcoming.map(e=>{
+            const p=patients.find(x=>x.id===e.patientId);
+            return(
+              <div key={e.id} style={{display:'flex',alignItems:'center',gap:12,padding:'10px 0',borderBottom:'1px solid #f1f5f9',cursor:p?'pointer':'default'}} onClick={()=>p&&openPatient(p.id)}>
+                <div style={{width:52,fontSize:13,fontWeight:700,color:'#64748b'}}>{e.date===today?'Hoje':fmtDate(e.date).slice(0,5)}</div>
+                <div style={{flex:1}}><div style={{fontWeight:600,fontSize:14}}>{e.title}</div><div style={{fontSize:12,color:'#64748b'}}>{e.time?`${e.time} · `:''}{e.type==='session'?'Sessão':e.type==='meeting'?'Reunião':'Formação'}</div></div>
+                <span className={`badge badge-${e.date===today?'blue':'gray'}`}>{e.date===today?'Hoje':'Agendada'}</span>
+              </div>
+            );
+          })}
         </div>
         <div className="card">
           <div className="card-header"><div className="card-title">Pacientes em Risco</div><button className="btn btn-sm btn-secondary" onClick={()=>setPage('patients')}>Ver todos</button></div>
-          {SAMPLE_PATIENTS.filter(p=>p.risk!=='low').map(p=>(
-            <div key={p.id} style={{display:'flex',alignItems:'center',gap:12,padding:'10px 0',borderBottom:'1px solid #f1f5f9'}}>
+          {atRisk.length===0&&<p style={{fontSize:14,color:'#64748b',padding:'10px 0'}}>Nenhum paciente em risco médio ou alto.</p>}
+          {atRisk.map(p=>(
+            <div key={p.id} style={{display:'flex',alignItems:'center',gap:12,padding:'10px 0',borderBottom:'1px solid #f1f5f9',cursor:'pointer'}} onClick={()=>openPatient(p.id)}>
               <div className="avatar" style={{background:p.avatar}}>{p.initials}</div>
               <div style={{flex:1}}><div style={{fontWeight:600,fontSize:14}}>{p.name}</div><div style={{fontSize:12,color:'#64748b'}}>{p.diagnosis}</div></div>
               <div style={{textAlign:'right'}}>
-                <div style={{fontWeight:700,fontSize:15,color:p.mmse<20?'#dc2626':p.mmse<25?'#d97706':'#16a34a'}}>MMSE {p.mmse}</div>
+                <div style={{fontWeight:700,fontSize:15,color:mmseColor(p.mmse)}}>MMSE {p.mmse??'—'}</div>
                 <span className={`badge badge-${p.risk==='high'?'red':'yellow'}`}>{p.risk==='high'?'Alto':'Médio'}</span>
               </div>
             </div>
@@ -1679,19 +1847,26 @@ function ModuleDetail({mod,setPage}){
   );
 }
 
-function PatientsPage({setPage,setSelectedPatient}){
+function riskBadge(risk){return <span className={`badge badge-${risk==='high'?'red':risk==='medium'?'yellow':'green'}`}>{risk==='high'?'Alto':risk==='medium'?'Médio':'Baixo'}</span>;}
+function nextEventFor(events,patientId){
+  const t=todayISO();
+  return events.filter(e=>e.patientId===patientId&&e.date>=t).sort((a,b)=>a.date.localeCompare(b.date))[0]||null;
+}
+
+function PatientsPage({setPage,openPatient}){
+  const {patients,events}=useStore();
   const [search,setSearch]=useState('');
   const [filter,setFilter]=useState('all');
-  const filtered=SAMPLE_PATIENTS.filter(p=>{
+  const filtered=patients.filter(p=>{
     const ms=p.name.toLowerCase().includes(search.toLowerCase());
-    const mf=filter==='all'||(filter==='high'&&p.risk==='high')||(filter==='medium'&&p.risk==='medium')||(filter==='low'&&p.risk==='low');
+    const mf=filter==='all'||p.risk===filter;
     return ms&&mf;
   });
   return(
     <div className="page">
-      <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:20}}>
-        <div><h2 style={{fontSize:22,fontWeight:800,color:'#0f172a'}}>Gestão de Pacientes</h2><p style={{color:'#64748b',fontSize:14}}>{SAMPLE_PATIENTS.length} pacientes ativos</p></div>
-        <div style={{display:'flex',gap:10}}>
+      <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:20,gap:12,flexWrap:'wrap'}}>
+        <div><h2 style={{fontSize:22,fontWeight:800,color:'#0f172a'}}>Gestão de Pacientes</h2><p style={{color:'#64748b',fontSize:14}}>{patients.length} {patients.length===1?'paciente ativo':'pacientes ativos'}</p></div>
+        <div style={{display:'flex',gap:10,flexWrap:'wrap'}}>
           <select style={{width:160}} value={filter} onChange={e=>setFilter(e.target.value)}>
             <option value="all">Todos os riscos</option><option value="high">Risco alto</option><option value="medium">Risco médio</option><option value="low">Risco baixo</option>
           </select>
@@ -1700,51 +1875,155 @@ function PatientsPage({setPage,setSelectedPatient}){
         </div>
       </div>
       <div className="card">
+        {patients.length===0?(
+          <div style={{textAlign:'center',padding:'40px 20px',color:'#64748b'}}>
+            <div style={{fontSize:40,marginBottom:8}}>👥</div>
+            <div style={{fontWeight:700,color:'#0f172a',marginBottom:4}}>Ainda não há pacientes</div>
+            <p style={{fontSize:14,marginBottom:16}}>Crie o primeiro paciente para começar a registar sessões e avaliações.</p>
+            <button className="btn btn-primary" onClick={()=>setPage('new-patient')}>+ Novo Paciente</button>
+          </div>
+        ):(
         <table className="table">
           <thead><tr><th>Paciente</th><th>Idade</th><th>Diagnóstico</th><th>MMSE</th><th>Módulo</th><th>Sessões</th><th>Risco</th><th>Próxima</th><th></th></tr></thead>
           <tbody>
+            {filtered.length===0&&<tr><td colSpan={9} style={{textAlign:'center',color:'#64748b',padding:20}}>Nenhum paciente corresponde à pesquisa.</td></tr>}
             {filtered.map(p=>{
-              const mod=MODULES.find(m=>m.id===p.module);
+              const mod=MODULES.find(m=>m.id===+p.module);
+              const nx=nextEventFor(events,p.id);
               return(
                 <tr key={p.id}>
-                  <td><div style={{display:'flex',alignItems:'center',gap:10}}><div className="avatar" style={{background:p.avatar}}>{p.initials}</div><div><div style={{fontWeight:600}}>{p.name}</div><div style={{fontSize:12,color:'#64748b'}}>{p.gender==='F'?'Feminino':'Masculino'}</div></div></div></td>
-                  <td>{p.age} anos</td>
-                  <td style={{maxWidth:180,fontSize:13}}>{p.diagnosis}</td>
-                  <td><span style={{fontWeight:700,fontSize:15,color:p.mmse<20?'#dc2626':p.mmse<25?'#d97706':'#16a34a'}}>{p.mmse}</span></td>
+                  <td><div style={{display:'flex',alignItems:'center',gap:10}}><div className="avatar" style={{background:p.avatar}}>{p.initials}</div><div><div style={{fontWeight:600}}>{p.name}</div><div style={{fontSize:12,color:'#64748b'}}>{p.gender==='F'?'Feminino':p.gender==='M'?'Masculino':'Outro'}</div></div></div></td>
+                  <td>{p.age!=null?`${p.age} anos`:'—'}</td>
+                  <td style={{maxWidth:180,fontSize:13}}>{p.diagnosis||'—'}</td>
+                  <td><span style={{fontWeight:700,fontSize:15,color:mmseColor(p.mmse)}}>{p.mmse??'—'}</span></td>
                   <td>{mod&&<span style={{fontSize:12}}>{mod.icon} {mod.name.split(' ')[0]}</span>}</td>
-                  <td style={{color:'#64748b',fontSize:13}}>{p.sessions}</td>
-                  <td><span className={`badge badge-${p.risk==='high'?'red':p.risk==='medium'?'yellow':'green'}`}>{p.risk==='high'?'Alto':p.risk==='medium'?'Médio':'Baixo'}</span></td>
-                  <td style={{fontSize:13,color:'#64748b'}}>{p.nextSession}</td>
-                  <td><button className="btn btn-sm btn-secondary" onClick={()=>{setSelectedPatient(p);setPage('patient-profile');}}>Ver</button></td>
+                  <td style={{color:'#64748b',fontSize:13}}>{p.sessions||0}</td>
+                  <td>{riskBadge(p.risk)}</td>
+                  <td style={{fontSize:13,color:'#64748b'}}>{nx?fmtDate(nx.date):'—'}</td>
+                  <td><button className="btn btn-sm btn-secondary" onClick={()=>openPatient(p.id)}>Ver</button></td>
                 </tr>
               );
             })}
           </tbody>
         </table>
+        )}
       </div>
     </div>
   );
 }
 
+function Modal({title,onClose,children}){
+  return(
+    <div className="modal-overlay" onClick={e=>{if(e.target===e.currentTarget)onClose();}}>
+      <div className="modal">
+        <div className="modal-header"><div className="modal-title">{title}</div><button className="close-btn" onClick={onClose}>×</button></div>
+        {children}
+      </div>
+    </div>
+  );
+}
+
+function NewSessionModal({patient,onClose}){
+  const {addSession,prefs}=useStore();
+  const [f,setF]=useState({date:todayISO(),moduleId:String(patient.module||1),exercises:'3',duration:prefs.duration||'45',performance:'Bom',notes:''});
+  const set=(k,v)=>setF(x=>({...x,[k]:v}));
+  const save=()=>{
+    if(!f.date) return;
+    addSession({patientId:patient.id,date:f.date,moduleId:+f.moduleId,exercises:+f.exercises||0,duration:+f.duration||0,performance:f.performance,notes:f.notes.trim()});
+    onClose();
+  };
+  return(
+    <Modal title={`Nova Sessão — ${patient.name}`} onClose={onClose}>
+      <div className="grid-2">
+        <div className="form-group"><label>Data *</label><input type="date" value={f.date} onChange={e=>set('date',e.target.value)}/></div>
+        <div className="form-group"><label>Módulo</label><select value={f.moduleId} onChange={e=>set('moduleId',e.target.value)}>{MODULES.map(m=><option key={m.id} value={m.id}>{m.icon} {m.name}</option>)}</select></div>
+        <div className="form-group"><label>Nº de exercícios</label><input type="number" min={0} value={f.exercises} onChange={e=>set('exercises',e.target.value)}/></div>
+        <div className="form-group"><label>Duração (min)</label><input type="number" min={0} value={f.duration} onChange={e=>set('duration',e.target.value)}/></div>
+      </div>
+      <div className="form-group"><label>Desempenho</label><select value={f.performance} onChange={e=>set('performance',e.target.value)}>{['Excelente','Bom','Razoável','Fraco'].map(x=><option key={x}>{x}</option>)}</select></div>
+      <div className="form-group"><label>Notas da sessão</label><textarea rows={3} value={f.notes} onChange={e=>set('notes',e.target.value)} placeholder="Observações, dificuldades, ajustes..."/></div>
+      <div style={{display:'flex',gap:10,justifyContent:'flex-end',marginTop:16}}>
+        <button className="btn btn-secondary" onClick={onClose}>Cancelar</button>
+        <button className="btn btn-primary" onClick={save}>Guardar Sessão</button>
+      </div>
+    </Modal>
+  );
+}
+
+function NewAssessmentModal({patient,onClose}){
+  const {addAssessments}=useStore();
+  const [date,setDate]=useState(todayISO());
+  const [vals,setVals]=useState({mmse:'',gds:'',barthel:'',moca:''});
+  const [notes,setNotes]=useState('');
+  const [err,setErr]=useState('');
+  const save=()=>{
+    const parsed={};
+    for(const [k,v] of Object.entries(vals)){
+      const n=numOrNull(v);
+      if(n!=null&&(n<0||n>SCALES[k].max)){setErr(`${SCALES[k].name}: valor entre 0 e ${SCALES[k].max}.`);return;}
+      parsed[k]=n;
+    }
+    if(Object.values(parsed).every(v=>v==null)){setErr('Preencha pelo menos uma escala.');return;}
+    addAssessments(patient.id,date,parsed,notes.trim());
+    onClose();
+  };
+  return(
+    <Modal title={`Nova Avaliação — ${patient.name}`} onClose={onClose}>
+      {err&&<div className="alert alert-warning" style={{marginBottom:12}}>{err}</div>}
+      <div className="form-group"><label>Data *</label><input type="date" value={date} onChange={e=>setDate(e.target.value)}/></div>
+      <div className="grid-2">
+        {Object.entries(SCALES).map(([k,s])=>(
+          <div key={k} className="form-group"><label>{s.name} (0–{s.max})</label><input type="number" min={0} max={s.max} value={vals[k]} onChange={e=>setVals(v=>({...v,[k]:e.target.value}))} placeholder={patient[k]!=null?`Atual: ${patient[k]}`:'—'}/></div>
+        ))}
+      </div>
+      <div className="form-group"><label>Notas</label><input value={notes} onChange={e=>setNotes(e.target.value)} placeholder="Condições de aplicação, observações..."/></div>
+      <div style={{display:'flex',gap:10,justifyContent:'flex-end',marginTop:16}}>
+        <button className="btn btn-secondary" onClick={onClose}>Cancelar</button>
+        <button className="btn btn-primary" onClick={save}>Guardar Avaliação</button>
+      </div>
+    </Modal>
+  );
+}
+
 function PatientProfile({patient,setPage}){
+  const {sessions,assessments,events,deletePatient,deleteSession,updatePatient,profile}=useStore();
   const [tab,setTab]=useState('overview');
-  const mod=MODULES.find(m=>m.id===patient.module);
+  const [modal,setModal]=useState(null);
+  const [editNotes,setEditNotes]=useState(null);
+  const mod=MODULES.find(m=>m.id===+patient.module);
+  const pSessions=sessions.filter(s=>s.patientId===patient.id).sort((a,b)=>b.date.localeCompare(a.date));
+  const pAssess=assessments.filter(a=>a.patientId===patient.id).sort((a,b)=>b.date.localeCompare(a.date)||b.id-a.id);
+  const nx=nextEventFor(events,patient.id);
+  const goodPerf=pSessions.filter(s=>s.performance==='Excelente'||s.performance==='Bom').length;
+  const remove=()=>{
+    if(!confirm(`Eliminar ${patient.name} e todo o seu historial (sessões, avaliações e eventos)? Esta ação não pode ser desfeita.`)) return;
+    deletePatient(patient.id);setPage('patients');
+  };
+  const scaleRows=[
+    {name:'MMSE',val:patient.mmse,max:30,good:27,warn:24,label:v=>v>=27?'Normal':v>=24?'DCL possível':'Défice'},
+    {name:'MoCA',val:patient.moca,max:30,good:26,warn:22,label:v=>v>=26?'Normal':'Défice cognitivo'},
+    {name:'GDS-15',val:patient.gds,max:15,inverse:true,good:5,warn:10,label:v=>v<=5?'Sem depressão':v<=10?'Dep. leve':'Dep. grave'},
+    {name:'Barthel',val:patient.barthel,max:100,good:95,warn:75,label:v=>v>=95?'Independente':v>=75?'Dep. leve':'Dep. moderada'},
+  ].filter(s=>s.val!=null);
+  const lvl=s=>s.inverse?(s.val<=s.good?'g':s.val<=s.warn?'w':'r'):(s.val>=s.good?'g':s.val>=s.warn?'w':'r');
+  const lvlColor={g:'#16a34a',w:'#d97706',r:'#dc2626'},lvlBadge={g:'green',w:'yellow',r:'red'};
   return(
     <div className="page">
-      <div style={{display:'flex',alignItems:'center',gap:12,marginBottom:20}}>
+      <div style={{display:'flex',alignItems:'center',gap:12,marginBottom:20,flexWrap:'wrap'}}>
         <button className="btn btn-secondary btn-sm" onClick={()=>setPage('patients')}>← Voltar</button>
         <div className="avatar" style={{background:patient.avatar,width:52,height:52,fontSize:18}}>{patient.initials}</div>
         <div style={{flex:1}}>
           <h2 style={{fontSize:20,fontWeight:800,color:'#0f172a'}}>{patient.name}</h2>
           <div style={{display:'flex',gap:10,alignItems:'center',marginTop:4}}>
-            <span style={{fontSize:13,color:'#64748b'}}>{patient.age} anos · {patient.gender==='F'?'Feminino':'Masculino'}</span>
+            <span style={{fontSize:13,color:'#64748b'}}>{patient.age!=null?`${patient.age} anos · `:''}{patient.gender==='F'?'Feminino':patient.gender==='M'?'Masculino':'Outro'}</span>
             <span className={`badge badge-${patient.risk==='high'?'red':patient.risk==='medium'?'yellow':'green'}`}>Risco {patient.risk==='high'?'Alto':patient.risk==='medium'?'Médio':'Baixo'}</span>
           </div>
         </div>
-        <button className="btn btn-primary btn-sm">+ Nova Sessão</button>
+        <button className="btn btn-secondary btn-sm" onClick={()=>setModal('assessment')}>+ Avaliação</button>
+        <button className="btn btn-primary btn-sm" onClick={()=>setModal('session')}>+ Nova Sessão</button>
       </div>
       <div className="tab-bar">
-        {[['overview','Visão Geral'],['assessments','Avaliações'],['sessions','Sessões']].map(([id,label])=>(
+        {[['overview','Visão Geral'],['assessments',`Avaliações (${pAssess.length})`],['sessions',`Sessões (${pSessions.length})`]].map(([id,label])=>(
           <div key={id} className={`tab${tab===id?' active':''}`} onClick={()=>setTab(id)}>{label}</div>
         ))}
       </div>
@@ -1753,80 +2032,115 @@ function PatientProfile({patient,setPage}){
           <div>
             <div className="card">
               <div className="card-title" style={{marginBottom:14}}>Informação Clínica</div>
-              {[['Diagnóstico',patient.diagnosis],['Módulo',mod?`${mod.icon} ${mod.name}`:'—'],['Cuidador',patient.caregiver],['Contacto',patient.phone],['Email',patient.email]].map(([k,v])=>(
+              {[['Diagnóstico',patient.diagnosis],['Módulo',mod?`${mod.icon} ${mod.name}`:'—'],['Cuidador',patient.caregiver+(patient.caregiverPhone?` · ${patient.caregiverPhone}`:'')],['Contacto',patient.phone],['Email',patient.email],['Referenciação',patient.referral]].filter(([k,v])=>k!=='Referenciação'||v).map(([k,v])=>(
                 <div key={k} style={{display:'flex',justifyContent:'space-between',padding:'8px 0',borderBottom:'1px solid #f1f5f9',fontSize:14}}>
-                  <span style={{color:'#64748b'}}>{k}</span><span style={{fontWeight:600,textAlign:'right',maxWidth:240}}>{v}</span>
+                  <span style={{color:'#64748b'}}>{k}</span><span style={{fontWeight:600,textAlign:'right',maxWidth:240}}>{v||'—'}</span>
                 </div>
               ))}
             </div>
-            <div className="card"><div className="card-title" style={{marginBottom:10}}>Notas Clínicas</div><p style={{fontSize:14,color:'#334155',lineHeight:1.6}}>{patient.notes}</p></div>
+            {patient.goals&&<div className="card"><div className="card-title" style={{marginBottom:10}}>Objetivos Terapêuticos</div><p style={{fontSize:14,color:'#334155',lineHeight:1.6,whiteSpace:'pre-wrap'}}>{patient.goals}</p></div>}
+            <div className="card">
+              <div className="card-header" style={{marginBottom:10}}><div className="card-title">Notas Clínicas</div>{editNotes==null&&<button className="btn btn-sm btn-secondary" onClick={()=>setEditNotes(patient.notes||'')}>Editar</button>}</div>
+              {editNotes==null
+                ?<p style={{fontSize:14,color:'#334155',lineHeight:1.6,whiteSpace:'pre-wrap'}}>{patient.notes||'Sem notas.'}</p>
+                :<div><textarea rows={5} value={editNotes} onChange={e=>setEditNotes(e.target.value)}/><div style={{display:'flex',gap:8,justifyContent:'flex-end',marginTop:8}}><button className="btn btn-sm btn-secondary" onClick={()=>setEditNotes(null)}>Cancelar</button><button className="btn btn-sm btn-primary" onClick={()=>{updatePatient(patient.id,{notes:editNotes});setEditNotes(null);}}>Guardar</button></div></div>}
+            </div>
           </div>
           <div>
             <div className="card">
               <div className="card-title" style={{marginBottom:14}}>Escalas de Avaliação</div>
-              {[
-                {name:'MMSE',val:patient.mmse,max:30,good:27,warn:24,label:patient.mmse>=27?'Normal':patient.mmse>=24?'DCL possível':'Défice'},
-                {name:'GDS-15',val:patient.gds,max:15,good:5,warn:10,label:patient.gds<=5?'Sem depressão':patient.gds<=10?'Dep. leve':'Dep. grave'},
-                {name:'Barthel',val:patient.barthel,max:100,good:95,warn:75,label:patient.barthel>=95?'Independente':patient.barthel>=75?'Dep. leve':'Dep. moderada'},
-              ].map(s=>(
+              {scaleRows.length===0&&<p style={{fontSize:14,color:'#64748b'}}>Sem avaliações registadas. <a href="#" onClick={e=>{e.preventDefault();setModal('assessment');}}>Registar avaliação</a></p>}
+              {scaleRows.map(s=>{const l=lvl(s);return(
                 <div key={s.name} style={{marginBottom:16}}>
                   <div style={{display:'flex',justifyContent:'space-between',marginBottom:6}}>
                     <span style={{fontWeight:700,fontSize:14}}>{s.name}</span>
                     <div style={{display:'flex',gap:8,alignItems:'center'}}>
-                      <span style={{fontWeight:800,fontSize:16,color:s.val>=s.good?'#16a34a':s.val>=s.warn?'#d97706':'#dc2626'}}>{s.val}<span style={{fontSize:12,color:'#94a3b8',fontWeight:400}}>/{s.max}</span></span>
-                      <span className={`badge badge-${s.val>=s.good?'green':s.val>=s.warn?'yellow':'red'}`} style={{fontSize:11}}>{s.label}</span>
+                      <span style={{fontWeight:800,fontSize:16,color:lvlColor[l]}}>{s.val}<span style={{fontSize:12,color:'#94a3b8',fontWeight:400}}>/{s.max}</span></span>
+                      <span className={`badge badge-${lvlBadge[l]}`} style={{fontSize:11}}>{s.label(s.val)}</span>
                     </div>
                   </div>
-                  <div className="progress-bar"><div className="progress-fill" style={{width:`${(s.val/s.max)*100}%`,background:s.val>=s.good?'#16a34a':s.val>=s.warn?'#d97706':'#dc2626'}}/></div>
+                  <div className="progress-bar"><div className="progress-fill" style={{width:`${(s.val/s.max)*100}%`,background:lvlColor[l]}}/></div>
                 </div>
-              ))}
+              );})}
             </div>
             <div className="card">
               <div className="card-title" style={{marginBottom:14}}>Progresso</div>
               <div style={{display:'flex',justifyContent:'space-around'}}>
-                <div style={{textAlign:'center'}}><div style={{fontSize:28,fontWeight:800}}>{patient.sessions}</div><div style={{fontSize:12,color:'#64748b'}}>Sessões</div></div>
-                <div style={{textAlign:'center'}}><div style={{fontSize:28,fontWeight:800,color:'#16a34a'}}>78%</div><div style={{fontSize:12,color:'#64748b'}}>Adesão</div></div>
-                <div style={{textAlign:'center'}}><div style={{fontSize:22,fontWeight:800,color:'#2563eb'}}>{patient.nextSession.split('-').slice(1).join('/')}</div><div style={{fontSize:12,color:'#64748b'}}>Próxima</div></div>
+                <div style={{textAlign:'center'}}><div style={{fontSize:28,fontWeight:800}}>{patient.sessions||0}</div><div style={{fontSize:12,color:'#64748b'}}>Sessões</div></div>
+                <div style={{textAlign:'center'}}><div style={{fontSize:28,fontWeight:800,color:'#16a34a'}}>{pSessions.length?Math.round(goodPerf/pSessions.length*100)+'%':'—'}</div><div style={{fontSize:12,color:'#64748b'}}>Desempenho bom+</div></div>
+                <div style={{textAlign:'center'}}><div style={{fontSize:22,fontWeight:800,color:'#2563eb'}}>{nx?fmtDate(nx.date).slice(0,5):'—'}</div><div style={{fontSize:12,color:'#64748b'}}>Próxima</div></div>
               </div>
             </div>
+            <div style={{textAlign:'right'}}><button className="btn btn-danger btn-sm" onClick={remove}>Eliminar paciente</button></div>
           </div>
         </div>
       )}
       {tab==='assessments'&&(
         <div className="card">
-          <div className="card-title" style={{marginBottom:16}}>Histórico de Avaliações</div>
+          <div className="card-header" style={{marginBottom:16}}><div className="card-title">Histórico de Avaliações</div><button className="btn btn-sm btn-primary" onClick={()=>setModal('assessment')}>+ Avaliação</button></div>
+          {pAssess.length===0?<p style={{fontSize:14,color:'#64748b'}}>Sem avaliações registadas.</p>:(
           <table className="table">
             <thead><tr><th>Data</th><th>Avaliação</th><th>Resultado</th><th>Terapeuta</th><th>Notas</th></tr></thead>
             <tbody>
-              {[{date:'2026-05-15',name:'MMSE',result:patient.mmse+'/30',notes:'Aplicado em condições standard'},{date:'2026-05-15',name:'GDS-15',result:patient.gds+'/15',notes:'Humor estável'},{date:'2026-05-15',name:'Índice de Barthel',result:patient.barthel+'/100',notes:'AVDs preservadas'},{date:'2026-04-10',name:'MMSE',result:(patient.mmse+1)+'/30',notes:'Ligeira descida face ao mês anterior'}].map((a,i)=>(
-                <tr key={i}><td>{a.date}</td><td style={{fontWeight:600}}>{a.name}</td><td style={{fontWeight:700,color:'#2563eb'}}>{a.result}</td><td>Dra. Ana Santos</td><td style={{fontSize:13,color:'#64748b'}}>{a.notes}</td></tr>
+              {pAssess.map(a=>(
+                <tr key={a.id}><td>{fmtDate(a.date)}</td><td style={{fontWeight:600}}>{SCALES[a.scale]?.name||a.scale}</td><td style={{fontWeight:700,color:'#2563eb'}}>{a.value}/{SCALES[a.scale]?.max}</td><td>{a.therapist||profile.name}</td><td style={{fontSize:13,color:'#64748b'}}>{a.notes||'—'}</td></tr>
               ))}
             </tbody>
-          </table>
+          </table>)}
         </div>
       )}
       {tab==='sessions'&&(
         <div className="card">
-          <div className="card-title" style={{marginBottom:16}}>Histórico de Sessões</div>
+          <div className="card-header" style={{marginBottom:16}}><div className="card-title">Histórico de Sessões</div><button className="btn btn-sm btn-primary" onClick={()=>setModal('session')}>+ Nova Sessão</button></div>
+          {pSessions.length===0?<p style={{fontSize:14,color:'#64748b'}}>Sem sessões registadas.</p>:(
           <table className="table">
-            <thead><tr><th>Data</th><th>Módulo</th><th>Exercícios</th><th>Duração</th><th>Desempenho</th><th>Estado</th></tr></thead>
+            <thead><tr><th>Data</th><th>Módulo</th><th>Exercícios</th><th>Duração</th><th>Desempenho</th><th>Notas</th><th></th></tr></thead>
             <tbody>
-              {['Excelente','Bom','Bom','Razoável','Bom'].map((perf,i)=>(
-                <tr key={i}><td>2026-{String(6-Math.floor(i/2)).padStart(2,'0')}-{String(30-i*7<1?1:30-i*7).padStart(2,'0')}</td><td>{mod?.name||'Memória'}</td><td>3 exercícios</td><td>45 min</td><td><span className={`badge badge-${perf==='Excelente'?'green':perf==='Bom'?'blue':'yellow'}`}>{perf}</span></td><td><span className="badge badge-green">Concluída</span></td></tr>
-              ))}
+              {pSessions.map(s=>{const m=MODULES.find(x=>x.id===+s.moduleId);return(
+                <tr key={s.id}><td>{fmtDate(s.date)}</td><td>{m?`${m.icon} ${m.name}`:'—'}</td><td>{s.exercises} exercícios</td><td>{s.duration} min</td><td><span className={`badge badge-${s.performance==='Excelente'?'green':s.performance==='Bom'?'blue':s.performance==='Fraco'?'red':'yellow'}`}>{s.performance}</span></td><td style={{fontSize:13,color:'#64748b',maxWidth:220}}>{s.notes||'—'}</td>
+                <td><button className="btn btn-sm btn-secondary" title="Eliminar sessão" onClick={()=>{if(confirm('Eliminar esta sessão?'))deleteSession(s);}}>🗑</button></td></tr>
+              );})}
             </tbody>
-          </table>
+          </table>)}
         </div>
       )}
+      {modal==='session'&&<NewSessionModal patient={patient} onClose={()=>setModal(null)}/>}
+      {modal==='assessment'&&<NewAssessmentModal patient={patient} onClose={()=>setModal(null)}/>}
     </div>
   );
 }
 
-function NewPatientPage({setPage}){
+function NewPatientPage({setPage,openPatient}){
+  const {addPatient,addAssessments}=useStore();
   const [step,setStep]=useState(1);
+  const [err,setErr]=useState('');
   const [form,setForm]=useState({name:'',dob:'',gender:'F',phone:'',email:'',address:'',caregiver:'',caregiverPhone:'',diagnosis:'',module:'1',referral:'',mmse:'',gds:'',barthel:'',moca:'',notes:'',goals:'',frequency:'weekly'});
   const set=(k,v)=>setForm(f=>({...f,[k]:v}));
   const steps=[{n:1,label:'Dados Pessoais'},{n:2,label:'Clínico'},{n:3,label:'Avaliações'},{n:4,label:'Plano'}];
+  const validate=st=>{
+    if(st===1){
+      if(!form.name.trim()) return 'Indique o nome completo.';
+      if(!form.dob) return 'Indique a data de nascimento.';
+      const a=ageFromDob(form.dob); if(a==null||a<0||a>120) return 'Data de nascimento inválida.';
+    }
+    if(st===2&&!form.diagnosis) return 'Selecione o diagnóstico principal.';
+    if(st===3){
+      for(const k of Object.keys(SCALES)){const n=numOrNull(form[k]);if(n!=null&&(n<0||n>SCALES[k].max))return `${SCALES[k].name}: valor entre 0 e ${SCALES[k].max}.`;}
+    }
+    return '';
+  };
+  const next=()=>{
+    const e=validate(step); setErr(e); if(e) return;
+    if(step<4){setStep(s=>s+1);return;}
+    const scores={mmse:numOrNull(form.mmse),gds:numOrNull(form.gds),barthel:numOrNull(form.barthel),moca:numOrNull(form.moca)};
+    const t=todayISO();
+    const lastAssessed={};Object.entries(scores).forEach(([k,v])=>{if(v!=null)lastAssessed[k]=t;});
+    const p=addPatient({name:form.name.trim(),dob:form.dob,age:ageFromDob(form.dob),gender:form.gender,phone:form.phone.trim(),email:form.email.trim(),address:form.address.trim(),
+      caregiver:form.caregiver.trim(),caregiverPhone:form.caregiverPhone.trim(),diagnosis:form.diagnosis,module:+form.module,frequency:form.frequency,referral:form.referral.trim(),
+      ...scores,lastAssessed,goals:form.goals.trim(),notes:form.notes.trim()});
+    addAssessments(p.id,t,scores,'Avaliação inicial');
+    openPatient(p.id);
+  };
   return(
     <div className="page" style={{maxWidth:700,margin:'0 auto'}}>
       <div style={{display:'flex',alignItems:'center',gap:12,marginBottom:24}}>
@@ -1845,6 +2159,7 @@ function NewPatientPage({setPage}){
         ))}
       </div>
       <div className="card">
+        {err&&<div className="alert alert-warning">{err}</div>}
         {step===1&&(
           <div>
             <div className="card-title" style={{marginBottom:16}}>Dados Pessoais</div>
@@ -1910,8 +2225,8 @@ function NewPatientPage({setPage}){
           </div>
         )}
         <div style={{display:'flex',justifyContent:'space-between',marginTop:24}}>
-          <button className="btn btn-secondary" onClick={()=>step>1?setStep(s=>s-1):setPage('patients')}>{step===1?'Cancelar':'← Anterior'}</button>
-          <button className="btn btn-primary" onClick={()=>{if(step<4)setStep(s=>s+1);else{alert('Paciente criado com sucesso!');setPage('patients');}}}>{step===4?'✓ Criar Paciente':'Seguinte →'}</button>
+          <button className="btn btn-secondary" onClick={()=>{setErr('');step>1?setStep(s=>s-1):setPage('patients');}}>{step===1?'Cancelar':'← Anterior'}</button>
+          <button className="btn btn-primary" onClick={next}>{step===4?'✓ Criar Paciente':'Seguinte →'}</button>
         </div>
       </div>
     </div>
@@ -1919,11 +2234,14 @@ function NewPatientPage({setPage}){
 }
 
 function CalendarPage(){
-  const [cur,setCur]=useState({y:2026,m:5});
-  const [events,setEvents]=useState(SAMPLE_EVENTS);
+  const {events,setEvents,patients}=useStore();
+  const NOW=new Date();
+  const [cur,setCur]=useState({y:NOW.getFullYear(),m:NOW.getMonth()});
   const [showModal,setShowModal]=useState(false);
   const [selDate,setSelDate]=useState('');
-  const [newEv,setNewEv]=useState({title:'',type:'session',patientId:''});
+  const [newEv,setNewEv]=useState({title:'',type:'session',patientId:'',time:''});
+  const [selEvent,setSelEvent]=useState(null);
+  const [evErr,setEvErr]=useState('');
   const daysInMonth=(y,m)=>new Date(y,m+1,0).getDate();
   const firstDow=(y,m)=>(new Date(y,m,1).getDay()+6)%7;
   const totalDays=daysInMonth(cur.y,cur.m);
@@ -1938,9 +2256,15 @@ function CalendarPage(){
   const typeColors={session:'#eff6ff',meeting:'#f0fdf4',training:'#fffbeb'};
   const typeText={session:'#1d4ed8',meeting:'#15803d',training:'#b45309'};
   const addEvent=()=>{
-    if(!newEv.title||!selDate) return;
-    setEvents(ev=>[...ev,{id:Date.now(),date:selDate,title:newEv.title,type:newEv.type,color:typeText[newEv.type]||'#2563eb'}]);
-    setShowModal(false);setNewEv({title:'',type:'session',patientId:''});
+    const pat=newEv.type==='session'&&newEv.patientId?patients.find(p=>p.id===+newEv.patientId):null;
+    const title=newEv.title.trim()||(pat?`${pat.name.split(' ')[0]} ${pat.name.split(' ').slice(-1)[0]} - Sessão`:'');
+    if(!selDate){setEvErr('Escolha a data.');return;}
+    if(!title){setEvErr('Indique um título ou selecione um paciente.');return;}
+    const ev={id:Date.now(),date:selDate,title,type:newEv.type,color:typeText[newEv.type]||'#2563eb'};
+    if(newEv.time) ev.time=newEv.time;
+    if(pat) ev.patientId=pat.id;
+    setEvents(es=>[...es,ev]);
+    setShowModal(false);setEvErr('');setNewEv({title:'',type:'session',patientId:'',time:''});
   };
   return(
     <div className="page">
@@ -1948,9 +2272,9 @@ function CalendarPage(){
         <div><h2 style={{fontSize:22,fontWeight:800,color:'#0f172a'}}>Calendário Clínico</h2><p style={{color:'#64748b',fontSize:14}}>{monthName} {cur.y}</p></div>
         <div style={{display:'flex',gap:10}}>
           <button className="btn btn-secondary btn-sm" onClick={()=>setCur(c=>{const m=c.m===0?11:c.m-1,y=c.m===0?c.y-1:c.y;return{y,m};})}>← Anterior</button>
-          <button className="btn btn-secondary btn-sm" onClick={()=>setCur({y:2026,m:5})}>Hoje</button>
+          <button className="btn btn-secondary btn-sm" onClick={()=>setCur({y:NOW.getFullYear(),m:NOW.getMonth()})}>Hoje</button>
           <button className="btn btn-secondary btn-sm" onClick={()=>setCur(c=>{const m=c.m===11?0:c.m+1,y=c.m===11?c.y+1:c.y;return{y,m};})}>Seguinte →</button>
-          <button className="btn btn-primary btn-sm" onClick={()=>{setSelDate(`${cur.y}-${String(cur.m+1).padStart(2,'0')}-05`);setShowModal(true);}}>+ Evento</button>
+          <button className="btn btn-primary btn-sm" onClick={()=>{const sameMonth=cur.y===NOW.getFullYear()&&cur.m===NOW.getMonth();setSelDate(sameMonth?todayISO():`${cur.y}-${String(cur.m+1).padStart(2,'0')}-01`);setShowModal(true);}}>+ Evento</button>
         </div>
       </div>
       <div className="card">
@@ -1958,12 +2282,12 @@ function CalendarPage(){
         <div className="cal-grid">
           {cells.map((c,i)=>{
             const evs=c.cur?eventsOnDay(c.day):[];
-            const isToday=c.cur&&cur.y===2026&&cur.m===5&&c.day===5;
+            const isToday=c.cur&&cur.y===NOW.getFullYear()&&cur.m===NOW.getMonth()&&c.day===NOW.getDate();
             return(
               <div key={i} className={`cal-day${isToday?' today':''}${!c.cur?' other-month':''}`}
                 onClick={()=>{if(c.cur){setSelDate(`${cur.y}-${String(cur.m+1).padStart(2,'0')}-${String(c.day).padStart(2,'0')}`);setShowModal(true);}}}>
                 <div className="day-num" style={{color:isToday?'#2563eb':'#475569',fontWeight:isToday?800:700}}>{c.day}</div>
-                {evs.map(e=><div key={e.id} className="cal-event" style={{background:typeColors[e.type]||'#f1f5f9',color:typeText[e.type]||'#475569'}}>{e.title}</div>)}
+                {evs.map(e=><div key={e.id} className="cal-event" title={e.title} onClick={ev=>{ev.stopPropagation();setSelEvent(e);}} style={{cursor:'pointer',background:typeColors[e.type]||'#f1f5f9',color:typeText[e.type]||'#475569'}}>{e.time?`${e.time} `:''}{e.title}</div>)}
               </div>
             );
           })}
@@ -1977,14 +2301,19 @@ function CalendarPage(){
       {showModal&&(
         <div className="modal-overlay" onClick={e=>{if(e.target===e.currentTarget)setShowModal(false);}}>
           <div className="modal">
-            <div className="modal-header"><div className="modal-title">Novo Evento — {selDate}</div><button className="close-btn" onClick={()=>setShowModal(false)}>×</button></div>
-            <div className="form-group"><label>Título *</label><input value={newEv.title} onChange={e=>setNewEv(v=>({...v,title:e.target.value}))} placeholder="Descrição do evento"/></div>
+            <div className="modal-header"><div className="modal-title">Novo Evento</div><button className="close-btn" onClick={()=>setShowModal(false)}>×</button></div>
+            {evErr&&<div className="alert alert-warning">{evErr}</div>}
+            <div className="grid-2">
+              <div className="form-group"><label>Data *</label><input type="date" value={selDate} onChange={e=>setSelDate(e.target.value)}/></div>
+              <div className="form-group"><label>Hora</label><input type="time" value={newEv.time} onChange={e=>setNewEv(v=>({...v,time:e.target.value}))}/></div>
+            </div>
+            <div className="form-group"><label>Título{newEv.type==='session'?' (opcional se escolher paciente)':' *'}</label><input value={newEv.title} onChange={e=>setNewEv(v=>({...v,title:e.target.value}))} placeholder="Descrição do evento"/></div>
             <div className="form-group"><label>Tipo</label>
               <select value={newEv.type} onChange={e=>setNewEv(v=>({...v,type:e.target.value}))}>
                 <option value="session">Sessão com Paciente</option><option value="meeting">Reunião</option><option value="training">Formação</option>
               </select>
             </div>
-            {newEv.type==='session'&&<div className="form-group"><label>Paciente</label><select value={newEv.patientId} onChange={e=>setNewEv(v=>({...v,patientId:e.target.value}))}><option value="">Selecionar...</option>{SAMPLE_PATIENTS.map(p=><option key={p.id} value={p.id}>{p.name}</option>)}</select></div>}
+            {newEv.type==='session'&&<div className="form-group"><label>Paciente</label><select value={newEv.patientId} onChange={e=>setNewEv(v=>({...v,patientId:e.target.value}))}><option value="">Selecionar...</option>{patients.map(p=><option key={p.id} value={p.id}>{p.name}</option>)}</select></div>}
             <div style={{display:'flex',gap:10,justifyContent:'flex-end',marginTop:20}}>
               <button className="btn btn-secondary" onClick={()=>setShowModal(false)}>Cancelar</button>
               <button className="btn btn-primary" onClick={addEvent}>Criar Evento</button>
@@ -1992,24 +2321,39 @@ function CalendarPage(){
           </div>
         </div>
       )}
+      {selEvent&&(
+        <Modal title={selEvent.title} onClose={()=>setSelEvent(null)}>
+          <div style={{fontSize:14,color:'#334155',lineHeight:1.8}}>
+            <div><strong>Data:</strong> {fmtDate(selEvent.date)}{selEvent.time?` às ${selEvent.time}`:''}</div>
+            <div><strong>Tipo:</strong> {selEvent.type==='session'?'Sessão com Paciente':selEvent.type==='meeting'?'Reunião':'Formação'}</div>
+            {selEvent.patientId&&<div><strong>Paciente:</strong> {patients.find(p=>p.id===selEvent.patientId)?.name||'—'}</div>}
+          </div>
+          <div style={{display:'flex',gap:10,justifyContent:'flex-end',marginTop:20}}>
+            <button className="btn btn-danger" onClick={()=>{if(confirm('Eliminar este evento?')){setEvents(es=>es.filter(x=>x.id!==selEvent.id));setSelEvent(null);}}}>Eliminar</button>
+            <button className="btn btn-secondary" onClick={()=>setSelEvent(null)}>Fechar</button>
+          </div>
+        </Modal>
+      )}
     </div>
   );
 }
 
 function ForumPage(){
-  const [posts,setPosts]=useState(INITIAL_POSTS);
+  const {posts,setPosts,profile}=useStore();
+  const me={author:profile.name,role:profile.role,avatar:'#4f46e5',initials:initialsOf(profile.name.replace(/^(Dra?|Enf|Prof)\.?\s+/i,''))};
+  const timeLabel=p=>p.createdAt?new Date(p.createdAt).toLocaleString('pt-PT',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'}):p.time;
   const [showNew,setShowNew]=useState(false);
   const [reply,setReply]=useState({});
   const [newPost,setNewPost]=useState({title:'',body:''});
   const [expanded,setExpanded]=useState({});
   const submit=()=>{
     if(!newPost.title||!newPost.body) return;
-    setPosts(p=>[{id:Date.now(),author:'Dra. Ana Santos',role:'Neuropsicóloga',avatar:'#4f46e5',initials:'AS',title:newPost.title,body:newPost.body,time:'agora',likes:0,replies:[]},...p]);
+    setPosts(p=>[{id:Date.now(),...me,title:newPost.title,body:newPost.body,createdAt:new Date().toISOString(),likes:0,replies:[]},...p]);
     setNewPost({title:'',body:''});setShowNew(false);
   };
   const addReply=pid=>{
     if(!reply[pid]) return;
-    setPosts(ps=>ps.map(p=>p.id===pid?{...p,replies:[...p.replies,{author:'Dra. Ana Santos',initials:'AS',avatar:'#4f46e5',text:reply[pid],time:'agora'}]}:p));
+    setPosts(ps=>ps.map(p=>p.id===pid?{...p,replies:[...p.replies,{author:me.author,initials:me.initials,avatar:me.avatar,text:reply[pid],createdAt:new Date().toISOString()}]}:p));
     setReply(r=>({...r,[pid]:''}));
   };
   return(
@@ -2035,7 +2379,7 @@ function ForumPage(){
             <div className="avatar" style={{background:post.avatar}}>{post.initials}</div>
             <div style={{flex:1}}>
               <div style={{display:'flex',alignItems:'flex-start',justifyContent:'space-between',gap:8}}>
-                <div><div style={{fontWeight:700,fontSize:16,marginBottom:2}}>{post.title}</div><div style={{fontSize:12,color:'#64748b'}}>{post.author} · {post.role} · {post.time}</div></div>
+                <div><div style={{fontWeight:700,fontSize:16,marginBottom:2}}>{post.title}</div><div style={{fontSize:12,color:'#64748b'}}>{post.author} · {post.role} · {timeLabel(post)}</div></div>
                 <span className="badge badge-blue" style={{fontSize:11,flexShrink:0}}>🔬 Clínico</span>
               </div>
               <p style={{margin:'10px 0',color:'#334155',fontSize:14,lineHeight:1.6}}>{post.body}</p>
@@ -2049,7 +2393,7 @@ function ForumPage(){
                     <div key={i} style={{display:'flex',gap:10,marginBottom:10}}>
                       <div className="avatar" style={{background:r.avatar,width:30,height:30,fontSize:12}}>{r.initials}</div>
                       <div style={{flex:1,background:'#f8fafc',borderRadius:8,padding:'8px 12px'}}>
-                        <div style={{fontSize:12,fontWeight:700}}>{r.author} <span style={{fontWeight:400,color:'#94a3b8'}}>· {r.time}</span></div>
+                        <div style={{fontSize:12,fontWeight:700}}>{r.author} <span style={{fontWeight:400,color:'#94a3b8'}}>· {timeLabel(r)}</span></div>
                         <div style={{fontSize:13,color:'#334155',marginTop:3}}>{r.text}</div>
                       </div>
                     </div>
@@ -2069,75 +2413,125 @@ function ForumPage(){
 }
 
 function SettingsPage(){
+  const store=useStore();
+  const {profile,setProfile,prefs,setPrefs,patients,sessions,assessments,events,posts}=store;
   const [tab,setTab]=useState('profile');
-  const [saved,setSaved]=useState(false);
-  const save=()=>{setSaved(true);setTimeout(()=>setSaved(false),2000);};
+  const [msg,setMsg]=useState(null);
+  const [draft,setDraft]=useState(profile);
+  const [pdraft,setPdraft]=useState(prefs);
+  const fileRef=React.useRef(null);
+  useEffect(()=>{setDraft(profile);},[profile]);
+  useEffect(()=>{setPdraft(prefs);},[prefs]);
+  const flash=(type,text)=>{setMsg({type,text});setTimeout(()=>setMsg(null),3500);};
+  const saveProfile=()=>{if(!draft.name.trim()){flash('warning','O nome profissional é obrigatório.');return;}setProfile({...draft,name:draft.name.trim()});flash('success','✓ Perfil guardado!');};
+  const savePrefs=()=>{setPrefs(pdraft);flash('success','✓ Definições guardadas!');};
+  const P=(k,label,type='text')=><div className="form-group"><label>{label}</label><input type={type} value={draft[k]||''} onChange={e=>setDraft(d=>({...d,[k]:e.target.value}))}/></div>;
+  const Toggle=(k,label)=>(
+    <div key={k} style={{display:'flex',justifyContent:'space-between',alignItems:'center',padding:'12px 0',borderBottom:'1px solid #f1f5f9'}}>
+      <span style={{fontSize:14,color:'#334155'}}>{label}</span>
+      <input type="checkbox" checked={!!pdraft[k]} onChange={e=>setPdraft(d=>({...d,[k]:e.target.checked}))} style={{width:'auto',transform:'scale(1.3)'}}/>
+    </div>
+  );
+  const doExport=()=>{downloadJSON(store.exportData(),`age-in-move-backup-${todayISO()}.json`);flash('success','✓ Backup descarregado.');};
+  const doImport=e=>{
+    const file=e.target.files&&e.target.files[0]; e.target.value='';
+    if(!file) return;
+    const r=new FileReader();
+    r.onload=()=>{
+      try{
+        const json=JSON.parse(r.result);
+        const n=(json.data&&json.data.patients||[]).length;
+        if(!confirm(`Importar este backup (${n} pacientes)? Os dados atuais neste browser serão substituídos.`)) return;
+        store.importData(json);flash('success','✓ Backup importado com sucesso.');
+      }catch(err){flash('warning','Não foi possível importar: '+err.message);}
+    };
+    r.readAsText(file);
+  };
   return(
     <div className="page" style={{maxWidth:760}}>
       <h2 style={{fontSize:22,fontWeight:800,color:'#0f172a',marginBottom:4}}>Definições</h2>
-      <p style={{color:'#64748b',fontSize:14,marginBottom:20}}>Gerir perfil, notificações e preferências clínicas</p>
+      <p style={{color:'#64748b',fontSize:14,marginBottom:20}}>Gerir perfil, notificações, preferências clínicas e dados</p>
       <div className="tab-bar">
-        {[['profile','Perfil'],['clinical','Clínico'],['notifications','Notificações'],['security','Segurança']].map(([id,l])=>(
+        {[['profile','Perfil'],['clinical','Clínico'],['notifications','Notificações'],['data','Dados & Backup'],['security','Segurança']].map(([id,l])=>(
           <div key={id} className={`tab${tab===id?' active':''}`} onClick={()=>setTab(id)}>{l}</div>
         ))}
       </div>
-      {saved&&<div className="alert alert-success">✓ Definições guardadas!</div>}
+      {msg&&<div className={`alert alert-${msg.type}`}>{msg.text}</div>}
       {tab==='profile'&&(
         <div className="card">
           <div style={{display:'flex',gap:16,alignItems:'center',marginBottom:20,padding:'0 0 16px',borderBottom:'1px solid #f1f5f9'}}>
-            <div className="avatar" style={{background:'#4f46e5',width:64,height:64,fontSize:22}}>AS</div>
-            <div><div style={{fontWeight:700,fontSize:16}}>Dra. Ana Santos</div><div style={{color:'#64748b',fontSize:13}}>Neuropsicóloga · CRP 12345</div><button className="btn btn-secondary btn-sm" style={{marginTop:8}}>Alterar foto</button></div>
+            <div className="avatar" style={{background:'#4f46e5',width:64,height:64,fontSize:22}}>{initialsOf(profile.name.replace(/^(Dra?|Enf|Prof)\.?\s+/i,''))}</div>
+            <div><div style={{fontWeight:700,fontSize:16}}>{profile.name}</div><div style={{color:'#64748b',fontSize:13}}>{profile.role} · {profile.license}</div></div>
           </div>
           <div className="grid-2">
-            <div className="form-group"><label>Nome Profissional</label><input defaultValue="Dra. Ana Santos"/></div>
-            <div className="form-group"><label>Nº Cédula</label><input defaultValue="CRP 12345"/></div>
-            <div className="form-group"><label>Email</label><input type="email" defaultValue="ana.santos@gerocare.pt"/></div>
-            <div className="form-group"><label>Telefone</label><input defaultValue="+351 912 345 678"/></div>
-            <div className="form-group"><label>Especialidade</label><input defaultValue="Neuropsicologia Geriátrica"/></div>
-            <div className="form-group"><label>Instituição</label><input defaultValue="Centro de Saúde Lisboa Norte"/></div>
+            {P('name','Nome Profissional *')}
+            {P('role','Profissão')}
+            {P('license','Nº Cédula')}
+            {P('email','Email','email')}
+            {P('phone','Telefone')}
+            {P('specialty','Especialidade')}
+            {P('institution','Instituição')}
           </div>
-          <button className="btn btn-primary" onClick={save}>Guardar Alterações</button>
+          <button className="btn btn-primary" onClick={saveProfile}>Guardar Alterações</button>
         </div>
       )}
       {tab==='clinical'&&(
         <div className="card">
           <div className="card-title" style={{marginBottom:16}}>Preferências Clínicas</div>
           <div className="grid-2">
-            <div className="form-group"><label>Duração padrão</label><select defaultValue="45"><option value="30">30 min</option><option value="45">45 min</option><option value="60">60 min</option></select></div>
-            <div className="form-group"><label>Escala preferida</label><select defaultValue="mmse"><option value="mmse">MMSE</option><option value="moca">MoCA</option><option value="both">Ambas</option></select></div>
+            <div className="form-group"><label>Duração padrão da sessão</label><select value={pdraft.duration} onChange={e=>setPdraft(d=>({...d,duration:e.target.value}))}><option value="30">30 min</option><option value="45">45 min</option><option value="60">60 min</option></select></div>
+            <div className="form-group"><label>Escala preferida</label><select value={pdraft.scale} onChange={e=>setPdraft(d=>({...d,scale:e.target.value}))}><option value="mmse">MMSE</option><option value="moca">MoCA</option><option value="both">Ambas</option></select></div>
           </div>
-          {[['Recordatórios automáticos de sessões',true],['Alertas de declínio cognitivo',true],['Relatórios mensais automáticos',false]].map(([l,def])=>(
-            <div key={l} style={{display:'flex',justifyContent:'space-between',alignItems:'center',padding:'12px 0',borderBottom:'1px solid #f1f5f9'}}>
-              <span style={{fontSize:14,color:'#334155'}}>{l}</span>
-              <input type="checkbox" defaultChecked={def} style={{width:'auto',transform:'scale(1.3)'}}/>
-            </div>
-          ))}
-          <button className="btn btn-primary" style={{marginTop:16}} onClick={save}>Guardar</button>
+          {Toggle('reminders','Recordatórios automáticos de sessões')}
+          {Toggle('declineAlerts','Alertas de declínio cognitivo')}
+          {Toggle('monthlyReports','Relatórios mensais automáticos')}
+          <button className="btn btn-primary" style={{marginTop:16}} onClick={savePrefs}>Guardar</button>
         </div>
       )}
       {tab==='notifications'&&(
         <div className="card">
           <div className="card-title" style={{marginBottom:16}}>Notificações</div>
-          {[['Sessões agendadas',true],['Alertas de pacientes em risco',true],['Mensagens do fórum',false],['Atualizações da plataforma',true]].map(([l,def])=>(
-            <div key={l} style={{display:'flex',justifyContent:'space-between',alignItems:'center',padding:'12px 0',borderBottom:'1px solid #f1f5f9'}}>
-              <span style={{fontSize:14,color:'#334155'}}>{l}</span>
-              <input type="checkbox" defaultChecked={def} style={{width:'auto',transform:'scale(1.3)'}}/>
+          {Toggle('nSessions','Sessões agendadas')}
+          {Toggle('nRisk','Alertas de pacientes em risco')}
+          {Toggle('nForum','Mensagens do fórum')}
+          {Toggle('nUpdates','Atualizações da plataforma')}
+          <button className="btn btn-primary" style={{marginTop:16}} onClick={savePrefs}>Guardar</button>
+        </div>
+      )}
+      {tab==='data'&&(
+        <div>
+          <div className="card">
+            <div className="card-title" style={{marginBottom:8}}>Dados guardados neste browser</div>
+            <p style={{fontSize:13,color:'#64748b',marginBottom:14}}>Tudo o que regista fica guardado automaticamente neste browser, neste computador. Não é enviado para nenhum servidor.</p>
+            <div className="grid-4" style={{marginBottom:6}}>
+              {[['Pacientes',patients.length],['Sessões',sessions.length],['Avaliações',assessments.length],['Eventos',events.length]].map(([l,v])=>(
+                <div key={l} style={{textAlign:'center',padding:12,background:'#f8fafc',borderRadius:8,border:'1px solid #e2e8f0'}}><div style={{fontSize:24,fontWeight:800}}>{v}</div><div style={{fontSize:12,color:'#64748b'}}>{l}</div></div>
+              ))}
             </div>
-          ))}
-          <button className="btn btn-primary" style={{marginTop:16}} onClick={save}>Guardar</button>
+          </div>
+          <div className="card">
+            <div className="card-title" style={{marginBottom:8}}>Backup</div>
+            <p style={{fontSize:13,color:'#64748b',marginBottom:14}}>Limpar o histórico do browser apaga estes dados. Descarregue um backup regularmente e guarde-o em local seguro (ex.: OneDrive). Também pode usá-lo para passar os dados para outro computador.</p>
+            <div style={{display:'flex',gap:10,flexWrap:'wrap'}}>
+              <button className="btn btn-primary" onClick={doExport}>⬇ Exportar backup (JSON)</button>
+              <button className="btn btn-secondary" onClick={()=>fileRef.current&&fileRef.current.click()}>⬆ Importar backup</button>
+              <input ref={fileRef} type="file" accept="application/json,.json" style={{display:'none'}} onChange={doImport}/>
+            </div>
+          </div>
+          <div className="alert alert-warning"><strong>RGPD:</strong> estes dados são de saúde (categoria especial). Use este computador apenas com conta protegida por password e guarde os ficheiros de backup de forma cifrada. Não partilhe backups por email.</div>
+          <div className="card" style={{border:'1px solid #fecaca',background:'#fef2f2'}}>
+            <div style={{fontWeight:700,color:'#991b1b',marginBottom:10}}>⚠️ Zona de Perigo</div>
+            <div style={{display:'flex',gap:10,flexWrap:'wrap'}}>
+              <button className="btn btn-secondary btn-sm" onClick={()=>{if(confirm('Repor os dados de demonstração? Os dados atuais serão substituídos.')){store.resetDemo();flash('success','✓ Dados de demonstração repostos.');}}}>Repor dados de demonstração</button>
+              <button className="btn btn-danger btn-sm" onClick={()=>{if(confirm('Apagar TODOS os pacientes, sessões, avaliações e eventos? Recomenda-se exportar um backup antes.')&&confirm('Tem a certeza? Esta ação não pode ser desfeita.')){store.clearAll();flash('success','✓ Dados apagados. Pode começar com dados reais.');}}}>Apagar todos os dados</button>
+            </div>
+          </div>
         </div>
       )}
       {tab==='security'&&(
         <div className="card">
           <div className="card-title" style={{marginBottom:16}}>Segurança</div>
-          <div className="form-group"><label>Password Atual</label><input type="password" placeholder="••••••••"/></div>
-          <div className="form-group"><label>Nova Password</label><input type="password" placeholder="Nova password"/></div>
-          <div className="form-group"><label>Confirmar</label><input type="password" placeholder="Repetir"/></div>
-          <button className="btn btn-primary" onClick={save}>Alterar Password</button>
-          <div style={{marginTop:20,padding:16,background:'#fef2f2',borderRadius:8,border:'1px solid #fecaca'}}>
-            <div style={{fontWeight:700,color:'#991b1b',marginBottom:6}}>⚠️ Zona de Perigo</div>
-            <button className="btn btn-danger btn-sm">Eliminar conta</button>
-          </div>
+          <div className="alert alert-info">Esta versão funciona sem servidor, por isso ainda não há contas nem passwords reais. A proteção dos dados depende do acesso ao computador.</div>
         </div>
       )}
     </div>
@@ -2145,6 +2539,7 @@ function SettingsPage(){
 }
 
 function DashboardLayout({children,page,setPage,onLogout,title}){
+  const {profile}=useStore();
   return(
     <div>
       <Sidebar page={page} setPage={setPage} onLogout={onLogout}/>
@@ -2154,7 +2549,7 @@ function DashboardLayout({children,page,setPage,onLogout,title}){
           <div className="topbar-actions">
             <button className="btn btn-secondary btn-sm">🔔</button>
             <button className="btn btn-secondary btn-sm">❓</button>
-            <div className="avatar" style={{background:'#4f46e5',cursor:'pointer'}}>AS</div>
+            <div className="avatar" style={{background:'#4f46e5',cursor:'pointer'}} title="Definições" onClick={()=>setPage('settings')}>{initialsOf(profile.name.replace(/^(Dra?|Enf|Prof)\.?\s+/i,''))}</div>
           </div>
         </div>
         {children}
@@ -2163,27 +2558,35 @@ function DashboardLayout({children,page,setPage,onLogout,title}){
   );
 }
 
-function App(){
+function AppInner(){
+  const {patients}=useStore();
   const [screen,setScreen]=useState('landing');
   const [page,setPage]=useState('dashboard');
   const [selectedModule,setSelectedModule]=useState(null);
-  const [selectedPatient,setSelectedPatient]=useState(null);
+  const [selectedPatientId,setSelectedPatientId]=useState(null);
+  const selectedPatient=patients.find(p=>p.id===selectedPatientId)||null;
+  const openPatient=id=>{setSelectedPatientId(id);setPage('patient-profile');};
+  useEffect(()=>{window.scrollTo(0,0);},[page]);
   const titles={dashboard:'Dashboard',modules:'Módulos','module-detail':selectedModule?.name||'Módulo',patients:'Pacientes','patient-profile':selectedPatient?.name||'Paciente','new-patient':'Novo Paciente',calendar:'Calendário',forum:'Fórum Clínico',settings:'Definições'};
   if(screen==='landing') return <LandingPage onEnter={()=>setScreen('auth')}/>;
   if(screen==='auth') return <AuthPage onLogin={()=>setScreen('dashboard')}/>;
   return(
-    <DashboardLayout page={page} setPage={setPage} onLogout={()=>setScreen('landing')} title={titles[page]||'GeroCare Pro'}>
-      {page==='dashboard'&&<DashboardHome setPage={setPage}/>}
+    <DashboardLayout page={page} setPage={setPage} onLogout={()=>setScreen('landing')} title={titles[page]||'Age in Move'}>
+      {page==='dashboard'&&<DashboardHome setPage={setPage} openPatient={openPatient}/>}
       {page==='modules'&&<ModulesPage setPage={setPage} setSelectedModule={setSelectedModule}/>}
       {page==='module-detail'&&selectedModule&&<ModuleDetail mod={selectedModule} setPage={setPage}/>}
-      {page==='patients'&&<PatientsPage setPage={setPage} setSelectedPatient={setSelectedPatient}/>}
-      {page==='patient-profile'&&selectedPatient&&<PatientProfile patient={selectedPatient} setPage={setPage}/>}
-      {page==='new-patient'&&<NewPatientPage setPage={setPage}/>}
+      {page==='patients'&&<PatientsPage setPage={setPage} openPatient={openPatient}/>}
+      {page==='patient-profile'&&(selectedPatient?<PatientProfile key={selectedPatient.id} patient={selectedPatient} setPage={setPage}/>:<PatientsPage setPage={setPage} openPatient={openPatient}/>)}
+      {page==='new-patient'&&<NewPatientPage setPage={setPage} openPatient={openPatient}/>}
       {page==='calendar'&&<CalendarPage/>}
       {page==='forum'&&<ForumPage/>}
       {page==='settings'&&<SettingsPage/>}
     </DashboardLayout>
   );
+}
+
+function App(){
+  return <StoreProvider><AppInner/></StoreProvider>;
 }
 
 ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
