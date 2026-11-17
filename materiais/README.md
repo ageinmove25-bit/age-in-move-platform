@@ -79,3 +79,17 @@ Para trocar uma fotografia: `node fotos/procurar.js <pasta> "chave|pesquisa"`, e
   com bola pequena no assento como referência. Guia (2 páginas, nível 1 totalmente sentado) + cartão "Os 3 passos" com desenhos.
 
 Regra destes materiais: **nenhuma atividade usa alimentos**.
+
+## 📚 Versão 3 (atual): ebooks por tipo de atividade e grau de dependência
+
+9 ebooks = 3 tipos × 3 grupos (ver `ebooks/v3/colecao.js`):
+
+| | Grupo 1 / A · autónomos | Grupo 2 / B · dependência moderada | Grupo 3 / C · dependência grave |
+|---|---|---|---|
+| **Físicas** (Barthel) | Em Forma | **Corpo em Movimento** ✅ | Movimento Suave |
+| **Cognitivas** (MMSE / GDS-R) | Mente Desperta | **Mente Ativa** ✅ | Sentidos e Memórias |
+| **Combinadas** (grupo mais limitativo) | **Corpo e Mente** ✅ | Mexer e Pensar | Toque e Ritmo |
+
+✅ = já feito, em `ebooks/pdf/v3/`. Grupos físicos pelo Índice de Barthel (91–100 / 61–90 / 0–60);
+grupos cognitivos pelo MMSE ajustado à escolaridade (Morgado et al., 2009) e pela Escala de Deterioração Global de Reisberg.
+Ilustrações em `lib/ilustracoes.js`. Gerar: `node ebooks/v3/gerar.js`.
