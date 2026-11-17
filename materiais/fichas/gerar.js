@@ -83,7 +83,7 @@ table.reg{width:100%;border-collapse:collapse;font-size:10pt;margin-top:1mm}tabl
 .card .letra{font-family:Nunito,sans-serif;font-weight:800;font-size:120pt;line-height:1;color:var(--c)}
 .row.pas .fig{width:52mm;height:52mm;flex:none}
 .row.pas .e{font-size:12pt}
-.lembrar{margin-top:5mm;background:var(--cl);border-radius:4mm;padding:4mm 5mm;font-size:14pt;color:var(--ce);text-align:center}
+.lembrar{margin-top:4mm;background:var(--cl);border-radius:4mm;padding:4mm 5mm;font-size:14pt;color:var(--ce);text-align:center}
 .pg{background:var(--cl);border-radius:4mm;padding:4mm 5mm;font-size:10.5pt}
 .pg b{display:block;color:var(--ce);font-size:11pt;margin-bottom:1.5mm}
 .pg div{margin-bottom:1mm}.pg span{display:inline-block;min-width:32mm;font-weight:800;color:var(--c)}
@@ -94,6 +94,12 @@ table.placar th{background:var(--c);color:#fff;padding:3mm;font-size:15pt}
 table.placar td{border:1.5px solid #D1D5DB;height:21mm}
 table.placar td.t{background:var(--cl)}
 table.placar th:first-child{width:38%}
+.cards.cpg{gap:3.5mm;flex:none;grid-template-rows:repeat(3,58mm)}
+.card.cp{padding:2mm 3mm;justify-content:center}
+.card.cp .art{width:36mm;height:36mm}
+.card.cp .nm{font-size:14pt;margin-top:1mm}
+.card.cp .ds{font-size:10pt;color:#374151;text-align:center;line-height:1.3;margin:1mm 0 1.5mm}
+.card.cp .e{font-size:9pt;font-weight:700;color:var(--c);background:var(--cl);border-radius:10mm;padding:.5mm 3mm}
 .board .foot{bottom:6mm;left:14mm;right:14mm}
 `;
 
@@ -147,7 +153,9 @@ function build(f) {
     const c = f.cartoesPassos;
     pages.push(`<section class="page board"><div class="frame">
     <h2>${esc(c.titulo)}</h2><div class="sub">${esc(c.sub)}</div>
-    <div class="rows">${c.itens.map(it => `<div class="row pas"><div class="fig" style="color:var(--c)">${it.svg}</div><div><div class="t">${esc(it.nome)}</div><div class="d">${esc(it.desc)}</div><span class="e">⏱ ${esc(it.tempo)}</span></div></div>`).join('')}</div>
+    ${c.itens.length > 3
+      ? `<div class="cards cpg">${c.itens.map(it => `<div class="card cp"><div class="art" style="color:var(--c)">${it.svg}</div><div class="nm">${esc(it.nome)}</div><div class="ds">${esc(it.desc)}</div><span class="e">⏱ ${esc(it.tempo)}</span></div>`).join('')}</div>`
+      : `<div class="rows">${c.itens.map(it => `<div class="row pas"><div class="fig" style="color:var(--c)">${it.svg}</div><div><div class="t">${esc(it.nome)}</div><div class="d">${esc(it.desc)}</div><span class="e">⏱ ${esc(it.tempo)}</span></div></div>`).join('')}</div>`}
     <div class="lembrar"><b>Lembrar sempre:</b> ${c.lembrar.map(esc).join(' · ')}</div>
     </div>${foot()}</section>`);
     pg++;

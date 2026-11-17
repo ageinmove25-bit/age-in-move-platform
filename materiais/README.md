@@ -80,6 +80,8 @@ Para trocar uma fotografia: `node fotos/procurar.js <pasta> "chave|pesquisa"`, e
 
 - `pista-dos-pontos.pdf` — **A Pista dos Pontos** (combinada): pista de esparguetes de piscina com pratos numerados (10–100); rolar a bola com o pé ou a mão e somar os pontos.
   Inclui números para colar nos pratos e placar.
+- `duas-maos.pdf` — **Duas Mãos, Duas Tarefas** (combinada): peso leve numa mão e bola de ténis na outra, cada mão faz uma coisa diferente.
+  Cartão com 6 combinações, da mais fácil à mais difícil (incluindo regras com números).
 
 Todas as fichas indicam **para que grupos de dependência** se adequam (físico e cognitivo) e em que ebook da coleção encaixam. O registo está numa página própria.
 
