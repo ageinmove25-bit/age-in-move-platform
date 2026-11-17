@@ -92,6 +92,7 @@ Para trocar uma fotografia: `node fotos/procurar.js <pasta> "chave|pesquisa"`, e
 - `bola-no-sapato.pdf` — **A Bola no Sapato** (reabilitação após AVC, só com fisioterapeuta): disco de plástico preso ao sapato com uma bola em cima, como aviso para controlar o pé durante a marcha.
 - `postits-parkinson.pdf` — **5 Exercícios com Post-its** (doença de Parkinson): post-its como alvos para movimentos amplos — alvos na parede, levantar e rodar, levantar a anca sentado, passo à frente e atrás, marcha com pés afastados.
 - `trave-do-equilibrio.pdf` — **A Trave do Equilíbrio** (física): equilíbrio dinâmico numa "trave" de fita-cola ou toalha — andar com garrafas, rolar a bola aos cones, apanhar cones.
+- `pe-que-nao-arrasta.pdf` — **O Pé que Não Arrasta** (pé pendente, só com fisioterapeuta): passar cones e bloco, joelho à frente, pontas para cima na parede, descolar da parede.
 
 Todas as fichas indicam **para que grupos de dependência** se adequam (físico e cognitivo) e em que ebook da coleção encaixam. O registo está numa página própria.
 
