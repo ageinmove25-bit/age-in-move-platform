@@ -1,4 +1,4 @@
-# Age in Move — Plataforma Clínica GeroCare Pro
+# Age in Move — Plataforma Clínica
 
 > **"idade em movimento"** · @age_in_move
 
@@ -9,6 +9,8 @@ Plataforma clínica integrada de **exercício físico** e **estimulação cognit
 - 🧠 **6 módulos cognitivos** — Memória, Linguagem, Executivas, Espacial, Visuo-Espacial, Praxias
 - 🏃 **5 módulos físicos** — Equilíbrio, Força, Mobilidade, Aeróbico, Coordenação
 - 📊 **Dashboard clínico** com alertas de risco e escalas validadas (MMSE, MoCA, GDS, Barthel)
+- 📈 **Gráficos de evolução** das escalas por paciente
+- 💾 **Dados guardados no browser** com exportação/importação de backup
 - 👥 **Gestão de pacientes** — historial, avaliações, sessões, cuidadores
 - 📅 **Calendário clínico** com agendamento de sessões
 - 💬 **Fórum profissional** para partilha clínica
@@ -36,12 +38,13 @@ age-in-move-platform/
 ├── index.html          # Aplicação completa (self-contained)
 ├── README.md           # Esta documentação
 ├── CHANGELOG.md        # Histórico de alterações
-└── backups/            # Versões anteriores
+└── backup.bat          # Script de backup local (Windows)
 ```
 
 ## Tecnologias
 
-- React 18 (CDN)
+- React 18.3.1 (CDN, versão de produção)
+- Babel Standalone 7.24.7 (JSX no browser)
 - jsPDF 2.5 (geração de PDF real)
 - CSS puro (sem frameworks)
 - HTML5 Canvas (logótipo Age in Move)

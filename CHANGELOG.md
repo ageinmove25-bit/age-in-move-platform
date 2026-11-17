@@ -1,5 +1,22 @@
 # Changelog — Age in Move Platform
 
+## [1.2.0] — 2026-11-17
+
+### Marca Age in Move
+- "GeroCare Pro" substituído por **Age in Move · idade em movimento** em toda a interface, nas fichas HTML e nos PDFs
+- Paleta laranja (#FF6200 / #EE2800) nos botões, menus, separadores, calendário e landing page
+- Logótipo Age in Move na landing page, no rodapé e no ecrã de login
+- Emails de exemplo passam para `@exemplo.pt` (removido o domínio gerocarepro.pt)
+
+### Gráficos de evolução
+- Novo cartão **Evolução das Escalas** no separador Avaliações do paciente (MMSE, MoCA, GDS-15, Barthel)
+- Linhas de referência clínica (pontos de corte), variação desde a primeira avaliação e detalhe ao passar o rato
+
+### Limpeza e desempenho
+- React passa para as versões de produção (mais rápidas) e todas as bibliotecas ficam com versão fixa (React 18.3.1, Babel 7.24.7, jsPDF 2.5.1)
+- Ecrã "A carregar…" com a marca enquanto a aplicação arranca
+- Removido o ficheiro duplicado `índex base.html` (continua disponível no histórico do Git)
+
 ## [1.1.0] — 2026-11-17
 
 ### Persistência de dados
