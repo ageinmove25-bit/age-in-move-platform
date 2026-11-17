@@ -88,6 +88,7 @@ Para trocar uma fotografia: `node fotos/procurar.js <pasta> "chave|pesquisa"`, e
 - `caras-divertidas.pdf` — **Caras Divertidas** (combinada): segurar uma cara de cartão à frente do rosto e pôr olhos, nariz e boca sem ver.
   Inclui 12 peças para recortar e o molde da cara.
 - `circuito-das-maos.pdf` — **Circuito das Mãos** (física): 5 estações de motricidade fina com materiais baratos (pinça e rolhas, pompons na grelha, "come-come" com bola de ténis, tesouros na plasticina, pompons entre os dedos).
+- `equilibrio-sem-aborrecer.pdf` — **Equilíbrio sem Aborrecer** (física): circuito de 5 estações, de sentado a levantar do chão (esta só com fisioterapeuta).
 
 Todas as fichas indicam **para que grupos de dependência** se adequam (físico e cognitivo) e em que ebook da coleção encaixam. O registo está numa página própria.
 
