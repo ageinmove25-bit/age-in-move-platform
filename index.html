@@ -869,33 +869,29 @@ function makePDF(mod, singleEx){
 
   // ── Cabeçalho de cada página ──────────────────────────────────────────────
   const header=()=>{
-    // Gradiente simulado com dois rectângulos
-    doc.setFillColor(...BRAND);
-    doc.rect(0,0,W,12,'F');
-    doc.setFillColor(109,76,224);
-    doc.rect(0,0,W*0.4,12,'F');
-    doc.setFillColor(...BRAND);
-    doc.rect(0,0,W*0.4,12,'F'); // overlay para suavizar
+    // Cabeçalho sem faixa de fundo: logo e textos sobre o branco da página
 
     // Logo (miniatura)
     try{ doc.addImage(logo,'PNG',ML-1,0.8,10,10); }catch(e){}
 
     // Nome da marca
-    doc.setTextColor(255,255,255);
+    doc.setTextColor(...BRAND);
     doc.setFontSize(10);
     doc.setFont('helvetica','bold');
     doc.text('Age in Move',ML+11,5.5);
     // Slogan
     doc.setFont('helvetica','italic');
     doc.setFontSize(7.5);
+    doc.setTextColor(...CG);
     doc.text('idade em movimento  |  @age_in_move',ML+11,10);
     // Separador vertical
-    doc.setDrawColor(255,255,255,0.3);
+    doc.setDrawColor(...CB);
     doc.setLineWidth(0.3);
     doc.line(ML+62,1.5,ML+62,10.5);
     // Age in Move (direita)
     doc.setFont('helvetica','normal');
     doc.setFontSize(7.5);
+    doc.setTextColor(...CG);
     doc.text('Age in Move  |  Protocolo Clinico',W-MR,7,{align:'right'});
     y=17;
   };
