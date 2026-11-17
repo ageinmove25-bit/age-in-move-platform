@@ -84,6 +84,7 @@ Para trocar uma fotografia: `node fotos/procurar.js <pasta> "chave|pesquisa"`, e
   Cartão com 6 combinações, da mais fácil à mais difícil (incluindo regras com números).
 - `escada-das-decisoes.pdf` — **A Escada das Decisões** (combinada): escada de fita-cola no chão com setas; em cada casa, decidir e dar o passo certo.
   Versão de pé (Grupo 1) e sentada (Grupo 2). Cartão de montagem + 6 cartões de setas.
+- `tres-com-a-bola.pdf` — **Três com a Bola** (física): sentado, com bola pequena — passar por baixo da perna, pressionar com o pé, rolar em linha reta.
 
 Todas as fichas indicam **para que grupos de dependência** se adequam (físico e cognitivo) e em que ebook da coleção encaixam. O registo está numa página própria.
 
