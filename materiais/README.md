@@ -116,3 +116,12 @@ Regra destes materiais: **nenhuma atividade usa alimentos**.
 ✅ = já feito, em `ebooks/pdf/v3/`. Grupos físicos pelo Índice de Barthel (91–100 / 61–90 / 0–60);
 grupos cognitivos pelo MMSE ajustado à escolaridade (Morgado et al., 2009) e pela Escala de Deterioração Global de Reisberg.
 Ilustrações em `lib/ilustracoes.js`. Gerar: `node ebooks/v3/gerar.js`.
+
+## 📕 Volumes (ebooks que juntam fichas) — `volumes/pdf/`
+
+- `parkinson-e-avc.pdf` — **Parkinson e AVC**: capa, introdução (dicas práticas para cada condição), índice e as fichas
+  5 Exercícios com Post-its · Coordenação em Parkinson · Não Cair para Trás · A Bola no Sapato · O Pé que Não Arrasta.
+
+**Para acrescentar fichas a um volume:** juntar o nome da ficha (ficheiro em `fichas/`, sem `.js`) à lista `fichas`
+da secção certa em `volumes/colecoes.js` e correr `node fichas/gerar.js && node volumes/gerar.js`.
+O índice e os números de página atualizam-se sozinhos. Para criar um volume novo, copiar um bloco em `colecoes.js`.
