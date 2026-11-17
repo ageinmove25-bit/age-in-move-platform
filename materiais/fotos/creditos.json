@@ -1,28 +1,4 @@
 {
- "bolorei": {
-  "titulo": "File:Bolo Rei - Natal.JPG",
-  "autor": "José Conçalves",
-  "licenca": "CC BY-SA 3.0",
-  "pagina": "https://commons.wikimedia.org/wiki/File%3ABolo_Rei_-_Natal.JPG"
- },
- "rabanadas": {
-  "titulo": "File:French toast 003.jpg",
-  "autor": "Ocdp",
-  "licenca": "CC0",
-  "pagina": "https://commons.wikimedia.org/wiki/File%3AFrench_toast_003.jpg"
- },
- "filhoses": {
-  "titulo": "File:Filhós.jpg",
-  "autor": "Catmatias",
-  "licenca": "CC BY-SA 4.0",
-  "pagina": "https://commons.wikimedia.org/wiki/File%3AFilh%C3%B3s.jpg"
- },
- "sardinhas": {
-  "titulo": "File:Grilled Sardines 5.50€ Marisqueira O Varino Nazaré (3785526688).jpg",
-  "autor": "Yusuke Kawasaki from Tokyo, Japan",
-  "licenca": "CC BY 2.0",
-  "pagina": "https://commons.wikimedia.org/wiki/File%3AGrilled_Sardines_5.50%E2%82%AC_Marisqueira_O_Varino_Nazar%C3%A9_(3785526688).jpg"
- },
  "presepio": {
   "titulo": "File:Lapinha e presépio tradicional em escadinha, Lombo dos Palheiros, São Roque do Faial, Madeira- 2017-12-31 - IMG 6208.jpg",
   "autor": "Paulo SP/ Wikimedia",
@@ -47,47 +23,17 @@
   "licenca": "CC BY-SA 3.0",
   "pagina": "https://commons.wikimedia.org/wiki/File%3AChristmas_Bells_18.jpg"
  },
- "arrozdoce": {
-  "titulo": "File:Rice pudding spoons.jpg",
-  "autor": "Daniel Lobo",
-  "licenca": "CC BY-SA 2.0",
-  "pagina": "https://commons.wikimedia.org/wiki/File%3ARice_pudding_spoons.jpg"
- },
  "praia": {
   "titulo": "File:Sesimbra Beach.jpg",
   "autor": "culebrense",
   "licenca": "CC BY 2.0",
   "pagina": "https://commons.wikimedia.org/wiki/File%3ASesimbra_Beach.jpg"
  },
- "melancia": {
-  "titulo": "File:Liat Portal for Foodie Disorder - Watermelon slices.jpg",
-  "autor": "HaJunkiyada",
-  "licenca": "CC BY-SA 4.0",
-  "pagina": "https://commons.wikimedia.org/wiki/File%3ALiat_Portal_for_Foodie_Disorder_-_Watermelon_slices.jpg"
- },
- "gelado": {
-  "titulo": "File:It's time to have ice cream on the beach.jpg",
-  "autor": "Andy Li",
-  "licenca": "CC0",
-  "pagina": "https://commons.wikimedia.org/wiki/File%3AIt's_time_to_have_ice_cream_on_the_beach.jpg"
- },
- "mesa": {
-  "titulo": "File:Christmas Eve dinner table with Christmas food 02.jpg",
-  "autor": "Chris Olszewski",
-  "licenca": "CC BY-SA 4.0",
-  "pagina": "https://commons.wikimedia.org/wiki/File%3AChristmas_Eve_dinner_table_with_Christmas_food_02.jpg"
- },
  "capa-maos": {
   "titulo": "File:Details of the hands of an elderly woman crocheting a curtain 02.jpg",
   "autor": "Miluša Snidová",
   "licenca": "CC BY-SA 4.0",
   "pagina": "https://commons.wikimedia.org/wiki/File%3ADetails_of_the_hands_of_an_elderly_woman_crocheting_a_curtain_02.jpg"
- },
- "feijao": {
-  "titulo": "File:Liat Portal for Foodie Disorder - Assorted Legumes.jpg",
-  "autor": "HaJunkiyada",
-  "licenca": "CC BY-SA 4.0",
-  "pagina": "https://commons.wikimedia.org/wiki/File%3ALiat_Portal_for_Foodie_Disorder_-_Assorted_Legumes.jpg"
  },
  "molas": {
   "titulo": "File:Clothespins on the Clotheslines.jpg",
@@ -107,12 +53,6 @@
   "licenca": "CC0",
   "pagina": "https://commons.wikimedia.org/wiki/File%3AEuro_coins_line.jpg"
  },
- "massa": {
-  "titulo": "File:Fusilli and Penne Pasta.jpg",
-  "autor": "Rubel Das",
-  "licenca": "CC0",
-  "pagina": "https://commons.wikimedia.org/wiki/File%3AFusilli_and_Penne_Pasta.jpg"
- },
  "frascos": {
   "titulo": "File:Home canning jars, lids and rings.jpg",
   "autor": "Nutrition, Food Safety & Health",
@@ -131,10 +71,40 @@
   "licenca": "CC BY 2.0",
   "pagina": "https://commons.wikimedia.org/wiki/File%3ABrown_gift_box_with_red_ribbon_and_bow.jpg"
  },
- "bacalhau": {
-  "titulo": "File:Salted Cod - Alma, Lisbon (52740748403).jpg",
-  "autor": "Haydn Blackey from Cardiff, Wales",
-  "licenca": "CC BY-SA 2.0",
-  "pagina": "https://commons.wikimedia.org/wiki/File%3ASalted_Cod_-_Alma%2C_Lisbon_(52740748403).jpg"
+ "novelo": {
+  "titulo": "File:A ball of yarn.jpg",
+  "autor": "Сергей Михель",
+  "licenca": "CC0",
+  "pagina": "https://commons.wikimedia.org/wiki/File%3AA_ball_of_yarn.jpg"
+ },
+ "chinelos": {
+  "titulo": "File:Zombies flip flops.jpg",
+  "autor": "Peachyeung316",
+  "licenca": "CC BY-SA 4.0",
+  "pagina": "https://commons.wikimedia.org/wiki/File%3AZombies_flip_flops.jpg"
+ },
+ "chapeu": {
+  "titulo": "File:Sun Hat hanged on a wall.jpg",
+  "autor": "mycurrency.com",
+  "licenca": "CC BY-SA 4.0",
+  "pagina": "https://commons.wikimedia.org/wiki/File%3ASun_Hat_hanged_on_a_wall.jpg"
+ },
+ "botoes": {
+  "titulo": "File:29256 Grand Canyon National Park 1893 Miner's Sewing Kit (7029920269).jpg",
+  "autor": "Grand Canyon National Park",
+  "licenca": "CC BY 2.0",
+  "pagina": "https://commons.wikimedia.org/wiki/File%3A29256_Grand_Canyon_National_Park_1893_Miner's_Sewing_Kit_(7029920269).jpg"
+ },
+ "postal": {
+  "titulo": "File:Greeting Card Christmas 1940.jpg",
+  "autor": "Desconhecido",
+  "licenca": "CC BY-SA 4.0",
+  "pagina": "https://commons.wikimedia.org/wiki/File%3AGreeting_Card_Christmas_1940.jpg"
+ },
+ "cachecol": {
+  "titulo": "File:Knitted-scarf.jpg",
+  "autor": "AbbieCall",
+  "licenca": "CC BY-SA 4.0",
+  "pagina": "https://commons.wikimedia.org/wiki/File%3AKnitted-scarf.jpg"
  }
 }

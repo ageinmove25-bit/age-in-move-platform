@@ -54,7 +54,7 @@ Novo modelo, para **animadores e auxiliares**, adaptado a pessoas autónomas, co
 com demência ligeira a moderada e residentes em lar (tudo sentado).
 
 - `ebooks/pdf/v2/Vol7-praxia-fina.pdf` — **Mãos Ativas** (Praxia Fina): 6 atividades com materiais de casa
-  (feijão, molas, panos, moedas, massa, frascos), cada uma com fotografia, custo, o que preparar, passo a passo
+  (botões, molas, panos, moedas, lã, frascos — sem alimentos), cada uma com fotografia, custo, o que preparar, passo a passo
   com **o que fazer** e **o que dizer**, 3 níveis (mais apoio / algum apoio / autónomos), segurança e o que fazer se correr mal.
 - `powerpoints/pptx/v2/natal-em-familia.pptx` — **Natal em Família**: fotografias reais grandes, uma ideia por diapositivo,
   2–3 opções no máximo, resposta mostrada logo a seguir, notas com o que dizer e como adaptar,
@@ -66,3 +66,10 @@ Conteúdos: `ebooks/v2/*.js` e `powerpoints/v2/*.js`. Gerar: `node ebooks/v2/ger
 Fotografias do Wikimedia Commons com licenças livres (CC0, CC BY, CC BY-SA), em `fotos/img/`.
 Autor e licença de cada uma em `fotos/creditos.json`; os créditos aparecem no fim de cada ebook e PowerPoint e **não devem ser removidos**.
 Para trocar uma fotografia: `node fotos/procurar.js <pasta> "chave|pesquisa"`, escolher, editar `fotos/escolhidas.json` e correr `node fotos/descarregar.js`.
+
+### Fichas de atividade (`fichas/pdf/`)
+- `lanca-o-dado.pdf` — **Lança o Dado**: jogo de grupo com exercícios sentados (dado grande de espuma + tabuleiro).
+  Guia do animador (2 páginas, com 3 níveis, variantes e registo) + tabuleiro "Dado dos Exercícios" + tabuleiro "Dado das Palavras"
+  para dupla tarefa. Imprimir os tabuleiros em A3 se possível. Conteúdo em `fichas/lanca-o-dado.js`; gerar com `node fichas/gerar.js`.
+
+Regra destes materiais: **nenhuma atividade usa alimentos**.
