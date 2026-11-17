@@ -1,5 +1,12 @@
 # Changelog — Age in Move Platform
 
+## [1.1.0] — 2026-11-17
+
+### Materiais
+- 7 ebooks em PDF — Coleção "Fatores Psicomotores" (Tonicidade, Equilibração, Lateralização, Noção do Corpo, Estruturação Espácio-Temporal, Praxia Global, Praxia Fina), 6 atividades cognitivo-motoras cada, com ficha de registo
+- 6 PowerPoints temáticos para sessões de grupo (Santos Populares, Viagem por Portugal, Na Cozinha da Avó, As Quatro Estações, Música e Memórias, Natal em Família), com respostas nas notas do orador
+- Geradores editáveis (`materiais/ebooks/dados.js`, `materiais/powerpoints/temas.js`)
+
 ## [1.0.0] — 2026-06-06
 
 ### Lançamento inicial
