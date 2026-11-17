@@ -100,6 +100,10 @@ table.placar th:first-child{width:38%}
 .card.cp .nm{font-size:14pt;margin-top:1mm}
 .card.cp .ds{font-size:10pt;color:#374151;text-align:center;line-height:1.3;margin:1mm 0 1.5mm}
 .card.cp .e{font-size:9pt;font-weight:700;color:var(--c);background:var(--cl);border-radius:10mm;padding:.5mm 3mm}
+.card.rc .art{width:48mm;height:48mm}
+.card.rc .nm{font-size:13pt;color:var(--muted);margin-top:1mm}
+.molde{flex:1;display:flex;align-items:center;justify-content:center}
+.molde svg{width:100%;height:100%}
 .board .foot{bottom:6mm;left:14mm;right:14mm}
 `;
 
@@ -180,8 +184,16 @@ function build(f) {
     pg++;
   }
   for (const c of f.cartoes || []) {
+    if (c.molde) {
+      pages.push(`<section class="page board"><div class="frame">
+      <h2>${esc(c.titulo)}</h2><div class="sub">${esc(c.sub)}</div>
+      <div class="molde">${c.molde}</div>
+      </div>${foot()}</section>`);
+      pg++;
+      continue;
+    }
     const cards = c.itens
-      ? c.itens.map(it => `<div class="card"><div class="art">${it.svg}</div><div class="nm">${esc(it.nome)}</div></div>`).join('')
+      ? c.itens.map(it => `<div class="card${c.recortar ? ' cut rc' : ''}"><div class="art">${it.svg}</div><div class="nm">${esc(it.nome)}</div></div>`).join('')
       : c.letras.map(l => `<div class="card"><div class="letra">${esc(l)}</div></div>`).join('');
     pages.push(`<section class="page board"><div class="frame">
     <h2>${esc(c.titulo)}</h2><div class="sub">${esc(c.sub)}</div>
