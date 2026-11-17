@@ -797,18 +797,18 @@ function getAgeInMoveLogo(size=320){
 
   // Sombra exterior suave
   ctx.save();
-  ctx.shadowColor='rgba(160,30,0,.30)';
+  ctx.shadowColor='rgba(30,30,140,.32)';
   ctx.shadowBlur=s*.07;
   ctx.shadowOffsetX=s*.025;
   ctx.shadowOffsetY=s*.035;
 
-  // Gradiente principal laranja-dourado → vermelho-laranja
+  // Gradiente principal azul → violeta (degradé azul-violeta da v1.0: #2563EB → #7C3AED)
   const gMain=ctx.createRadialGradient(cx-s*.12,cy-s*.14,s*.01, cx+s*.04,cy+s*.06,s*.52);
-  gMain.addColorStop(0.00,'#FFE040'); // dourado brilhante
-  gMain.addColorStop(0.18,'#FFAA00'); // laranja cálido
-  gMain.addColorStop(0.50,'#FF6200'); // laranja intenso
-  gMain.addColorStop(0.82,'#EE2800'); // vermelho-laranja
-  gMain.addColorStop(1.00,'#C01800'); // vermelho escuro borda
+  gMain.addColorStop(0.00,'#BFD4FF'); // azul muito claro (brilho)
+  gMain.addColorStop(0.18,'#6E9BFF'); // azul claro
+  gMain.addColorStop(0.50,'#2563EB'); // azul principal
+  gMain.addColorStop(0.82,'#5B3FE0'); // azul-violeta
+  gMain.addColorStop(1.00,'#7C3AED'); // violeta borda
   ctx.fillStyle=gMain;
   blobPath();
   ctx.fill();
@@ -819,9 +819,9 @@ function getAgeInMoveLogo(size=320){
   ctx.save();
   ctx.clip();
   const gHL=ctx.createRadialGradient(cx-s*.20,cy-s*.22,0, cx-s*.06,cy-s*.10,s*.42);
-  gHL.addColorStop(0.00,'rgba(255,255,220,.60)');
-  gHL.addColorStop(0.30,'rgba(255,210,120,.20)');
-  gHL.addColorStop(0.70,'rgba(255,180, 80,.06)');
+  gHL.addColorStop(0.00,'rgba(235,242,255,.60)');
+  gHL.addColorStop(0.30,'rgba(190,210,255,.20)');
+  gHL.addColorStop(0.70,'rgba(160,185,255,.06)');
   gHL.addColorStop(1.00,'rgba(255,255,255,.00)');
   ctx.fillStyle=gHL;
   ctx.fillRect(0,0,s,s);

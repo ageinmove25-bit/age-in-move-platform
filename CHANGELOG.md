@@ -1,5 +1,10 @@
 # Changelog — Age in Move Platform
 
+## [1.2.1] — 2026-11-17
+
+### Logótipo
+- Logótipo Age in Move passa ao degradé **azul-violeta** estabelecido (azul #2563EB → violeta #7C3AED), em todas as vistas e nos PDFs
+
 ## [1.2.0] — 2026-11-17
 
 ### Marca Age in Move
