@@ -347,7 +347,7 @@ const MODULES=[
 ];
 
 const SAMPLE_PATIENTS=[
-  {id:1,name:'Maria Conceição Silva',age:78,gender:'F',diagnosis:'DCL - Défice Cognitivo Ligeiro',phone:'912345678',email:'maria.silva@email.pt',caregiver:'Ana Silva (filha)',module:1,sessions:12,nextSession:'2026-06-08',risk:'medium',mmse:24,gds:6,barthel:85,notes:'Boa adesão à terapia. Dificuldade em tarefas de atenção dividida.',avatar:'#4f46e5',initials:'MS'},
+  {id:1,name:'Maria Conceição Silva',age:78,gender:'F',diagnosis:'DCL - Défice Cognitivo Ligeiro',phone:'912345678',email:'maria.silva@email.pt',caregiver:'Ana Silva (filha)',module:1,sessions:12,nextSession:'2026-06-08',risk:'medium',mmse:24,gds:6,barthel:85,notes:'Boa adesão à terapia. Dificuldade em tarefas de atenção dividida.',avatar:'#4f46e5',initials:'MS',plan:[{uid:1,exId:801,version:'standard',frequency:'3week',dose:'2 séries de 5 levantamentos'},{uid:2,exId:701,version:'simples',frequency:'daily',dose:'Junto à bancada da cozinha'},{uid:3,exId:101,version:'criativa',frequency:'3week',dose:'Com a filha Ana'}]},
   {id:2,name:'António Ferreira Costa',age:82,gender:'M',diagnosis:'Doença de Alzheimer leve',phone:'923456789',email:'antonio.costa@email.pt',caregiver:'João Costa (filho)',module:2,sessions:24,nextSession:'2026-06-10',risk:'high',mmse:18,gds:10,barthel:70,notes:'Necessita supervisão contínua. Confusão ao fim do dia.',avatar:'#0891b2',initials:'AC'},
   {id:3,name:'Rosa Pereira Nunes',age:74,gender:'F',diagnosis:'Envelhecimento Normal',phone:'934567890',email:'rosa.nunes@email.pt',caregiver:'Manuel Nunes (marido)',module:3,sessions:5,nextSession:'2026-06-12',risk:'low',mmse:28,gds:3,barthel:100,notes:'Participante motivada. Ótima evolução.',avatar:'#059669',initials:'RN'},
   {id:4,name:'José Manuel Rodrigues',age:85,gender:'M',diagnosis:'DCM - Défice Cognitivo Moderado',phone:'945678901',email:'jose.rodrigues@email.pt',caregiver:'Filomena Rodrigues (esposa)',module:1,sessions:18,nextSession:'2026-06-07',risk:'high',mmse:16,gds:12,barthel:60,notes:'Agitação vespertina. Medicação ajustada recentemente.',avatar:'#d97706',initials:'JR'},
@@ -923,6 +923,24 @@ const pt=s=>(s||'')
   .replace(/—/g,'-').replace(/→/g,'->').replace(/←/g,'<-')
   .replace(/[✓✗□✨🟢📋📅📦📚📊]/g,'');
 
+// ─── Cabeçalho e rodapé comuns a todos os PDFs Age in Move ─────────────────
+// Sem faixa: à esquerda logo + nome, à direita "idade em movimento | @age_in_move"
+const PDF_BRAND=[52,72,197], PDF_GREY=[100,116,139];
+function drawBrandHeader(doc,{W,ML,MR}){
+  try{ doc.addImage(getLogo(),'PNG',ML-1,0.8,10,10); }catch(e){}
+  doc.setTextColor(...PDF_BRAND);doc.setFontSize(11);doc.setFont('helvetica','bold');
+  doc.text('Age in Move',ML+11,7.2);
+  doc.setFont('helvetica','italic');doc.setFontSize(8);doc.setTextColor(...PDF_GREY);
+  doc.text('idade em movimento  |  @age_in_move',W-MR,7.2,{align:'right'});
+}
+function drawBrandFooter(doc,{W,H,ML,MR}){
+  try{ doc.addImage(getLogo(),'PNG',ML-1,H-11.8,10,10); }catch(e){}
+  doc.setTextColor(...PDF_BRAND);doc.setFontSize(11);doc.setFont('helvetica','bold');
+  doc.text('Age in Move',ML+11,H-5.4);
+  doc.setFont('helvetica','italic');doc.setFontSize(8);doc.setTextColor(...PDF_GREY);
+  doc.text('idade em movimento  |  @age_in_move',W-MR,H-5.4,{align:'right'});
+}
+
 function makePDF(mod, singleEx){
   if(!window.jspdf){alert('A biblioteca PDF ainda esta a carregar. Aguarde e tente novamente.');return null;}
   const {jsPDF}=window.jspdf;
@@ -943,38 +961,10 @@ function makePDF(mod, singleEx){
   const logo=getLogo();
 
   // ── Cabeçalho de cada página ──────────────────────────────────────────────
-  const header=()=>{
-    // Cabeçalho sem faixa: à esquerda logo + nome, à direita slogan + @
-
-    // Logo (miniatura)
-    try{ doc.addImage(logo,'PNG',ML-1,0.8,10,10); }catch(e){}
-
-    // Esquerda: logo + nome
-    doc.setTextColor(...BRAND);
-    doc.setFontSize(11);
-    doc.setFont('helvetica','bold');
-    doc.text('Age in Move',ML+11,7.2);
-    // Direita: slogan + handle
-    doc.setFont('helvetica','italic');
-    doc.setFontSize(8);
-    doc.setTextColor(...CG);
-    doc.text('idade em movimento  |  @age_in_move',W-MR,7.2,{align:'right'});
-    y=17;
-  };
+  const header=()=>{drawBrandHeader(doc,{W,ML,MR});y=17;};
 
   // ── Rodapé de cada página ─────────────────────────────────────────────────
-  const footer=()=>{
-    // Rodapé igual ao cabeçalho: sem faixa, logo + nome à esquerda, slogan + @ à direita
-    try{ doc.addImage(logo,'PNG',ML-1,H-11.8,10,10); }catch(e){}
-    doc.setTextColor(...BRAND);
-    doc.setFontSize(11);
-    doc.setFont('helvetica','bold');
-    doc.text('Age in Move',ML+11,H-5.4);
-    doc.setFont('helvetica','italic');
-    doc.setFontSize(8);
-    doc.setTextColor(...CG);
-    doc.text('idade em movimento  |  @age_in_move',W-MR,H-5.4,{align:'right'});
-  };
+  const footer=()=>drawBrandFooter(doc,{W,H,ML,MR});
 
   // ── Nova página ───────────────────────────────────────────────────────────
   const newPage=()=>{footer();doc.addPage();header();};
@@ -1280,6 +1270,244 @@ function exportExercisePDF(ex,mod){
 }
 
 // Manter compatibilidade (HTML preview ainda disponível via botão separado se necessário)
+// ─── PDFs DO PACIENTE: relatório clínico e ficha de exercícios para casa ──────
+const PLAN_FREQ={daily:'Todos os dias','5week':'5x por semana','3week':'3x por semana','2week':'2x por semana',weekly:'1x por semana'};
+const PLAN_VERSION={standard:'Standard',simples:'Simples',criativa:'Criativa'};
+function findExercise(exId){
+  for(const m of MODULES){const ex=(m.exercises_list||[]).find(e=>e.id===exId);if(ex)return {ex,mod:m};}
+  return null;
+}
+function planInstructions(item){
+  const f=findExercise(item.exId); if(!f) return '';
+  if(item.version==='simples'||item.version==='criativa'){
+    const v=getVariants(f.ex,f.mod)||{};
+    const t=item.version==='simples'?v.s:v.c;
+    if(t) return t;
+  }
+  return f.ex.instructions||'';
+}
+function scaleLabel(scale,v){
+  if(v==null) return '';
+  if(scale==='mmse') return v>=27?'Normal':v>=24?'DCL possivel':'Defice';
+  if(scale==='moca') return v>=26?'Normal':'Defice cognitivo';
+  if(scale==='gds') return v<=5?'Sem depressao':v<=10?'Depressao leve':'Depressao grave';
+  if(scale==='barthel') return v>=95?'Independente':v>=75?'Dependencia leve':'Dependencia moderada';
+  return '';
+}
+const riskText=r=>r==='high'?'Alto':r==='medium'?'Medio':'Baixo';
+const genderText=g=>g==='F'?'Feminino':g==='M'?'Masculino':'Outro';
+
+function newBrandedDoc(){
+  if(!window.jspdf){alert('A biblioteca PDF ainda esta a carregar. Aguarde e tente novamente.');return null;}
+  const {jsPDF}=window.jspdf;
+  const doc=new jsPDF('p','mm','a4');
+  const g={doc,W:210,H:297,ML:16,MR:16,y:17};
+  g.cw=g.W-g.ML-g.MR;
+  g.header=()=>{drawBrandHeader(doc,g);g.y=20;};
+  g.footer=()=>drawBrandFooter(doc,g);
+  g.newPage=()=>{g.footer();doc.addPage();g.header();};
+  g.check=need=>{if(g.y+need>g.H-16)g.newPage();};
+  g.finish=()=>{
+    const n=doc.getNumberOfPages();
+    for(let i=1;i<=n;i++){doc.setPage(i);if(i===n)g.footer();doc.setFont('helvetica','normal');doc.setFontSize(7.5);doc.setTextColor(...PDF_GREY);doc.text(`${i}/${n}`,g.W/2,g.H-5.4,{align:'center'});}
+    return doc;
+  };
+  g.header();
+  return g;
+}
+function pdfSection(g,title){
+  g.y+=4;g.check(16);
+  g.doc.setTextColor(...PDF_BRAND);g.doc.setFontSize(11.5);g.doc.setFont('helvetica','bold');
+  g.doc.text(pt(title),g.ML,g.y);
+  g.doc.setDrawColor(169,139,234);g.doc.setLineWidth(0.5);g.doc.line(g.ML,g.y+2,g.ML+g.cw,g.y+2);
+  g.y+=8;
+}
+function pdfParagraph(g,text,size=9.5,color=[26,32,44]){
+  const {doc}=g;doc.setFont('helvetica','normal');doc.setFontSize(size);doc.setTextColor(...color);
+  const lines=doc.splitTextToSize(pt(text),g.cw);
+  const lh=size*0.42;
+  lines.forEach(l=>{g.check(lh+1);doc.text(l,g.ML,g.y);g.y+=lh;});
+  g.y+=2;
+}
+function pdfTable(g,cols,rows,widths){
+  const {doc}=g;const rowH=7;
+  const head=()=>{doc.setFillColor(238,241,255);doc.rect(g.ML,g.y,g.cw,rowH,'F');doc.setTextColor(...PDF_BRAND);doc.setFontSize(7.5);doc.setFont('helvetica','bold');
+    let x=g.ML;cols.forEach((c,i)=>{doc.text(pt(c),x+2,g.y+4.8);x+=widths[i];});g.y+=rowH;};
+  g.check(rowH*2);head();
+  rows.forEach((r,ri)=>{
+    const cells=r.map((c,i)=>doc.splitTextToSize(pt(String(c??'—')),widths[i]-4));
+    const h=Math.max(rowH,Math.max(...cells.map(c=>c.length))*3.6+3.4);
+    if(g.y+h>g.H-16){g.newPage();head();}
+    if(ri%2===1){doc.setFillColor(248,250,252);doc.rect(g.ML,g.y,g.cw,h,'F');}
+    doc.setTextColor(26,32,44);doc.setFontSize(8);doc.setFont('helvetica','normal');
+    let x=g.ML;cells.forEach((c,i)=>{doc.text(c,x+2,g.y+4.8);x+=widths[i];});
+    doc.setDrawColor(226,232,240);doc.setLineWidth(0.2);doc.line(g.ML,g.y+h,g.ML+g.cw,g.y+h);
+    g.y+=h;
+  });
+  g.y+=4;
+}
+// Gráfico de linha simples desenhado diretamente no PDF
+function pdfScaleChart(g,scale,points){
+  const {doc}=g;const max=SCALES[scale].max;const band=SCALE_BANDS[scale];
+  const h=38,w=g.cw,x0=g.ML+10,x1=g.ML+w-4,y0=g.y+4,y1=g.y+h-6;
+  g.check(h+10);
+  doc.setFont('helvetica','bold');doc.setFontSize(9);doc.setTextColor(26,32,44);
+  const last=points[points.length-1].value,first=points[0].value;
+  doc.text(pt(`${SCALES[scale].name}: ${last}/${max} (${scaleLabel(scale,last)})`),g.ML,g.y);
+  if(points.length>1){const d=last-first;const better=band.inverse?d<0:d>0;doc.setFont('helvetica','normal');doc.setTextColor(...(d===0?PDF_GREY:better?[22,163,74]:[220,38,38]));
+    doc.text(pt(`Variacao desde ${fmtDate(points[0].date)}: ${d>0?'+':''}${d}`),g.ML+g.cw,g.y,{align:'right'});}
+  g.y+=2;
+  const Y=v=>y1-(v/max)*(y1-y0);
+  const X=i=>points.length===1?(x0+x1)/2:x0+8+(i/(points.length-1))*(x1-x0-16);
+  doc.setDrawColor(226,232,240);doc.setLineWidth(0.2);
+  [0,max/2,max].forEach(t=>{doc.line(x0,Y(t),x1,Y(t));doc.setFontSize(6.5);doc.setTextColor(...PDF_GREY);doc.text(String(Math.round(t)),x0-2,Y(t)+1,{align:'right'});});
+  band.cuts.forEach(c=>{doc.setDrawColor(203,213,225);doc.setLineDashPattern([1.2,1.2],0);doc.line(x0,Y(c.v),x1,Y(c.v));doc.setLineDashPattern([],0);
+    doc.setFontSize(6);doc.setTextColor(148,163,184);doc.text(pt(c.label.replace('≥','>= ').replace('≤','<= ')),x1,Y(c.v)-1,{align:'right'});});
+  doc.setDrawColor(67,97,238);doc.setLineWidth(0.7);
+  for(let i=1;i<points.length;i++) doc.line(X(i-1),Y(points[i-1].value),X(i),Y(points[i].value));
+  points.forEach((p,i)=>{doc.setFillColor(67,97,238);doc.circle(X(i),Y(p.value),1,'F');
+    if(points.length<=10){doc.setFontSize(6.5);doc.setTextColor(26,32,44);doc.setFont('helvetica','bold');doc.text(String(p.value),X(i),Y(p.value)-2,{align:'center'});}});
+  doc.setFont('helvetica','normal');doc.setFontSize(6.5);doc.setTextColor(...PDF_GREY);
+  const idx=points.length<=6?points.map((_,i)=>i):[0,Math.floor((points.length-1)/2),points.length-1];
+  idx.forEach(i=>doc.text(fmtDate(points[i].date),X(i),y1+4.5,{align:'center'}));
+  g.y+=h;
+}
+
+function makePatientReportPDF(patient,{sessions,assessments,profile}){
+  const g=newBrandedDoc(); if(!g) return null;
+  const {doc}=g;
+  const pS=sessions.filter(s=>s.patientId===patient.id).sort((a,b)=>b.date.localeCompare(a.date));
+  const pA=assessments.filter(a=>a.patientId===patient.id).sort((a,b)=>a.date.localeCompare(b.date)||a.id-b.id);
+  const mod=MODULES.find(m=>m.id===+patient.module);
+  // Título
+  doc.setTextColor(26,32,44);doc.setFont('helvetica','bold');doc.setFontSize(18);
+  doc.text(pt('Relatorio Clinico'),g.ML,g.y+4);
+  doc.setFont('helvetica','normal');doc.setFontSize(9);doc.setTextColor(...PDF_GREY);
+  doc.text(pt(`Emitido em ${fmtDate(todayISO())}  |  ${profile.name}${profile.role?' - '+profile.role:''}${profile.license?' ('+profile.license+')':''}`),g.ML,g.y+10);
+  if(profile.institution) doc.text(pt(profile.institution),g.ML,g.y+14.5);
+  g.y+=22;
+  // Identificação
+  pdfSection(g,'Identificacao do paciente');
+  const id=[['Nome',patient.name],['Idade',patient.age!=null?`${patient.age} anos`:'—'],['Genero',genderText(patient.gender)],['Diagnostico',patient.diagnosis||'—'],
+    ['Modulo',mod?mod.name:'—'],['Risco atual',riskText(patient.risk)],['Cuidador',patient.caregiver||'—'],['Referenciacao',patient.referral||'—']];
+  const colW=g.cw/2;
+  for(let i=0;i<id.length;i+=2){
+    g.check(7);
+    [id[i],id[i+1]].forEach((kv,j)=>{if(!kv)return;const x=g.ML+j*colW;
+      doc.setFont('helvetica','normal');doc.setFontSize(8);doc.setTextColor(...PDF_GREY);doc.text(pt(kv[0]),x,g.y);
+      doc.setFont('helvetica','bold');doc.setFontSize(9);doc.setTextColor(26,32,44);doc.text(doc.splitTextToSize(pt(kv[1]),colW-30)[0],x+28,g.y);});
+    g.y+=6.5;
+  }
+  g.y+=3;
+  // Escalas atuais + evolução
+  pdfSection(g,'Avaliacoes e evolucao');
+  const scales=Object.keys(SCALES).filter(k=>pA.some(a=>a.scale===k));
+  if(!scales.length) pdfParagraph(g,'Sem avaliacoes registadas.');
+  scales.forEach(k=>{pdfScaleChart(g,k,pA.filter(a=>a.scale===k));g.y+=4;});
+  if(pA.length){
+    g.check(20);
+    doc.setFont('helvetica','bold');doc.setFontSize(9);doc.setTextColor(26,32,44);doc.text(pt('Historico de avaliacoes'),g.ML,g.y);g.y+=3;
+    pdfTable(g,['Data','Escala','Resultado','Interpretacao','Notas'],
+      pA.slice().reverse().map(a=>[fmtDate(a.date),SCALES[a.scale]?.name||a.scale,`${a.value}/${SCALES[a.scale]?.max}`,scaleLabel(a.scale,a.value),a.notes||'—']),[22,32,24,38,62]);
+  }
+  // Sessões
+  pdfSection(g,'Sessoes de intervencao');
+  if(!pS.length) pdfParagraph(g,'Sem sessoes registadas.');
+  else{
+    const mins=pS.reduce((n,s)=>n+(+s.duration||0),0);
+    const dist=['Excelente','Bom','Razoável','Fraco'].map(k=>`${k}: ${pS.filter(s=>s.performance===k).length}`).join('  |  ');
+    pdfParagraph(g,`${pS.length} sessoes registadas (${fmtDate(pS[pS.length-1].date)} a ${fmtDate(pS[0].date)}), ${mins} minutos no total. Desempenho - ${dist}.`);
+    pdfTable(g,['Data','Modulo','Exerc.','Duracao','Desempenho','Notas'],
+      pS.slice(0,12).map(s=>[fmtDate(s.date),MODULES.find(m=>m.id===+s.moduleId)?.name||'—',s.exercises,`${s.duration} min`,s.performance,s.notes||'—']),[22,44,14,18,24,56]);
+    if(pS.length>12) pdfParagraph(g,`(mostradas as 12 sessoes mais recentes de ${pS.length})`,8,PDF_GREY);
+  }
+  // Plano
+  const plan=patient.plan||[];
+  pdfSection(g,'Plano de exercicios em curso');
+  if(!plan.length) pdfParagraph(g,'Sem exercicios atribuidos.');
+  else pdfTable(g,['Exercicio','Modulo','Versao','Frequencia','Dose / notas'],
+    plan.map(it=>{const f=findExercise(it.exId);return [f?f.ex.name:'—',f?f.mod.name:'—',PLAN_VERSION[it.version]||'Standard',PLAN_FREQ[it.frequency]||'—',it.dose||'—'];}),[46,40,20,26,46]);
+  // Objetivos e notas
+  if(patient.goals){pdfSection(g,'Objetivos terapeuticos');pdfParagraph(g,patient.goals);}
+  if(patient.notes){pdfSection(g,'Notas clinicas');pdfParagraph(g,patient.notes);}
+  // Assinatura
+  g.check(34);g.y+=10;
+  doc.setDrawColor(148,163,184);doc.setLineWidth(0.3);doc.line(g.ML,g.y,g.ML+80,g.y);
+  doc.setFont('helvetica','normal');doc.setFontSize(8.5);doc.setTextColor(26,32,44);
+  doc.text(pt(profile.name),g.ML,g.y+5);doc.setTextColor(...PDF_GREY);
+  doc.text(pt([profile.role,profile.license].filter(Boolean).join('  |  ')),g.ML,g.y+9.5);
+  g.y+=16;
+  doc.setFontSize(7);doc.setTextColor(148,163,184);
+  doc.text(doc.splitTextToSize(pt('Documento clinico confidencial. Contem dados de saude (RGPD, art. 9.o). Destina-se apenas ao paciente, cuidador ou profissionais envolvidos no seu acompanhamento.'),g.cw),g.ML,g.y);
+  return g.finish();
+}
+
+function makeHomePlanPDF(patient,{profile}){
+  const plan=(patient.plan||[]).filter(it=>findExercise(it.exId));
+  const g=newBrandedDoc(); if(!g) return null;
+  const {doc}=g;
+  // Título grande e legível (pensado para o paciente e o cuidador)
+  doc.setTextColor(26,32,44);doc.setFont('helvetica','bold');doc.setFontSize(22);
+  doc.text(pt('O meu plano de exercicios'),g.ML,g.y+6);
+  doc.setFont('helvetica','normal');doc.setFontSize(13);doc.setTextColor(...PDF_BRAND);
+  doc.text(pt(patient.name),g.ML,g.y+14);
+  doc.setFontSize(10);doc.setTextColor(...PDF_GREY);
+  doc.text(pt(`Preparado por ${profile.name}  |  ${fmtDate(todayISO())}`),g.ML,g.y+20);
+  g.y+=30;
+  if(!plan.length){pdfParagraph(g,'Ainda nao ha exercicios atribuidos.',12);return g.finish();}
+  const days=['Seg','Ter','Qua','Qui','Sex','Sab','Dom'];
+  plan.forEach((it,n)=>{
+    const {ex,mod}=findExercise(it.exId);
+    doc.setFont('helvetica','normal');doc.setFontSize(12);
+    const how=doc.splitTextToSize(pt(planInstructions(it)),g.cw-8);
+    doc.setFontSize(10.5);
+    const mat=ex.materials?doc.splitTextToSize(pt('Material: '+ex.materials),g.cw-8):[];
+    const boxH=16+how.length*5.6+mat.length*5+(it.dose?7:0)+24;
+    g.check(boxH+4);
+    const top=g.y;
+    doc.setDrawColor(203,213,225);doc.setLineWidth(0.4);doc.setFillColor(255,255,255);doc.roundedRect(g.ML,top,g.cw,boxH,2.5,2.5,'FD');
+    doc.setFillColor(67,97,238);doc.circle(g.ML+8,top+8.5,4.5,'F');
+    doc.setTextColor(255,255,255);doc.setFont('helvetica','bold');doc.setFontSize(12);doc.text(String(n+1),g.ML+8,top+10.3,{align:'center'});
+    doc.setTextColor(26,32,44);doc.setFontSize(14);doc.text(doc.splitTextToSize(pt(ex.name),g.cw-60)[0],g.ML+16,top+10.5);
+    doc.setFont('helvetica','normal');doc.setFontSize(10);doc.setTextColor(...PDF_BRAND);
+    doc.text(pt(`${PLAN_FREQ[it.frequency]||''}${ex.duration?'  |  '+ex.duration:''}`),g.ML+g.cw-4,top+10.5,{align:'right'});
+    let y=top+18;
+    doc.setFont('helvetica','normal');doc.setFontSize(12);doc.setTextColor(26,32,44);doc.text(how,g.ML+4,y);y+=how.length*5.6;
+    if(mat.length){doc.setFontSize(10.5);doc.setTextColor(...PDF_GREY);doc.text(mat,g.ML+4,y+1);y+=mat.length*5+1;}
+    if(it.dose){doc.setFont('helvetica','bold');doc.setFontSize(11);doc.setTextColor(...PDF_BRAND);doc.text(pt(it.dose),g.ML+4,y+3);doc.setFont('helvetica','normal');y+=7;}
+    // Grelha semanal para marcar
+    y+=4;const bw=(g.cw-8)/7;
+    doc.setFontSize(9.5);doc.setTextColor(...PDF_GREY);
+    days.forEach((d,i)=>{const bx=g.ML+4+i*bw;doc.text(d,bx+bw/2,y,{align:'center'});doc.setDrawColor(148,163,184);doc.setLineWidth(0.4);doc.roundedRect(bx+bw/2-4,y+2,8,8,1.2,1.2);});
+    g.y=top+boxH+5;
+  });
+  // Conselhos de segurança
+  g.check(48);
+  doc.setFillColor(255,251,235);doc.setDrawColor(253,230,138);doc.roundedRect(g.ML,g.y,g.cw,40,2.5,2.5,'FD');
+  doc.setFont('helvetica','bold');doc.setFontSize(12);doc.setTextColor(146,64,14);doc.text(pt('Para fazer em seguranca'),g.ML+5,g.y+8);
+  doc.setFont('helvetica','normal');doc.setFontSize(10.5);
+  ['Pare se sentir dor, tonturas, falta de ar ou dor no peito.','Tenha uma cadeira estavel ou uma parede por perto para se apoiar.','Beba agua e use calcado fechado e confortavel.','Em caso de duvida, fale com o seu terapeuta antes de continuar.']
+    .forEach((t,i)=>doc.text(pt('- '+t),g.ML+5,g.y+15+i*6));
+  g.y+=46;
+  g.check(14);
+  doc.setFontSize(10.5);doc.setTextColor(26,32,44);
+  doc.text(pt(`Contacto: ${profile.name}${profile.phone?'  |  '+profile.phone:''}${profile.email?'  |  '+profile.email:''}`),g.ML,g.y);
+  return g.finish();
+}
+
+// Entrega do PDF: no telemóvel abre a folha "Partilhar" (Guardar em Ficheiros, WhatsApp, Mail...); no computador descarrega
+async function deliverPDF(doc,filename){
+  if(!doc) return;
+  try{
+    const blob=doc.output('blob');
+    const file=new File([blob],filename,{type:'application/pdf'});
+    const touch=window.matchMedia&&window.matchMedia('(pointer:coarse)').matches;
+    if(touch&&navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],title:filename});return;}
+  }catch(e){if(e&&e.name==='AbortError')return;}
+  doc.save(filename);
+}
+const pdfName=(prefix,name)=>pt(`ageinmove-${prefix}-${name}`).replace(/\s+/g,'-').replace(/[^a-zA-Z0-9.-]/g,'').toLowerCase()+'.pdf';
+
 function previewModuleHTML(mod){
   const w=window.open('','_blank');
   if(!w){alert('Active pop-ups para usar o preview.');return;}
@@ -2042,8 +2270,53 @@ function ScaleEvolution({assessments}){
   );
 }
 
+function AddPlanModal({patient,onClose}){
+  const {updatePatient}=useStore();
+  const [moduleId,setModuleId]=useState(String(patient.module||MODULES[0].id));
+  const mod=MODULES.find(m=>m.id===+moduleId);
+  const list=(mod&&mod.exercises_list)||[];
+  const taken=new Set((patient.plan||[]).map(x=>x.exId));
+  const [exId,setExId]=useState('');
+  const [version,setVersion]=useState('standard');
+  const [frequency,setFrequency]=useState('3week');
+  const [dose,setDose]=useState('');
+  const [err,setErr]=useState('');
+  const cur=list.find(e=>e.id===+exId);
+  const preview=cur?planInstructions({exId:cur.id,version}):'';
+  const save=()=>{
+    if(!cur){setErr('Escolha um exercício.');return;}
+    const item={uid:Date.now(),exId:cur.id,version,frequency,dose:dose.trim(),addedAt:todayISO()};
+    updatePatient(patient.id,{plan:[...(patient.plan||[]),item]});
+    onClose();
+  };
+  return(
+    <Modal title="Adicionar ao Plano" onClose={onClose}>
+      {err&&<div className="alert alert-warning">{err}</div>}
+      <div className="form-group"><label>Módulo</label><select value={moduleId} onChange={e=>{setModuleId(e.target.value);setExId('');}}>{MODULES.map(m=><option key={m.id} value={m.id}>{m.icon} {m.name}</option>)}</select></div>
+      <div className="form-group"><label>Exercício *</label><select value={exId} onChange={e=>setExId(e.target.value)}>
+        <option value="">Selecionar...</option>
+        {list.map(e=><option key={e.id} value={e.id} disabled={taken.has(e.id)}>{e.name} · {e.difficulty}{taken.has(e.id)?' (já no plano)':''}</option>)}
+      </select></div>
+      <div className="grid-2">
+        <div className="form-group"><label>Versão</label><select value={version} onChange={e=>setVersion(e.target.value)}><option value="standard">Standard</option><option value="simples">Simples (menor capacidade)</option><option value="criativa">Criativa</option></select></div>
+        <div className="form-group"><label>Frequência</label><select value={frequency} onChange={e=>setFrequency(e.target.value)}>{Object.entries(PLAN_FREQ).map(([k,v])=><option key={k} value={k}>{v}</option>)}</select></div>
+      </div>
+      <div className="form-group"><label>Dose / indicação (opcional)</label><input value={dose} onChange={e=>setDose(e.target.value)} placeholder="Ex.: 2 séries de 10 · 10 minutos · com apoio do cuidador"/></div>
+      {preview&&<div className="alert alert-info" style={{fontSize:13}}><strong>Na ficha vai aparecer:</strong> {preview}</div>}
+      <div style={{display:'flex',gap:10,justifyContent:'flex-end',marginTop:16}}>
+        <button className="btn btn-secondary" onClick={onClose}>Cancelar</button>
+        <button className="btn btn-primary" onClick={save}>Adicionar</button>
+      </div>
+    </Modal>
+  );
+}
+
 function PatientProfile({patient,setPage}){
   const {sessions,assessments,events,deletePatient,deleteSession,updatePatient,profile}=useStore();
+  const plan=patient.plan||[];
+  const report=()=>deliverPDF(makePatientReportPDF(patient,{sessions,assessments,profile}),pdfName('relatorio',patient.name));
+  const homeSheet=()=>deliverPDF(makeHomePlanPDF(patient,{profile}),pdfName('plano-casa',patient.name));
+  const removePlanItem=uid=>updatePatient(patient.id,{plan:plan.filter(x=>x.uid!==uid)});
   const [tab,setTab]=useState('overview');
   const [modal,setModal]=useState(null);
   const [editNotes,setEditNotes]=useState(null);
@@ -2076,11 +2349,12 @@ function PatientProfile({patient,setPage}){
             <span className={`badge badge-${patient.risk==='high'?'red':patient.risk==='medium'?'yellow':'green'}`}>Risco {patient.risk==='high'?'Alto':patient.risk==='medium'?'Médio':'Baixo'}</span>
           </div>
         </div>
+        <button className="btn btn-secondary btn-sm" onClick={report} title="Relatório clínico em PDF">📄 Relatório</button>
         <button className="btn btn-secondary btn-sm" onClick={()=>setModal('assessment')}>+ Avaliação</button>
         <button className="btn btn-primary btn-sm" onClick={()=>setModal('session')}>+ Nova Sessão</button>
       </div>
       <div className="tab-bar">
-        {[['overview','Visão Geral'],['assessments',`Avaliações (${pAssess.length})`],['sessions',`Sessões (${pSessions.length})`]].map(([id,label])=>(
+        {[['overview','Visão Geral'],['plan',`Plano (${plan.length})`],['assessments',`Avaliações (${pAssess.length})`],['sessions',`Sessões (${pSessions.length})`]].map(([id,label])=>(
           <div key={id} className={`tab${tab===id?' active':''}`} onClick={()=>setTab(id)}>{label}</div>
         ))}
       </div>
@@ -2164,6 +2438,40 @@ function PatientProfile({patient,setPage}){
           </table></div>)}
         </div>
       )}
+      {tab==='plan'&&(
+        <div className="card">
+          <div className="card-header" style={{marginBottom:12}}>
+            <div><div className="card-title">Plano de Exercícios</div><div style={{fontSize:13,color:'#64748b'}}>Exercícios para fazer em casa entre sessões</div></div>
+            <div style={{display:'flex',gap:8,flexWrap:'wrap'}}>
+              <button className="btn btn-sm btn-secondary" disabled={!plan.length} style={{opacity:plan.length?1:.5}} onClick={homeSheet}>📄 Ficha para casa</button>
+              <button className="btn btn-sm btn-primary" onClick={()=>setModal('plan')}>+ Exercício</button>
+            </div>
+          </div>
+          {plan.length===0?(
+            <div style={{textAlign:'center',padding:'28px 10px',color:'#64748b'}}>
+              <div style={{fontSize:34,marginBottom:6}}>🏠</div>
+              <div style={{fontWeight:700,color:'#0f172a',marginBottom:4}}>Sem exercícios atribuídos</div>
+              <p style={{fontSize:14,marginBottom:14}}>Escolha exercícios dos módulos para gerar uma ficha simples para o paciente e o cuidador.</p>
+              <button className="btn btn-primary" onClick={()=>setModal('plan')}>+ Adicionar exercício</button>
+            </div>
+          ):plan.map((it,i)=>{const f=findExercise(it.exId);if(!f)return null;return(
+            <div key={it.uid} style={{display:'flex',gap:12,padding:'12px 0',borderBottom:'1px solid #f1f5f9',alignItems:'flex-start'}}>
+              <div style={{width:28,height:28,borderRadius:'50%',background:'#4361EE',color:'#fff',display:'flex',alignItems:'center',justifyContent:'center',fontWeight:700,fontSize:13,flexShrink:0}}>{i+1}</div>
+              <div style={{flex:1,minWidth:0}}>
+                <div style={{fontWeight:700,fontSize:15}}>{f.ex.name}</div>
+                <div style={{fontSize:12,color:'#64748b',margin:'2px 0 6px'}}>{f.mod.icon} {f.mod.name} · {f.ex.duration}</div>
+                <div style={{display:'flex',gap:6,flexWrap:'wrap',marginBottom:6}}>
+                  <span className="badge badge-blue">{PLAN_FREQ[it.frequency]}</span>
+                  <span className={`badge badge-${it.version==='simples'?'green':it.version==='criativa'?'purple':'gray'}`}>{PLAN_VERSION[it.version]}</span>
+                  {it.dose&&<span className="badge badge-gray">{it.dose}</span>}
+                </div>
+                <div style={{fontSize:13,color:'#334155',lineHeight:1.5}}>{planInstructions(it)}</div>
+              </div>
+              <button className="btn btn-sm btn-secondary" title="Retirar do plano" onClick={()=>{if(confirm(`Retirar "${f.ex.name}" do plano?`))removePlanItem(it.uid);}}>🗑</button>
+            </div>);})}
+        </div>
+      )}
+      {modal==='plan'&&<AddPlanModal patient={patient} onClose={()=>setModal(null)}/>}
       {modal==='session'&&<NewSessionModal patient={patient} onClose={()=>setModal(null)}/>}
       {modal==='assessment'&&<NewAssessmentModal patient={patient} onClose={()=>setModal(null)}/>}
     </div>

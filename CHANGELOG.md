@@ -1,5 +1,17 @@
 # Changelog — Age in Move Platform
 
+## [1.6.0] — 2026-11-18
+
+### Plano de exercícios por paciente
+- Novo separador **Plano** no perfil do paciente: atribuir exercícios de qualquer módulo, com versão (Standard / Simples / Criativa), frequência e dose
+- Pré-visualização do texto que vai aparecer na ficha
+- **Ficha para casa (PDF)**: letra grande para o paciente e o cuidador, instruções da versão escolhida, material, grelha semanal Seg–Dom para marcar, conselhos de segurança e contacto do terapeuta
+
+### Relatório clínico do paciente (PDF)
+- Botão **📄 Relatório** no perfil: identificação, gráficos de evolução das escalas com pontos de corte, histórico de avaliações, resumo e lista de sessões, plano em curso, objetivos, notas clínicas, assinatura e aviso de confidencialidade
+- No telemóvel, os PDFs abrem a folha **Partilhar** (Guardar em Ficheiros, WhatsApp, Mail…); no computador são descarregados
+- Cabeçalho e rodapé de todos os PDFs passam a vir de funções comuns
+
 ## [1.5.0] — 2026-11-18
 
 ### Instalar no iPhone / Android (app web)
