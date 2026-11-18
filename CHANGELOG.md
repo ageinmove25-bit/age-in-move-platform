@@ -1,5 +1,13 @@
 # Changelog — Age in Move Platform
 
+## [1.5.0] — 2026-11-18
+
+### Instalar no iPhone / Android (app web)
+- Ícone Age in Move para o ecrã principal e abertura em ecrã inteiro, sem barras do Safari
+- Funciona sem internet depois da primeira abertura (service worker `sw.js`)
+- Respeita o notch e a barra inferior do iPhone
+- Novos ficheiros: `manifest.webmanifest`, `sw.js`, `icons/`
+
 ## [1.4.0] — 2026-11-18
 
 ### Versão para telemóvel

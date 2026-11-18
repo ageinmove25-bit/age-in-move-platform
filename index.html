@@ -2,10 +2,17 @@
 <html lang="pt">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
 <title>Age in Move — idade em movimento</title>
 <meta name="description" content="Age in Move — idade em movimento. Plataforma clínica de exercício físico e estimulação cognitiva."/>
-<meta name="theme-color" content="#4361EE"/>
+<meta name="theme-color" content="#16224f"/>
+<link rel="manifest" href="manifest.webmanifest"/>
+<link rel="apple-touch-icon" href="icons/icon-180.png"/>
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="Age in Move"/>
 <link rel="preconnect" href="https://unpkg.com"/>
 <link rel="preconnect" href="https://cdnjs.cloudflare.com"/>
 <script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js"></script>
@@ -147,6 +154,12 @@ label{display:block;font-size:13px;font-weight:600;color:#374151;margin-bottom:5
 .mobile-only{display:none}
 .sidebar-close{display:none;margin-left:auto;width:34px;height:34px;border-radius:8px;border:1px solid #2c3a78;background:transparent;color:#cbd5e1;font-size:16px;cursor:pointer}
 .table-scroll{width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+/* iPhone: respeitar a zona do relógio/notch e a barra inferior quando instalada no ecrã principal */
+.topbar{padding-top:env(safe-area-inset-top);height:calc(60px + env(safe-area-inset-top))}
+.sidebar{padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}
+.landing-nav{padding-top:calc(20px + env(safe-area-inset-top))}
+.page{padding-bottom:calc(24px + env(safe-area-inset-bottom))}
+.modal{padding-bottom:calc(28px + env(safe-area-inset-bottom))}
 @media(max-width:860px){
   .menu-toggle{display:inline-flex}
   .sidebar{transform:translateX(-100%);transition:transform .25s ease;width:min(280px,82vw);box-shadow:0 0 40px rgba(0,0,0,.35);z-index:200}
@@ -155,11 +168,11 @@ label{display:block;font-size:13px;font-weight:600;color:#374151;margin-bottom:5
   .sidebar-backdrop.open{display:block;position:fixed;inset:0;background:rgba(10,16,40,.45);z-index:150}
   .nav-item{padding:12px 12px;font-size:15px}
   .main{margin-left:0}
-  .topbar{padding:0 12px;gap:10px;height:56px}
+  .topbar{padding:env(safe-area-inset-top) 12px 0;gap:10px;height:calc(56px + env(safe-area-inset-top))}
   .topbar-title{font-size:16px;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .topbar-actions{gap:8px}
   .topbar-actions .hide-mobile{display:none}
-  .page{padding:14px}
+  .page{padding:14px 14px calc(14px + env(safe-area-inset-bottom))}
   .page h2{font-size:19px!important}
   .card{padding:14px;border-radius:10px}
   .grid-2,.grid-3{grid-template-columns:1fr}
@@ -175,12 +188,12 @@ label{display:block;font-size:13px;font-weight:600;color:#374151;margin-bottom:5
   .table th,.table td{padding:9px 8px;white-space:nowrap}
   .table td[style*="maxWidth"],.table td[style*="max-width"]{white-space:normal;min-width:140px}
   .modal-overlay{padding:10px;align-items:flex-end}
-  .modal{padding:18px;border-radius:16px 16px 12px 12px;max-height:92vh}
+  .modal{padding:18px 18px calc(18px + env(safe-area-inset-bottom));border-radius:16px 16px 12px 12px;max-height:92vh}
   .cal-dow{font-size:11px;padding:4px 0}
   .cal-day{min-height:46px;padding:4px;border-radius:6px}
   .cal-event{font-size:0;height:5px;padding:0;margin-bottom:2px;border-radius:3px}
   .mobile-only{display:block}
-  .landing-nav{padding:14px 16px}
+  .landing-nav{padding:calc(14px + env(safe-area-inset-top)) 16px 14px}
   .landing-nav .btn{padding:8px 12px;font-size:13px}
   .landing-hero{padding:40px 18px 40px}
   .landing-hero h1{font-size:40px}
@@ -2649,6 +2662,11 @@ function AppInner(){
 
 function App(){
   return <StoreProvider><AppInner/></StoreProvider>;
+}
+
+// Instalação como app (ecrã principal) e funcionamento offline — só quando servida por http(s)
+if('serviceWorker' in navigator && /^https?:$/.test(location.protocol)){
+  window.addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').catch(e=>console.warn('Service worker não registado',e));});
 }
 
 ReactDOM.createRoot(document.getElementById('root')).render(<App/>);

@@ -23,6 +23,15 @@ Abrir `index.html` diretamente no browser (Chrome/Edge recomendado).
 
 Não requer instalação, servidor ou base de dados.
 
+### Instalar no iPhone
+
+1. No iPhone, abrir no **Safari**: https://ageinmove25-bit.github.io/age-in-move-platform/
+2. Tocar no botão **Partilhar** (quadrado com seta para cima)
+3. Escolher **Adicionar ao ecrã principal** → **Adicionar**
+
+A app fica com o ícone Age in Move, abre em ecrã inteiro e funciona sem internet depois da primeira abertura.
+Os dados da app instalada ficam separados dos do Safari: use **Definições → Dados & Backup** para os passar de um lado para o outro.
+
 ### Onde ficam os dados
 
 Tudo o que é registado (pacientes, sessões, avaliações, calendário, fórum, perfil) fica guardado **automaticamente no browser**, neste computador (localStorage). Nada é enviado para servidores.
@@ -36,6 +45,9 @@ Tudo o que é registado (pacientes, sessões, avaliações, calendário, fórum,
 ```
 age-in-move-platform/
 ├── index.html          # Aplicação completa (self-contained)
+├── manifest.webmanifest # Instalação como app (ecrã principal)
+├── sw.js               # Funcionamento offline
+├── icons/              # Ícones da app
 ├── README.md           # Esta documentação
 ├── CHANGELOG.md        # Histórico de alterações
 └── backup.bat          # Script de backup local (Windows)
