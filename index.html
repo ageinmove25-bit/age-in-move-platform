@@ -2,28 +2,39 @@
 <html lang="pt">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>GeroCare Pro</title>
-<script src="https://unpkg.com/react@18/umd/react.development.js"></script>
-<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<title>Age in Move — idade em movimento</title>
+<meta name="description" content="Age in Move — idade em movimento. Plataforma clínica de exercício físico e estimulação cognitiva."/>
+<meta name="theme-color" content="#16224f"/>
+<link rel="manifest" href="manifest.webmanifest"/>
+<link rel="apple-touch-icon" href="icons/icon-180.png"/>
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="Age in Move"/>
+<link rel="preconnect" href="https://unpkg.com"/>
+<link rel="preconnect" href="https://cdnjs.cloudflare.com"/>
+<script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone@7.24.7/babel.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Segoe UI',sans-serif;background:#f0f4f8;color:#1a202c}
-:root{--primary:#2563eb;--primary-dark:#1d4ed8;--secondary:#7c3aed;--success:#16a34a;--warning:#d97706;--danger:#dc2626;--sidebar-w:240px}
-.sidebar{position:fixed;left:0;top:0;bottom:0;width:var(--sidebar-w);background:#1e293b;color:#e2e8f0;display:flex;flex-direction:column;z-index:100}
-.sidebar-logo{padding:20px 16px;border-bottom:1px solid #334155;display:flex;align-items:center;gap:10px}
-.sidebar-logo .logo-icon{width:36px;height:36px;background:linear-gradient(135deg,#2563eb,#7c3aed);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px}
+:root{--primary:#4361EE;--primary-dark:#3448C5;--secondary:#6D4CE0;--primary-light:#eef1ff;--accent:#E58BD3;--success:#16a34a;--warning:#d97706;--danger:#dc2626;--sidebar-w:240px}
+.sidebar{position:fixed;left:0;top:0;bottom:0;width:var(--sidebar-w);background:#141c3d;color:#e2e8f0;display:flex;flex-direction:column;z-index:100}
+.sidebar-logo{padding:20px 16px;border-bottom:1px solid #26305c;display:flex;align-items:center;gap:10px}
+.sidebar-logo .logo-icon{width:36px;height:36px;background:linear-gradient(135deg,#4361EE,#6D4CE0);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px}
 .sidebar-logo span{font-weight:700;font-size:17px;color:#fff}
 .sidebar-nav{flex:1;padding:12px 8px;overflow-y:auto}
 .nav-section{font-size:10px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.08em;padding:12px 8px 4px}
 .nav-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:8px;cursor:pointer;color:#94a3b8;font-size:14px;transition:all .15s;margin-bottom:2px}
-.nav-item:hover{background:#334155;color:#e2e8f0}
-.nav-item.active{background:#2563eb;color:#fff}
+.nav-item:hover{background:#232d5c;color:#e2e8f0}
+.nav-item.active{background:#4361EE;color:#fff}
 .nav-item .icon{font-size:17px;width:22px;text-align:center}
 .nav-item .badge{margin-left:auto;background:#ef4444;color:#fff;font-size:10px;padding:1px 6px;border-radius:10px}
-.sidebar-footer{padding:12px 8px;border-top:1px solid #334155}
+.sidebar-footer{padding:12px 8px;border-top:1px solid #26305c}
 .main{margin-left:var(--sidebar-w);min-height:100vh;display:flex;flex-direction:column}
 .topbar{background:#fff;border-bottom:1px solid #e2e8f0;padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
 .topbar-title{font-weight:700;font-size:18px;color:#0f172a}
@@ -56,7 +67,7 @@ body{font-family:'Segoe UI',sans-serif;background:#f0f4f8;color:#1a202c}
 .badge-purple{background:#faf5ff;color:#6d28d9}
 .badge-gray{background:#f1f5f9;color:#475569}
 input,select,textarea{width:100%;padding:9px 12px;border:1px solid #e2e8f0;border-radius:8px;font-size:14px;color:#1a202c;outline:none;transition:border .15s}
-input:focus,select:focus,textarea:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(37,99,235,.1)}
+input:focus,select:focus,textarea:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(67,97,238,.15)}
 label{display:block;font-size:13px;font-weight:600;color:#374151;margin-bottom:5px}
 .form-group{margin-bottom:14px}
 .tab-bar{display:flex;border-bottom:2px solid #e2e8f0;margin-bottom:20px;gap:4px}
@@ -81,33 +92,33 @@ label{display:block;font-size:13px;font-weight:600;color:#374151;margin-bottom:5
 .alert-info{background:#eff6ff;color:#1d4ed8;border:1px solid #bfdbfe}
 .alert-success{background:#f0fdf4;color:#15803d;border:1px solid #bbf7d0}
 .alert-warning{background:#fffbeb;color:#92400e;border:1px solid #fde68a}
-.landing{min-height:100vh;background:linear-gradient(135deg,#0f172a 0%,#1e3a8a 50%,#312e81 100%)}
+.landing{min-height:100vh;background:linear-gradient(135deg,#16224f 0%,#25357f 50%,#4f3c94 100%)}
 .landing-nav{padding:20px 60px;display:flex;align-items:center;justify-content:space-between}
 .landing-hero{padding:90px 60px 70px;text-align:center;color:#fff}
-.landing-pill{display:inline-flex;align-items:center;gap:8px;background:rgba(99,102,241,.25);border:1px solid rgba(99,102,241,.5);border-radius:40px;padding:8px 20px;font-size:13px;font-weight:600;color:#a5b4fc;margin-bottom:28px;letter-spacing:.03em}
-.landing-pill .dot{width:7px;height:7px;border-radius:50%;background:#6366f1;animation:pulse-dot 1.8s ease-in-out infinite}
+.landing-pill{display:inline-flex;align-items:center;gap:8px;background:rgba(67,97,238,.2);border:1px solid rgba(67,97,238,.5);border-radius:40px;padding:8px 20px;font-size:13px;font-weight:600;color:#E9A6D6;margin-bottom:28px;letter-spacing:.03em}
+.landing-pill .dot{width:7px;height:7px;border-radius:50%;background:#4361EE;animation:pulse-dot 1.8s ease-in-out infinite}
 @keyframes pulse-dot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.7)}}
 .landing-hero h1{font-size:64px;font-weight:900;line-height:1.05;margin-bottom:0;letter-spacing:-.02em}
 .landing-hero h1 .line-plain{display:block;color:#fff}
-.landing-hero h1 .line-grad{display:block;background:linear-gradient(100deg,#60a5fa 0%,#a78bfa 50%,#f472b6 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.landing-hero h1 .line-grad{display:block;background:linear-gradient(100deg,#6FA3F2 0%,#A98BEA 55%,#E38AD6 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 .landing-hero h1 .line-accent{display:block;font-size:42px;font-weight:700;color:rgba(255,255,255,.45);margin-top:6px;letter-spacing:.01em}
-.landing-hero .hero-sub{font-size:18px;color:#93c5fd;max-width:560px;margin:24px auto 36px;line-height:1.65}
-.landing-hero .hero-sub strong{color:#e0e7ff;font-weight:600}
+.landing-hero .hero-sub{font-size:18px;color:#b8c6f5;max-width:560px;margin:24px auto 36px;line-height:1.65}
+.landing-hero .hero-sub strong{color:#eef2ff;font-weight:600}
 .landing-features{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;padding:0 60px 80px;max-width:1200px;margin:0 auto}
 .feature-card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:28px;color:#fff}
 .feature-card .fi{font-size:36px;margin-bottom:14px}
 .feature-card h3{font-size:18px;font-weight:700;margin-bottom:8px}
-.feature-card p{font-size:14px;color:#93c5fd;line-height:1.6}
-.auth-page{min-height:100vh;background:linear-gradient(135deg,#0f172a,#1e3a8a);display:flex;align-items:center;justify-content:center}
+.feature-card p{font-size:14px;color:#b8c6f5;line-height:1.6}
+.auth-page{min-height:100vh;background:linear-gradient(135deg,#16224f,#4f3c94);display:flex;align-items:center;justify-content:center}
 .auth-card{background:#fff;border-radius:20px;padding:40px;width:100%;max-width:420px}
 .auth-logo{text-align:center;margin-bottom:28px}
-.auth-logo .icon{width:56px;height:56px;background:linear-gradient(135deg,#2563eb,#7c3aed);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:26px;margin:0 auto 12px}
+.auth-logo .icon{width:56px;height:56px;background:linear-gradient(135deg,#4361EE,#6D4CE0);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:26px;margin:0 auto 12px}
 .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
 .cal-header{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:4px}
 .cal-dow{text-align:center;font-size:12px;font-weight:700;color:#64748b;padding:6px}
 .cal-day{min-height:80px;background:#f8fafc;border-radius:8px;padding:6px;cursor:pointer;transition:background .15s;border:1px solid #e2e8f0}
 .cal-day:hover{background:#eff6ff}
-.cal-day.today{border:2px solid var(--primary);background:#eff6ff}
+.cal-day.today{border:2px solid var(--primary);background:#eef1ff}
 .cal-day.other-month{opacity:.35}
 .cal-day .day-num{font-size:12px;font-weight:700;color:#475569;margin-bottom:3px}
 .cal-event{font-size:10px;padding:2px 5px;border-radius:4px;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600}
@@ -116,18 +127,18 @@ label{display:block;font-size:13px;font-weight:600;color:#374151;margin-bottom:5
 @media(max-width:900px){.grid-4{grid-template-columns:1fr 1fr}.grid-3{grid-template-columns:1fr 1fr}}
 .pricing-section{padding:60px 60px 80px;max-width:1200px;margin:0 auto}
 .pricing-section h2{text-align:center;color:#fff;font-size:36px;font-weight:900;margin-bottom:8px}
-.pricing-section .sub{text-align:center;color:#93c5fd;font-size:16px;margin-bottom:48px}
+.pricing-section .sub{text-align:center;color:#b8c6f5;font-size:16px;margin-bottom:48px}
 .pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
 .pricing-card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:32px;color:#fff;position:relative;transition:transform .2s,box-shadow .2s}
 .pricing-card:hover{transform:translateY(-4px);box-shadow:0 16px 40px rgba(0,0,0,.3)}
 .pricing-card.featured{background:linear-gradient(135deg,rgba(37,99,235,.5),rgba(124,58,237,.4));border:2px solid rgba(99,102,241,.6);transform:scale(1.04)}
 .pricing-card.featured:hover{transform:scale(1.04) translateY(-4px)}
-.pricing-badge{position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#2563eb,#7c3aed);color:#fff;font-size:12px;font-weight:700;padding:4px 16px;border-radius:20px;white-space:nowrap}
-.pricing-name{font-size:14px;font-weight:700;color:#93c5fd;text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px}
+.pricing-badge{position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#4361EE,#6D4CE0);color:#fff;font-size:12px;font-weight:700;padding:4px 16px;border-radius:20px;white-space:nowrap}
+.pricing-name{font-size:14px;font-weight:700;color:#b8c6f5;text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px}
 .pricing-price{display:flex;align-items:flex-end;gap:4px;margin-bottom:6px}
 .pricing-price .amount{font-size:48px;font-weight:900;line-height:1}
-.pricing-price .period{font-size:14px;color:#93c5fd;margin-bottom:8px}
-.pricing-desc{font-size:13px;color:#93c5fd;margin-bottom:24px;line-height:1.5}
+.pricing-price .period{font-size:14px;color:#b8c6f5;margin-bottom:8px}
+.pricing-desc{font-size:13px;color:#b8c6f5;margin-bottom:24px;line-height:1.5}
 .pricing-features{list-style:none;margin-bottom:28px}
 .pricing-features li{padding:7px 0;font-size:13px;color:#e2e8f0;border-bottom:1px solid rgba(255,255,255,.07);display:flex;align-items:center;gap:8px}
 .pricing-features li:last-child{border-bottom:none}
@@ -136,12 +147,74 @@ label{display:block;font-size:13px;font-weight:600;color:#374151;margin-bottom:5
 .btn-outline-white{background:transparent;border:1px solid rgba(255,255,255,.3);color:#fff}
 .btn-outline-white:hover{background:rgba(255,255,255,.1)}
 .pricing-note{text-align:center;color:#64748b;font-size:12px;margin-top:20px}
+
+/* ─── Telemóvel e tablet ───────────────────────────────────────────────── */
+.menu-toggle{display:none;width:38px;height:38px;border-radius:8px;border:1px solid #e2e8f0;background:#f8fafc;font-size:20px;line-height:1;cursor:pointer;color:#0f172a;align-items:center;justify-content:center;flex-shrink:0}
+.sidebar-backdrop{display:none}
+.mobile-only{display:none}
+.sidebar-close{display:none;margin-left:auto;width:34px;height:34px;border-radius:8px;border:1px solid #2c3a78;background:transparent;color:#cbd5e1;font-size:16px;cursor:pointer}
+.table-scroll{width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+/* iPhone: respeitar a zona do relógio/notch e a barra inferior quando instalada no ecrã principal */
+.topbar{padding-top:env(safe-area-inset-top);height:calc(60px + env(safe-area-inset-top))}
+.sidebar{padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}
+.landing-nav{padding-top:calc(20px + env(safe-area-inset-top))}
+.page{padding-bottom:calc(24px + env(safe-area-inset-bottom))}
+.modal{padding-bottom:calc(28px + env(safe-area-inset-bottom))}
+@media(max-width:860px){
+  .menu-toggle{display:inline-flex}
+  .sidebar{transform:translateX(-100%);transition:transform .25s ease;width:min(280px,82vw);box-shadow:0 0 40px rgba(0,0,0,.35);z-index:200}
+  .sidebar.open{transform:none}
+  .sidebar-close{display:inline-flex;align-items:center;justify-content:center}
+  .sidebar-backdrop.open{display:block;position:fixed;inset:0;background:rgba(10,16,40,.45);z-index:150}
+  .nav-item{padding:12px 12px;font-size:15px}
+  .main{margin-left:0}
+  .topbar{padding:env(safe-area-inset-top) 12px 0;gap:10px;height:calc(56px + env(safe-area-inset-top))}
+  .topbar-title{font-size:16px;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .topbar-actions{gap:8px}
+  .topbar-actions .hide-mobile{display:none}
+  .page{padding:14px 14px calc(14px + env(safe-area-inset-bottom))}
+  .page h2{font-size:19px!important}
+  .card{padding:14px;border-radius:10px}
+  .grid-2,.grid-3{grid-template-columns:1fr}
+  .grid-4{grid-template-columns:1fr 1fr;gap:10px}
+  .stat-card{padding:12px;gap:10px;flex-direction:column}
+  .stat-icon{width:38px;height:38px;font-size:18px}
+  .stat-value{font-size:22px}
+  [style*="space-between"]{flex-wrap:wrap;gap:10px}
+  .page input[style*="width"],.page select[style*="width"]{width:100%!important;flex:1 1 100%}
+  input,select,textarea{font-size:16px}
+  .tab-bar{overflow-x:auto;flex-wrap:nowrap;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+  .tab{white-space:nowrap;padding:10px 12px}
+  .table th,.table td{padding:9px 8px;white-space:nowrap}
+  .table td[style*="maxWidth"],.table td[style*="max-width"]{white-space:normal;min-width:140px}
+  .modal-overlay{padding:10px;align-items:flex-end}
+  .modal{padding:18px 18px calc(18px + env(safe-area-inset-bottom));border-radius:16px 16px 12px 12px;max-height:92vh}
+  .cal-dow{font-size:11px;padding:4px 0}
+  .cal-day{min-height:46px;padding:4px;border-radius:6px}
+  .cal-event{font-size:0;height:5px;padding:0;margin-bottom:2px;border-radius:3px}
+  .mobile-only{display:block}
+  .landing-nav{padding:calc(14px + env(safe-area-inset-top)) 16px 14px}
+  .landing-nav .btn{padding:8px 12px;font-size:13px}
+  .landing-hero{padding:40px 18px 40px}
+  .landing-hero h1{font-size:40px}
+  .landing-hero h1 .line-accent{font-size:26px}
+  .landing-hero .hero-sub{font-size:16px}
+  .landing-pill{font-size:11px;padding:6px 12px;margin-bottom:20px}
+  .landing-features{grid-template-columns:1fr;padding:0 16px 40px;gap:14px}
+  .pricing-section{padding:30px 16px 50px}
+  .pricing-section h2{font-size:28px}
+  .pricing-grid{grid-template-columns:1fr;gap:28px}
+  .pricing-card.featured,.pricing-card.featured:hover{transform:none}
+  .landing-footer{padding:20px 16px!important;flex-direction:column;align-items:flex-start!important}
+  .auth-page{padding:16px}
+  .auth-card{padding:26px 20px}
+}
 </style>
 </head>
 <body>
-<div id="root"></div>
+<div id="root"><div style="min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(135deg,#16224f,#4f3c94);color:#fff;font-family:'Segoe UI',sans-serif"><div style="font-size:26px;font-weight:800">Age in Move</div><div style="color:#E9A6D6;font-style:italic;margin-top:4px">idade em movimento</div><div style="margin-top:18px;font-size:13px;color:#b8c6f5">A carregar a plataforma…</div></div></div>
 <script type="text/babel">
-const {useState,useEffect}=React;
+const {useState,useEffect,useContext,createContext,useCallback}=React;
 
 const MODULES=[
   {id:1,name:'Memória e Atenção',icon:'🧠',color:'#4f46e5',bg:'#ede9fe',exercises:8,duration:'45 min',difficulty:'Moderado',type:'cognitivo',
@@ -282,13 +355,13 @@ const SAMPLE_PATIENTS=[
 ];
 
 const SAMPLE_EVENTS=[
-  {id:1,date:'2026-06-08',title:'Maria Silva - Sessão',type:'session',color:'#4f46e5'},
+  {id:1,date:'2026-06-08',title:'Maria Silva - Sessão',type:'session',color:'#4f46e5',patientId:1},
   {id:2,date:'2026-06-09',title:'Reunião Equipa',type:'meeting',color:'#0891b2'},
-  {id:3,date:'2026-06-10',title:'António Costa - Sessão',type:'session',color:'#0891b2'},
-  {id:4,date:'2026-06-12',title:'Rosa Nunes - Sessão',type:'session',color:'#059669'},
-  {id:5,date:'2026-06-14',title:'Fernanda Martins - Sessão',type:'session',color:'#7c3aed'},
+  {id:3,date:'2026-06-10',title:'António Costa - Sessão',type:'session',color:'#0891b2',patientId:2},
+  {id:4,date:'2026-06-12',title:'Rosa Nunes - Sessão',type:'session',color:'#059669',patientId:3},
+  {id:5,date:'2026-06-14',title:'Fernanda Martins - Sessão',type:'session',color:'#7c3aed',patientId:5},
   {id:6,date:'2026-06-15',title:'Formação Contínua',type:'training',color:'#d97706'},
-  {id:7,date:'2026-06-07',title:'José Rodrigues - Sessão',type:'session',color:'#d97706'},
+  {id:7,date:'2026-06-07',title:'José Rodrigues - Sessão',type:'session',color:'#d97706',patientId:4},
   {id:8,date:'2026-06-20',title:'Supervisão Clínica',type:'meeting',color:'#0891b2'},
 ];
 
@@ -333,6 +406,157 @@ const INITIAL_POSTS=[
     {author:'Dr. Pedro Alves',initials:'PA',avatar:'#059669',text:'Não esquecer a avaliação do cuidador com a Escala de Zarit (sobrecarga) nas nossas consultas. Score > 56 indica sobrecarga intensa e deve acionar encaminhamento urgente para apoio psicológico.',time:'há 2 dias'},
   ]},
 ];
+
+// ─── PERSISTÊNCIA LOCAL (localStorage) ─────────────────────────────────────
+// Todos os dados ficam guardados apenas neste browser, neste computador.
+const STORAGE_PREFIX='aim_v1_';
+const STORE_KEYS=['patients','sessions','assessments','events','posts','profile','prefs'];
+const AVATAR_COLORS=['#4f46e5','#0891b2','#059669','#d97706','#7c3aed','#e11d48','#0d9488','#ea580c'];
+const SCALES={
+  mmse:{name:'MMSE',max:30},
+  gds:{name:'GDS-15',max:15},
+  barthel:{name:'Índice de Barthel',max:100},
+  moca:{name:'MoCA',max:30},
+};
+const DEFAULT_PROFILE={name:'Dra. Ana Santos',license:'CRP 12345',email:'ana.santos@exemplo.pt',phone:'+351 912 345 678',specialty:'Neuropsicologia Geriátrica',role:'Neuropsicóloga',institution:'Centro de Saúde Lisboa Norte'};
+const DEFAULT_PREFS={duration:'45',scale:'mmse',reminders:true,declineAlerts:true,monthlyReports:false,nSessions:true,nRisk:true,nForum:false,nUpdates:true};
+
+function storageRead(key,fallback){
+  try{const raw=localStorage.getItem(STORAGE_PREFIX+key);return raw==null?fallback:JSON.parse(raw);}
+  catch(e){return fallback;}
+}
+function storageWrite(key,value){
+  try{localStorage.setItem(STORAGE_PREFIX+key,JSON.stringify(value));return true;}
+  catch(e){console.warn('Não foi possível guardar',key,e);return false;}
+}
+function usePersistentState(key,initial){
+  const [value,setValue]=useState(()=>storageRead(key,typeof initial==='function'?initial():initial));
+  useEffect(()=>{storageWrite(key,value);},[key,value]);
+  return [value,setValue];
+}
+
+const todayISO=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;};
+const fmtDate=iso=>{if(!iso)return '—';const [y,m,d]=iso.split('-');return `${d}/${m}/${y}`;};
+const initialsOf=name=>name.trim().split(/\s+/).filter(Boolean).map(w=>w[0]).filter((_,i,a)=>i===0||i===a.length-1).join('').toUpperCase()||'?';
+const ageFromDob=dob=>{if(!dob)return null;const b=new Date(dob),n=new Date();let a=n.getFullYear()-b.getFullYear();if(n.getMonth()<b.getMonth()||(n.getMonth()===b.getMonth()&&n.getDate()<b.getDate()))a--;return a;};
+const numOrNull=v=>v===''||v==null||isNaN(+v)?null:+v;
+function computeRisk(p){
+  const {mmse,gds,barthel}=p;
+  if((mmse!=null&&mmse<20)||(gds!=null&&gds>10)||(barthel!=null&&barthel<70)) return 'high';
+  if((mmse!=null&&mmse<25)||(gds!=null&&gds>5)||(barthel!=null&&barthel<90)) return 'medium';
+  return 'low';
+}
+const mmseColor=v=>v==null?'#94a3b8':v<20?'#dc2626':v<25?'#d97706':'#16a34a';
+function useNarrow(bp=640){
+  const get=()=>typeof window!=='undefined'&&window.innerWidth<bp;
+  const [n,setN]=useState(get);
+  useEffect(()=>{const f=()=>setN(get());window.addEventListener('resize',f);return()=>window.removeEventListener('resize',f);},[]);
+  return n;
+}
+const nextId=list=>list.reduce((m,x)=>Math.max(m,+x.id||0),0)+1;
+
+function seedSessions(){
+  const perfs=['Excelente','Bom','Bom','Razoável','Bom'];
+  const out=[];let id=1;
+  SAMPLE_PATIENTS.forEach(p=>perfs.forEach((perf,i)=>{
+    out.push({id:id++,patientId:p.id,date:`2026-${String(6-Math.floor(i/2)).padStart(2,'0')}-${String(Math.max(1,30-i*7)).padStart(2,'0')}`,moduleId:p.module,exercises:3,duration:45,performance:perf,notes:''});
+  }));
+  return out;
+}
+function seedAssessments(){
+  const out=[];let id=1;
+  SAMPLE_PATIENTS.forEach(p=>{
+    out.push({id:id++,patientId:p.id,date:'2026-04-10',scale:'mmse',value:Math.min(30,p.mmse+1),notes:'Ligeira descida face ao mês anterior'});
+    out.push({id:id++,patientId:p.id,date:'2026-05-15',scale:'mmse',value:p.mmse,notes:'Aplicado em condições standard'});
+    out.push({id:id++,patientId:p.id,date:'2026-05-15',scale:'gds',value:p.gds,notes:'Humor estável'});
+    out.push({id:id++,patientId:p.id,date:'2026-05-15',scale:'barthel',value:p.barthel,notes:'AVDs preservadas'});
+  });
+  return out;
+}
+const SEED={
+  patients:()=>SAMPLE_PATIENTS,
+  sessions:seedSessions,
+  assessments:seedAssessments,
+  events:()=>SAMPLE_EVENTS,
+  posts:()=>INITIAL_POSTS,
+  profile:()=>DEFAULT_PROFILE,
+  prefs:()=>DEFAULT_PREFS,
+};
+
+const StoreContext=createContext(null);
+const useStore=()=>useContext(StoreContext);
+
+function StoreProvider({children}){
+  const [patients,setPatients]=usePersistentState('patients',SEED.patients);
+  const [sessions,setSessions]=usePersistentState('sessions',SEED.sessions);
+  const [assessments,setAssessments]=usePersistentState('assessments',SEED.assessments);
+  const [events,setEvents]=usePersistentState('events',SEED.events);
+  const [posts,setPosts]=usePersistentState('posts',SEED.posts);
+  const [profile,setProfile]=usePersistentState('profile',SEED.profile);
+  const [prefs,setPrefs]=usePersistentState('prefs',SEED.prefs);
+  const setters={patients:setPatients,sessions:setSessions,assessments:setAssessments,events:setEvents,posts:setPosts,profile:setProfile,prefs:setPrefs};
+
+  const addPatient=data=>{
+    const id=nextId(patients);
+    const created={...data,id,initials:initialsOf(data.name),avatar:AVATAR_COLORS[id%AVATAR_COLORS.length],sessions:0,createdAt:todayISO()};
+    created.risk=computeRisk(created);
+    setPatients(ps=>[...ps,created]);
+    return created;
+  };
+  const updatePatient=useCallback((id,patch)=>{
+    setPatients(ps=>ps.map(p=>{if(p.id!==id)return p;const n={...p,...patch};n.risk=computeRisk(n);return n;}));
+  },[]);
+  const deletePatient=useCallback(id=>{
+    setPatients(ps=>ps.filter(p=>p.id!==id));
+    setSessions(ss=>ss.filter(s=>s.patientId!==id));
+    setAssessments(as=>as.filter(a=>a.patientId!==id));
+    setEvents(es=>es.filter(e=>e.patientId!==id));
+  },[]);
+  const addSession=useCallback(s=>{
+    setSessions(ss=>[...ss,{...s,id:nextId(ss)}]);
+    setPatients(ps=>ps.map(p=>p.id===s.patientId?{...p,sessions:(p.sessions||0)+1}:p));
+  },[]);
+  const deleteSession=useCallback(s=>{
+    setSessions(ss=>ss.filter(x=>x.id!==s.id));
+    setPatients(ps=>ps.map(p=>p.id===s.patientId?{...p,sessions:Math.max(0,(p.sessions||0)-1)}:p));
+  },[]);
+  const addAssessments=useCallback((patientId,date,values,notes)=>{
+    const entries=Object.entries(values).filter(([,v])=>v!=null);
+    if(!entries.length) return;
+    setAssessments(as=>{let id=nextId(as);return [...as,...entries.map(([scale,value])=>({id:id++,patientId,date,scale,value,notes}))];});
+    // Atualiza os valores atuais do paciente se esta for a avaliação mais recente
+    setPatients(ps=>ps.map(p=>{
+      if(p.id!==patientId) return p;
+      const n={...p};
+      entries.forEach(([scale,value])=>{if(!p.lastAssessed||!p.lastAssessed[scale]||date>=p.lastAssessed[scale]){n[scale]=value;n.lastAssessed={...(n.lastAssessed||{}),[scale]:date};}});
+      n.risk=computeRisk(n);
+      return n;
+    }));
+  },[]);
+
+  const exportData=()=>({app:'age-in-move',version:1,exportedAt:new Date().toISOString(),data:{patients,sessions,assessments,events,posts,profile,prefs}});
+  const importData=json=>{
+    const d=json&&json.data;
+    if(!d||json.app!=='age-in-move') throw new Error('Ficheiro não reconhecido como backup Age in Move.');
+    ['patients','sessions','assessments','events','posts'].forEach(k=>{if(d[k]!=null&&!Array.isArray(d[k]))throw new Error(`Campo "${k}" inválido.`);});
+    STORE_KEYS.forEach(k=>{if(d[k]!=null)setters[k](d[k]);});
+  };
+  const resetDemo=()=>STORE_KEYS.forEach(k=>setters[k](SEED[k]()));
+  const clearAll=()=>{['patients','sessions','assessments','events'].forEach(k=>setters[k]([]));setPosts(SEED.posts());};
+
+  const value={patients,sessions,assessments,events,posts,profile,prefs,
+    setEvents,setPosts,setProfile,setPrefs,
+    addPatient,updatePatient,deletePatient,addSession,deleteSession,addAssessments,
+    exportData,importData,resetDemo,clearAll};
+  return <StoreContext.Provider value={value}>{children}</StoreContext.Provider>;
+}
+
+function downloadJSON(obj,filename){
+  const blob=new Blob([JSON.stringify(obj,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download=filename;document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
 
 // ─── VARIANTES SIMPLES → CRIATIVAS ─────────────────────────────────────────
 function getVariants(ex, mod){
@@ -520,7 +744,7 @@ function buildModulePDFHTML(mod){
     ?['WHO (2020). Physical activity guidelines for older adults.','ACSM (2022). Exercise prescription for older adults.','Sherrington et al. (2019). Effective fall prevention. Cochrane Review.','Mirelman et al. (2016). Addition of cognitive training to treadmill training. Lancet Neurology.','EWGSOP2 (2018). Sarcopaenia: revised European consensus.']
     :['Baddeley & Hitch (1974). Working memory model.','Petersen (2004). Mild cognitive impairment. Journal of Internal Medicine.','Rebok et al. (2014). ACTIVE Cognitive Training Trial. JAGS.','Woods et al. (2012). Cognitive stimulation to improve cognitive functioning in people with dementia. Cochrane.','Guerreiro et al. (1994). Adaptação à população portuguesa do MMSE.'];
   return`<!DOCTYPE html><html lang="pt"><head>
-<meta charset="UTF-8"><title>GeroCare Pro — ${mod.name}</title>
+<meta charset="UTF-8"><title>Age in Move — ${mod.name}</title>
 <style>
 @page{size:A4;margin:16mm 15mm}
 *{box-sizing:border-box;margin:0;padding:0}
@@ -577,13 +801,13 @@ body{font-family:Arial,sans-serif;color:#1a202c;font-size:10pt;line-height:1.5;b
 @media print{.no-print{display:none}.pb{page-break-before:always}body{print-color-adjust:exact;-webkit-print-color-adjust:exact}}
 </style></head><body>
 <div class="no-print">
-  <span style="flex:1">📄 <strong>GeroCare Pro</strong> — ${mod.name} &nbsp;·&nbsp; Prima <strong>Ctrl+P</strong> ou o botão para guardar como PDF</span>
-  <button onclick="window.print()" style="background:#2563eb;color:#fff;border:none;padding:7px 18px;border-radius:6px;cursor:pointer;font-weight:700;font-size:13px">🖨 Imprimir / Guardar PDF</button>
+  <span style="flex:1">📄 <strong>Age in Move</strong> — ${mod.name} &nbsp;·&nbsp; Prima <strong>Ctrl+P</strong> ou o botão para guardar como PDF</span>
+  <button onclick="window.print()" style="background:#4361EE;color:#fff;border:none;padding:7px 18px;border-radius:6px;cursor:pointer;font-weight:700;font-size:13px">🖨 Imprimir / Guardar PDF</button>
   <button onclick="window.close()" style="background:#475569;color:#fff;border:none;padding:7px 12px;border-radius:6px;cursor:pointer">✕</button>
 </div>
 <div class="page-wrap">
 <div class="cover">
-  <div class="cover-logo">🧠 GeroCare Pro &nbsp;·&nbsp; Protocolo Clínico Oficial</div>
+  <div class="cover-logo">Age in Move &nbsp;·&nbsp; Protocolo Clínico Oficial</div>
   <div class="cover-icon">${mod.icon}</div>
   <div class="cover-type">${mod.type==='fisico'?'🏃 Módulo Físico':'🧠 Módulo Cognitivo'}</div>
   <h1 class="cover-title">${mod.name}</h1>
@@ -597,7 +821,7 @@ body{font-family:Arial,sans-serif;color:#1a202c;font-size:10pt;line-height:1.5;b
   <div style="margin-top:16px;font-size:9pt;color:#64748b;border:1px solid #e2e8f0;border-radius:8px;padding:12px 20px;display:inline-block;text-align:left">
     <strong>Como usar este protocolo:</strong> Cada exercício tem 3 versões — <span style="color:#15803d;font-weight:700">Simples</span> (menor capacidade funcional), <span style="color:#1a202c;font-weight:700">Standard</span> (protocolo clínico base) e <span style="color:${c};font-weight:700">Criativa</span> (maximizar engagement). Selecionar conforme o paciente. Registar versão usada.
   </div>
-  <div class="cover-foot">GeroCare Pro © 2026 · gerocarepro.pt · Documento de uso clínico confidencial · ${new Date().toLocaleDateString('pt-PT')}</div>
+  <div class="cover-foot">Age in Move © 2026 · idade em movimento · @age_in_move · Documento de uso clínico confidencial · ${new Date().toLocaleDateString('pt-PT')}</div>
 </div>
 <div class="pb">
   <div class="section-hdr"><span style="font-size:16px">${mod.icon}</span><h2>Exercícios — Progressão: Simples → Criativo</h2></div>
@@ -612,7 +836,7 @@ body{font-family:Arial,sans-serif;color:#1a202c;font-size:10pt;line-height:1.5;b
   </div>
 </div>
 </div>
-<div class="footer-bar">GeroCare Pro © 2026 · ${mod.name} · Protocolo gerado em ${new Date().toLocaleDateString('pt-PT')} · Documento confidencial para uso clínico</div>
+<div class="footer-bar">Age in Move © 2026 · ${mod.name} · Protocolo gerado em ${new Date().toLocaleDateString('pt-PT')} · Documento confidencial para uso clínico</div>
 </body></html>`;
 }
 
@@ -620,133 +844,45 @@ body{font-family:Arial,sans-serif;color:#1a202c;font-size:10pt;line-height:1.5;b
 
 // Gera o logótipo Age in Move — versão melhorada
 function getAgeInMoveLogo(size=320){
+  // Logótipo Age in Move — círculo azul-violeta, anel rosa-lilás e figura branca de braços no ar
   const c=document.createElement('canvas');
   c.width=c.height=size;
   const ctx=c.getContext('2d');
-  const s=size, cx=s/2, cy=s/2+s*.02;
+  const s=size, cx=s/2, cy=s/2;
   ctx.clearRect(0,0,s,s);
 
-  // ── Blob orgânico (forma cérebro) com 80 pontos + ondas seno ──────────────
-  const blobPath=()=>{
-    ctx.beginPath();
-    const pts=90, baseR=s*.41;
-    for(let i=0;i<=pts;i++){
-      const a=(i/pts)*Math.PI*2 - Math.PI/2;
-      // Múltiplas ondas para textura orgânica
-      const bump=
-        Math.sin(a*3+0.5)*s*.042 +
-        Math.sin(a*5+1.4)*s*.022 +
-        Math.sin(a*7-0.9)*s*.014 +
-        Math.sin(a*2+0.3)*s*.028 +
-        Math.sin(a*4+2.1)*s*.016;
-      const r=baseR+bump;
-      const x=cx+r*Math.cos(a), y=cy+r*Math.sin(a);
-      i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
-    }
-    ctx.closePath();
-  };
+  // Disco principal (degradé azul → violeta)
+  const gDisk=ctx.createLinearGradient(s*.12,s*.08,s*.88,s*.92);
+  gDisk.addColorStop(0,'#3F6BE8');
+  gDisk.addColorStop(.55,'#4B55E0');
+  gDisk.addColorStop(1,'#6E45DA');
+  ctx.beginPath();ctx.arc(cx,cy,s*.49,0,Math.PI*2);ctx.fillStyle=gDisk;ctx.fill();
 
-  // Sombra exterior suave
-  ctx.save();
-  ctx.shadowColor='rgba(160,30,0,.30)';
-  ctx.shadowBlur=s*.07;
-  ctx.shadowOffsetX=s*.025;
-  ctx.shadowOffsetY=s*.035;
+  // Brilho suave no topo
+  const gHL=ctx.createRadialGradient(cx-s*.12,cy-s*.18,0,cx-s*.12,cy-s*.18,s*.42);
+  gHL.addColorStop(0,'rgba(255,255,255,.16)');
+  gHL.addColorStop(1,'rgba(255,255,255,0)');
+  ctx.beginPath();ctx.arc(cx,cy,s*.49,0,Math.PI*2);ctx.fillStyle=gHL;ctx.fill();
 
-  // Gradiente principal laranja-dourado → vermelho-laranja
-  const gMain=ctx.createRadialGradient(cx-s*.12,cy-s*.14,s*.01, cx+s*.04,cy+s*.06,s*.52);
-  gMain.addColorStop(0.00,'#FFE040'); // dourado brilhante
-  gMain.addColorStop(0.18,'#FFAA00'); // laranja cálido
-  gMain.addColorStop(0.50,'#FF6200'); // laranja intenso
-  gMain.addColorStop(0.82,'#EE2800'); // vermelho-laranja
-  gMain.addColorStop(1.00,'#C01800'); // vermelho escuro borda
-  ctx.fillStyle=gMain;
-  blobPath();
-  ctx.fill();
-  ctx.restore();
+  // Anel rosa-lilás, aberto em cima à direita (onde passa o braço)
+  const gRing=ctx.createLinearGradient(s*.15,s*.15,s*.85,s*.85);
+  gRing.addColorStop(0,'#C7A2F2');
+  gRing.addColorStop(.5,'#E58BD3');
+  gRing.addColorStop(1,'#F3B0DC');
+  const deg=d=>d*Math.PI/180;
+  ctx.beginPath();ctx.arc(cx,cy,s*.405,deg(-38),deg(-82),false);
+  ctx.strokeStyle=gRing;ctx.lineWidth=s*.042;ctx.lineCap='round';ctx.stroke();
 
-  // Brilho interno (reflexo luz — canto superior esquerdo)
-  blobPath();
-  ctx.save();
-  ctx.clip();
-  const gHL=ctx.createRadialGradient(cx-s*.20,cy-s*.22,0, cx-s*.06,cy-s*.10,s*.42);
-  gHL.addColorStop(0.00,'rgba(255,255,220,.60)');
-  gHL.addColorStop(0.30,'rgba(255,210,120,.20)');
-  gHL.addColorStop(0.70,'rgba(255,180, 80,.06)');
-  gHL.addColorStop(1.00,'rgba(255,255,255,.00)');
-  ctx.fillStyle=gHL;
-  ctx.fillRect(0,0,s,s);
-  ctx.restore();
-
-  // Bordadura suave (claridade na borda interior)
-  blobPath();
-  ctx.save();
-  ctx.clip();
-  const gEdge=ctx.createRadialGradient(cx,cy,s*.28,cx,cy,s*.44);
-  gEdge.addColorStop(0,'rgba(0,0,0,.00)');
-  gEdge.addColorStop(1,'rgba(0,0,0,.18)');
-  ctx.fillStyle=gEdge;
-  ctx.fillRect(0,0,s,s);
-  ctx.restore();
-
-  // ── Figura humana dançante ────────────────────────────────────────────────
-  const lw=s*.046;
-  const fy=cy-s*.06; // centro vertical da figura
-
-  ctx.lineCap='round';
-  ctx.lineJoin='round';
-  ctx.lineWidth=lw;
-
-  // Cabeça (círculo sólido negro)
-  ctx.fillStyle='#0A0A0A';
-  ctx.strokeStyle='#0A0A0A';
-  ctx.beginPath();
-  ctx.arc(cx, fy-s*.20, s*.082, 0, Math.PI*2);
-  ctx.fill();
-
-  // Pescoço + torso
-  ctx.beginPath();
-  ctx.moveTo(cx, fy-s*.118);
-  ctx.lineTo(cx+s*.010, fy+s*.088);
-  ctx.stroke();
-
-  // Braço esquerdo — levantado e aberto (pose vitória)
-  ctx.beginPath();
-  ctx.moveTo(cx-s*.005, fy-s*.022);
-  ctx.lineTo(cx-s*.265, fy-s*.195);
-  ctx.stroke();
-
-  // Braço direito — levantado, ligeiramente assimétrico (pose dinâmica)
-  ctx.beginPath();
-  ctx.moveTo(cx-s*.005, fy-s*.022);
-  ctx.lineTo(cx+s*.245, fy-s*.168);
-  ctx.stroke();
-
-  // Perna esquerda — passada aberta para baixo-esquerda
-  ctx.beginPath();
-  ctx.moveTo(cx+s*.010, fy+s*.088);
-  ctx.lineTo(cx-s*.225, fy+s*.375);
-  ctx.stroke();
-
-  // Perna direita — passada aberta para baixo-direita
-  ctx.beginPath();
-  ctx.moveTo(cx+s*.010, fy+s*.088);
-  ctx.lineTo(cx+s*.245, fy+s*.348);
-  ctx.stroke();
-
-  // ── Coração no peito (elemento identitário da marca) ──────────────────────
-  const hx=cx+s*.004, hy2=fy-s*.010;
-  const hr=s*.048;
-  ctx.fillStyle='#0A0A0A';
-  ctx.beginPath();
-  // Coração via 2 semicírculos + ponto em baixo
-  ctx.moveTo(hx, hy2+hr*.75);
-  ctx.bezierCurveTo(hx-hr*.05, hy2+hr*.30, hx-hr*1.20, hy2+hr*.20, hx-hr*1.20, hy2-hr*.42);
-  ctx.bezierCurveTo(hx-hr*1.20, hy2-hr*1.10, hx-hr*.10, hy2-hr*1.20, hx, hy2-hr*.55);
-  ctx.bezierCurveTo(hx+hr*.10, hy2-hr*1.20, hx+hr*1.20, hy2-hr*1.10, hx+hr*1.20, hy2-hr*.42);
-  ctx.bezierCurveTo(hx+hr*1.20, hy2+hr*.20, hx+hr*.05, hy2+hr*.30, hx, hy2+hr*.75);
-  ctx.closePath();
-  ctx.fill();
+  // Figura branca
+  ctx.strokeStyle='#FFFFFF';ctx.fillStyle='#FFFFFF';
+  ctx.lineWidth=s*.058;ctx.lineCap='round';ctx.lineJoin='round';
+  const P=(x,y)=>[s*x,s*y];
+  ctx.beginPath();ctx.arc(...P(.50,.355),s*.058,0,Math.PI*2);ctx.fill();          // cabeça
+  ctx.beginPath();ctx.moveTo(...P(.50,.445));ctx.lineTo(...P(.50,.60));ctx.stroke(); // tronco
+  ctx.beginPath();ctx.moveTo(...P(.49,.47));ctx.quadraticCurveTo(...P(.40,.43),...P(.37,.30));ctx.stroke(); // braço esquerdo
+  ctx.beginPath();ctx.moveTo(...P(.51,.47));ctx.quadraticCurveTo(...P(.61,.42),...P(.665,.215));ctx.stroke(); // braço direito (sobe pela abertura)
+  ctx.beginPath();ctx.moveTo(...P(.50,.60));ctx.lineTo(...P(.395,.755));ctx.stroke(); // perna esquerda
+  ctx.beginPath();ctx.moveTo(...P(.50,.60));ctx.lineTo(...P(.605,.755));ctx.stroke(); // perna direita
 
   return c.toDataURL('image/png');
 }
@@ -801,62 +937,43 @@ function makePDF(mod, singleEx){
   const CB=[226,232,240]; // borda
   let y=0;
 
-  // Cores da marca AGE IN MOVE (sempre laranja, independente do módulo)
-  const BRAND=[232,80,0];      // laranja escuro #E85000
-  const BRAND_L=[255,140,30];  // laranja claro
+  // Cores da marca AGE IN MOVE (sempre azul-violeta, independente do módulo)
+  const BRAND=[52,72,197];     // azul Age in Move #3448C5
+  const BRAND_L=[169,139,234]; // lilás #A98BEA
   const logo=getLogo();
 
   // ── Cabeçalho de cada página ──────────────────────────────────────────────
   const header=()=>{
-    // Gradiente simulado com dois rectângulos
-    doc.setFillColor(...BRAND);
-    doc.rect(0,0,W,12,'F');
-    doc.setFillColor(255,165,30);
-    doc.rect(0,0,W*0.4,12,'F');
-    doc.setFillColor(...BRAND);
-    doc.rect(0,0,W*0.4,12,'F'); // overlay para suavizar
+    // Cabeçalho sem faixa: à esquerda logo + nome, à direita slogan + @
 
     // Logo (miniatura)
     try{ doc.addImage(logo,'PNG',ML-1,0.8,10,10); }catch(e){}
 
-    // Nome da marca
-    doc.setTextColor(255,255,255);
-    doc.setFontSize(10);
+    // Esquerda: logo + nome
+    doc.setTextColor(...BRAND);
+    doc.setFontSize(11);
     doc.setFont('helvetica','bold');
-    doc.text('Age in Move',ML+11,5.5);
-    // Slogan
+    doc.text('Age in Move',ML+11,7.2);
+    // Direita: slogan + handle
     doc.setFont('helvetica','italic');
-    doc.setFontSize(7.5);
-    doc.text('idade em movimento  |  @age_in_move',ML+11,10);
-    // Separador vertical
-    doc.setDrawColor(255,255,255,0.3);
-    doc.setLineWidth(0.3);
-    doc.line(ML+62,1.5,ML+62,10.5);
-    // GeroCare Pro (direita)
-    doc.setFont('helvetica','normal');
-    doc.setFontSize(7.5);
-    doc.text('GeroCare Pro  |  Protocolo Clinico',W-MR,7,{align:'right'});
+    doc.setFontSize(8);
+    doc.setTextColor(...CG);
+    doc.text('idade em movimento  |  @age_in_move',W-MR,7.2,{align:'right'});
     y=17;
   };
 
   // ── Rodapé de cada página ─────────────────────────────────────────────────
   const footer=()=>{
-    doc.setFillColor(255,245,235); // laranja muito suave
-    doc.rect(0,H-9,W,9,'F');
-    doc.setDrawColor(...BRAND_L);
-    doc.setLineWidth(0.4);
-    doc.line(0,H-9,W,H-9);
-    // Logo mini no rodapé
-    try{ doc.addImage(logo,'PNG',ML-1,H-8.5,7,7); }catch(e){}
+    // Rodapé igual ao cabeçalho: sem faixa, logo + nome à esquerda, slogan + @ à direita
+    try{ doc.addImage(logo,'PNG',ML-1,H-11.8,10,10); }catch(e){}
     doc.setTextColor(...BRAND);
-    doc.setFontSize(7);
+    doc.setFontSize(11);
     doc.setFont('helvetica','bold');
-    doc.text('Age in Move',ML+8,H-4);
+    doc.text('Age in Move',ML+11,H-5.4);
     doc.setFont('helvetica','italic');
-    doc.setFontSize(6.5);
+    doc.setFontSize(8);
     doc.setTextColor(...CG);
-    doc.text('idade em movimento  |  @age_in_move  |  GeroCare Pro (c) 2026  |  '+new Date().toLocaleDateString('pt-PT'),
-      ML+42,H-4);
+    doc.text('idade em movimento  |  @age_in_move',W-MR,H-5.4,{align:'right'});
   };
 
   // ── Nova página ───────────────────────────────────────────────────────────
@@ -897,8 +1014,8 @@ function makePDF(mod, singleEx){
     header();
 
     // ── Logo grande centrado ─────────────────────────────────
-    try{ doc.addImage(logo,'PNG',W/2-18,y,36,36); }catch(e){}
-    y+=40;
+    try{ doc.addImage(logo,'PNG',W/2-16,y,32,32); }catch(e){}
+    y+=42;
 
     // Nome da marca
     doc.setTextColor(...BRAND);
@@ -977,11 +1094,11 @@ function makePDF(mod, singleEx){
     doc.setTextColor(...BRAND);
     doc.setFontSize(8.5);
     doc.setFont('helvetica','bold');
-    doc.text('Age in Move  x  GeroCare Pro',W/2,y+5,{align:'center'});
+    doc.text('Age in Move',W/2,y+5,{align:'center'});
     doc.setFont('helvetica','italic');
     doc.setFontSize(8);
     doc.setTextColor(...CG);
-    doc.text('idade em movimento  |  @age_in_move  |  gerocarepro.pt',W/2,y+11,{align:'center'});
+    doc.text('idade em movimento  |  @age_in_move',W/2,y+11,{align:'center'});
     y+=16;
     footer();
   }
@@ -1141,11 +1258,11 @@ function makePDF(mod, singleEx){
     // Marca final com logo
     y+=8;
     try{ doc.addImage(logo,'PNG',W/2-5,y,10,10); }catch(e){}
-    y+=13;
+    y+=15;
     doc.setFontSize(10);doc.setFont('helvetica','bold');doc.setTextColor(...BRAND);
-    doc.text('Age in Move  x  GeroCare Pro',W/2,y,{align:'center'});
+    doc.text('Age in Move',W/2,y,{align:'center'});
     doc.setFont('helvetica','italic');doc.setFontSize(8.5);doc.setTextColor(...CG);
-    doc.text('idade em movimento  |  @age_in_move  |  gerocarepro.pt',W/2,y+6,{align:'center'});
+    doc.text('idade em movimento  |  @age_in_move',W/2,y+6,{align:'center'});
   }
 
   footer();
@@ -1174,7 +1291,7 @@ function _exportExercisePDF_html(ex,mod){
   const c=mod.type==='fisico'?'#16a34a':'#4f46e5';
   const cbg=mod.type==='fisico'?'#f0fdf4':'#ede9fe';
   const html=`<!DOCTYPE html><html lang="pt"><head>
-<meta charset="UTF-8"><title>${ex.name} — GeroCare Pro</title>
+<meta charset="UTF-8"><title>${ex.name} — Age in Move</title>
 <style>
 @page{size:A4;margin:18mm}
 *{box-sizing:border-box;margin:0;padding:0}
@@ -1207,17 +1324,17 @@ body{font-family:Arial,sans-serif;color:#1a202c;font-size:10.5pt;line-height:1.5
 </style></head><body>
 <div class="no-print">
   <span style="flex:1">📄 Ficha: <strong>${ex.name}</strong></span>
-  <button onclick="window.print()" style="background:#2563eb;color:#fff;border:none;padding:7px 18px;border-radius:6px;cursor:pointer;font-weight:700">🖨 Imprimir / PDF</button>
+  <button onclick="window.print()" style="background:#4361EE;color:#fff;border:none;padding:7px 18px;border-radius:6px;cursor:pointer;font-weight:700">🖨 Imprimir / PDF</button>
   <button onclick="window.close()" style="background:#475569;color:#fff;border:none;padding:7px 12px;border-radius:6px;cursor:pointer">✕</button>
 </div>
 <div class="wrap">
   <div class="hdr">
-    <div class="hdr-logo">🧠 GeroCare Pro · Ficha de Exercício</div>
+    <div class="hdr-logo">Age in Move · Ficha de Exercício</div>
     <div class="hdr-mod">${mod.icon} ${mod.name}</div>
     <div class="hdr-title">${ex.name}</div>
   </div>
   ${buildExBlock(ex,mod,'',c,cbg)}
-  <div class="footer">GeroCare Pro © 2026 · gerocarepro.pt · Documento de uso clínico confidencial · ${new Date().toLocaleDateString('pt-PT')}</div>
+  <div class="footer">Age in Move © 2026 · idade em movimento · @age_in_move · Documento de uso clínico confidencial · ${new Date().toLocaleDateString('pt-PT')}</div>
 </div>
 </body></html>`;
   const w=window.open('','_blank');
@@ -1231,8 +1348,8 @@ function LandingPage({onEnter}){
     <div className="landing">
       <nav className="landing-nav">
         <div style={{display:'flex',alignItems:'center',gap:10}}>
-          <div style={{width:36,height:36,background:'linear-gradient(135deg,#2563eb,#7c3aed)',borderRadius:10,display:'flex',alignItems:'center',justifyContent:'center',fontSize:18}}>🧠</div>
-          <span style={{color:'#fff',fontWeight:800,fontSize:18}}>GeroCare Pro</span>
+          <LogoPreview size={42}/>
+          <div><div style={{color:'#fff',fontWeight:800,fontSize:18,lineHeight:1.1}}>Age in Move</div><div style={{color:'#E9A6D6',fontSize:11,fontStyle:'italic'}}>idade em movimento</div></div>
         </div>
         <button className="btn btn-primary" onClick={onEnter}>Entrar na Plataforma</button>
       </nav>
@@ -1370,10 +1487,10 @@ function LandingPage({onEnter}){
       </div>
 
       {/* ── RODAPÉ ── */}
-      <div style={{borderTop:'1px solid rgba(255,255,255,.08)',padding:'24px 60px',display:'flex',justifyContent:'space-between',alignItems:'center',flexWrap:'wrap',gap:12}}>
+      <div className="landing-footer" style={{borderTop:'1px solid rgba(255,255,255,.08)',padding:'24px 60px',display:'flex',justifyContent:'space-between',alignItems:'center',flexWrap:'wrap',gap:12}}>
         <div style={{display:'flex',alignItems:'center',gap:10}}>
-          <div style={{width:28,height:28,background:'linear-gradient(135deg,#2563eb,#7c3aed)',borderRadius:8,display:'flex',alignItems:'center',justifyContent:'center',fontSize:14}}>🧠</div>
-          <span style={{color:'#64748b',fontSize:13}}>GeroCare Pro © 2026 · gerocarepro.pt</span>
+          <LogoPreview size={30}/>
+          <span style={{color:'#64748b',fontSize:13}}>Age in Move © 2026 · idade em movimento · @age_in_move</span>
         </div>
         <div style={{display:'flex',gap:20,fontSize:13,color:'#64748b'}}>
           {['Política de Privacidade','Termos de Uso','Contacto','RGPD'].map(l=><a key={l} href="#" style={{color:'#64748b',textDecoration:'none'}}>{l}</a>)}
@@ -1384,7 +1501,7 @@ function LandingPage({onEnter}){
 }
 
 function AuthPage({onLogin}){
-  const [email,setEmail]=useState('terapeuta@gerocare.pt');
+  const [email,setEmail]=useState('terapeuta@exemplo.pt');
   const [pass,setPass]=useState('••••••••');
   const [loading,setLoading]=useState(false);
   const handle=e=>{e.preventDefault();setLoading(true);setTimeout(()=>{setLoading(false);onLogin();},900);};
@@ -1392,9 +1509,10 @@ function AuthPage({onLogin}){
     <div className="auth-page">
       <div className="auth-card">
         <div className="auth-logo">
-          <div className="icon">🧠</div>
-          <div style={{fontSize:22,fontWeight:800,color:'#0f172a'}}>GeroCare Pro</div>
-          <div style={{fontSize:13,color:'#64748b',marginTop:4}}>Plataforma Clínica Geriátrica</div>
+          <div style={{display:'flex',justifyContent:'center',marginBottom:10}}><LogoPreview size={64}/></div>
+          <div style={{fontSize:22,fontWeight:800,color:'#0f172a'}}>Age in Move</div>
+          <div style={{fontSize:13,color:'#4361EE',fontStyle:'italic',marginTop:2}}>idade em movimento</div>
+          <div style={{fontSize:12,color:'#64748b',marginTop:4}}>Plataforma Clínica Geriátrica</div>
         </div>
         <form onSubmit={handle}>
           <div className="form-group"><label>Email Profissional</label><input value={email} onChange={e=>setEmail(e.target.value)} type="email"/></div>
@@ -1412,32 +1530,36 @@ function AuthPage({onLogin}){
   );
 }
 
-function Sidebar({page,setPage,onLogout}){
+function Sidebar({page,setPage,onLogout,open,onClose}){
+  const {patients,posts,profile}=useStore();
   const nav=[
     {section:'Principal'},
     {id:'dashboard',label:'Dashboard',icon:'📊'},
     {id:'modules',label:'Módulos',icon:'📚'},
-    {id:'patients',label:'Pacientes',icon:'👥',badge:'5'},
+    {id:'patients',label:'Pacientes',icon:'👥',badge:patients.length?String(patients.length):null},
     {section:'Gestão'},
     {id:'calendar',label:'Calendário',icon:'📅'},
-    {id:'forum',label:'Fórum Clínico',icon:'💬',badge:'3'},
+    {id:'forum',label:'Fórum Clínico',icon:'💬',badge:posts.length?String(posts.length):null},
     {section:'Configuração'},
     {id:'settings',label:'Definições',icon:'⚙️'},
   ];
   return(
-    <div className="sidebar">
-      <div className="sidebar-logo" style={{background:'linear-gradient(135deg,#1a0a00,#2d1000)',borderBottom:'1px solid #3d1800'}}>
+    <>
+    <div className={`sidebar-backdrop${open?' open':''}`} onClick={onClose}/>
+    <div className={`sidebar${open?' open':''}`}>
+      <div className="sidebar-logo" style={{background:'linear-gradient(135deg,#16224f,#1d2a63)',borderBottom:'1px solid #2c3a78'}}>
         <LogoPreview size={38}/>
         <div>
           <div style={{fontWeight:800,fontSize:13,color:'#fff',lineHeight:1.2}}>Age in Move</div>
-          <div style={{fontSize:9,color:'#FF9040',fontStyle:'italic',letterSpacing:'.02em'}}>idade em movimento</div>
+          <div style={{fontSize:9,color:'#E9A6D6',fontStyle:'italic',letterSpacing:'.02em'}}>idade em movimento</div>
         </div>
+        <button className="sidebar-close" aria-label="Fechar menu" onClick={onClose}>✕</button>
       </div>
       <nav className="sidebar-nav">
         {nav.map((item,i)=>
           item.section
             ?<div key={i} className="nav-section">{item.section}</div>
-            :<div key={item.id} className={`nav-item${page===item.id?' active':''}`} onClick={()=>setPage(item.id)}>
+            :<div key={item.id} className={`nav-item${page===item.id?' active':''}`} onClick={()=>{setPage(item.id);onClose&&onClose();}}>
               <span className="icon">{item.icon}</span>
               <span>{item.label}</span>
               {item.badge&&<span className="badge">{item.badge}</span>}
@@ -1448,28 +1570,46 @@ function Sidebar({page,setPage,onLogout}){
         <div className="nav-item" style={{marginBottom:4}}>
           <span className="icon">👤</span>
           <div>
-            <div style={{fontSize:13,fontWeight:600,color:'#e2e8f0'}}>Dra. Ana Santos</div>
-            <div style={{fontSize:11,color:'#64748b'}}>Neuropsicóloga</div>
+            <div style={{fontSize:13,fontWeight:600,color:'#e2e8f0'}}>{profile.name}</div>
+            <div style={{fontSize:11,color:'#64748b'}}>{profile.role}</div>
           </div>
         </div>
         <div className="nav-item" onClick={onLogout}><span className="icon">🚪</span><span>Sair</span></div>
       </div>
     </div>
+    </>
   );
 }
 
-function DashboardHome({setPage}){
+function DashboardHome({setPage,openPatient}){
+  const {patients,sessions,events,profile}=useStore();
+  const now=new Date();
+  const today=todayISO();
+  const monthKey=today.slice(0,7);
+  const prevMonth=new Date(now.getFullYear(),now.getMonth()-1,1);
+  const prevKey=`${prevMonth.getFullYear()}-${String(prevMonth.getMonth()+1).padStart(2,'0')}`;
+  const sessMonth=sessions.filter(s=>s.date.startsWith(monthKey)).length;
+  const sessPrev=sessions.filter(s=>s.date.startsWith(prevKey)).length;
+  const newThisMonth=patients.filter(p=>(p.createdAt||'').startsWith(monthKey)).length;
+  const atRisk=patients.filter(p=>p.risk!=='low');
+  const highRisk=patients.filter(p=>p.risk==='high').length;
+  const upcoming=events.filter(e=>e.date>=today).sort((a,b)=>a.date.localeCompare(b.date)).slice(0,6);
+  const todayCount=events.filter(e=>e.date===today&&e.type==='session').length;
+  const exCount=MODULES.reduce((n,m)=>n+(m.exercises_list?m.exercises_list.length:(+m.exercises||0)),0);
   const stats=[
-    {label:'Pacientes Ativos',value:'5',sub:'+1 este mês',icon:'👥',bg:'#eff6ff',ic:'#1d4ed8'},
-    {label:'Sessões este Mês',value:'24',sub:'↑ 12% vs anterior',icon:'📋',bg:'#f0fdf4',ic:'#15803d'},
-    {label:'Módulos',value:'6',sub:'40 exercícios',icon:'📚',bg:'#faf5ff',ic:'#6d28d9'},
-    {label:'Alertas',value:'2',sub:'Revisão necessária',icon:'⚠️',bg:'#fffbeb',ic:'#b45309'},
+    {label:'Pacientes Ativos',value:String(patients.length),sub:newThisMonth?`+${newThisMonth} este mês`:'Sem novos este mês',icon:'👥',bg:'#eff6ff',ic:'#1d4ed8'},
+    {label:'Sessões este Mês',value:String(sessMonth),sub:`${sessPrev} no mês anterior`,icon:'📋',bg:'#f0fdf4',ic:'#15803d'},
+    {label:'Módulos',value:String(MODULES.length),sub:`${exCount} exercícios`,icon:'📚',bg:'#faf5ff',ic:'#6d28d9'},
+    {label:'Alertas',value:String(highRisk),sub:highRisk?'Risco alto — rever':'Sem alertas',icon:'⚠️',bg:'#fffbeb',ic:'#b45309'},
   ];
+  const hour=now.getHours();
+  const greet=hour<12?'Bom dia':hour<20?'Boa tarde':'Boa noite';
+  const dateStr=now.toLocaleDateString('pt-PT',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
   return(
     <div className="page">
       <div style={{marginBottom:20}}>
-        <h2 style={{fontSize:22,fontWeight:800,color:'#0f172a'}}>Bom dia, Dra. Ana! 👋</h2>
-        <p style={{color:'#64748b',fontSize:14}}>Quinta-feira, 5 de junho de 2026 · 4 sessões hoje</p>
+        <h2 style={{fontSize:22,fontWeight:800,color:'#0f172a'}}>{greet}, {profile.name.split(' ').slice(0,2).join(' ')}! 👋</h2>
+        <p style={{color:'#64748b',fontSize:14}}>{dateStr.charAt(0).toUpperCase()+dateStr.slice(1)} · {todayCount} {todayCount===1?'sessão':'sessões'} hoje</p>
       </div>
       <div className="grid-4" style={{marginBottom:20}}>
         {stats.map(s=>(
@@ -1481,23 +1621,28 @@ function DashboardHome({setPage}){
       </div>
       <div className="grid-2">
         <div className="card">
-          <div className="card-header"><div className="card-title">Sessões de Hoje</div><button className="btn btn-sm btn-secondary" onClick={()=>setPage('calendar')}>Ver calendário</button></div>
-          {[{time:'09:00',patient:'Maria Silva',module:'Memória',dur:'45min',status:'done'},{time:'10:30',patient:'António Costa',module:'Linguagem',dur:'40min',status:'next'},{time:'14:00',patient:'Rosa Nunes',module:'Executivas',dur:'50min',status:'upcoming'},{time:'16:00',patient:'José Rodrigues',module:'Memória',dur:'45min',status:'upcoming'}].map(s=>(
-            <div key={s.time} style={{display:'flex',alignItems:'center',gap:12,padding:'10px 0',borderBottom:'1px solid #f1f5f9'}}>
-              <div style={{width:52,fontSize:13,fontWeight:700,color:'#64748b'}}>{s.time}</div>
-              <div style={{flex:1}}><div style={{fontWeight:600,fontSize:14}}>{s.patient}</div><div style={{fontSize:12,color:'#64748b'}}>{s.module} · {s.dur}</div></div>
-              <span className={`badge badge-${s.status==='done'?'green':s.status==='next'?'blue':'gray'}`}>{s.status==='done'?'Concluída':s.status==='next'?'A seguir':'Agendada'}</span>
-            </div>
-          ))}
+          <div className="card-header"><div className="card-title">Próximos Eventos</div><button className="btn btn-sm btn-secondary" onClick={()=>setPage('calendar')}>Ver calendário</button></div>
+          {upcoming.length===0&&<p style={{fontSize:14,color:'#64748b',padding:'10px 0'}}>Sem eventos agendados. Adicione sessões no calendário.</p>}
+          {upcoming.map(e=>{
+            const p=patients.find(x=>x.id===e.patientId);
+            return(
+              <div key={e.id} style={{display:'flex',alignItems:'center',gap:12,padding:'10px 0',borderBottom:'1px solid #f1f5f9',cursor:p?'pointer':'default'}} onClick={()=>p&&openPatient(p.id)}>
+                <div style={{width:52,fontSize:13,fontWeight:700,color:'#64748b'}}>{e.date===today?'Hoje':fmtDate(e.date).slice(0,5)}</div>
+                <div style={{flex:1}}><div style={{fontWeight:600,fontSize:14}}>{e.title}</div><div style={{fontSize:12,color:'#64748b'}}>{e.time?`${e.time} · `:''}{e.type==='session'?'Sessão':e.type==='meeting'?'Reunião':'Formação'}</div></div>
+                <span className={`badge badge-${e.date===today?'blue':'gray'}`}>{e.date===today?'Hoje':'Agendada'}</span>
+              </div>
+            );
+          })}
         </div>
         <div className="card">
           <div className="card-header"><div className="card-title">Pacientes em Risco</div><button className="btn btn-sm btn-secondary" onClick={()=>setPage('patients')}>Ver todos</button></div>
-          {SAMPLE_PATIENTS.filter(p=>p.risk!=='low').map(p=>(
-            <div key={p.id} style={{display:'flex',alignItems:'center',gap:12,padding:'10px 0',borderBottom:'1px solid #f1f5f9'}}>
+          {atRisk.length===0&&<p style={{fontSize:14,color:'#64748b',padding:'10px 0'}}>Nenhum paciente em risco médio ou alto.</p>}
+          {atRisk.map(p=>(
+            <div key={p.id} style={{display:'flex',alignItems:'center',gap:12,padding:'10px 0',borderBottom:'1px solid #f1f5f9',cursor:'pointer'}} onClick={()=>openPatient(p.id)}>
               <div className="avatar" style={{background:p.avatar}}>{p.initials}</div>
               <div style={{flex:1}}><div style={{fontWeight:600,fontSize:14}}>{p.name}</div><div style={{fontSize:12,color:'#64748b'}}>{p.diagnosis}</div></div>
               <div style={{textAlign:'right'}}>
-                <div style={{fontWeight:700,fontSize:15,color:p.mmse<20?'#dc2626':p.mmse<25?'#d97706':'#16a34a'}}>MMSE {p.mmse}</div>
+                <div style={{fontWeight:700,fontSize:15,color:mmseColor(p.mmse)}}>MMSE {p.mmse??'—'}</div>
                 <span className={`badge badge-${p.risk==='high'?'red':'yellow'}`}>{p.risk==='high'?'Alto':'Médio'}</span>
               </div>
             </div>
@@ -1679,19 +1824,26 @@ function ModuleDetail({mod,setPage}){
   );
 }
 
-function PatientsPage({setPage,setSelectedPatient}){
+function riskBadge(risk){return <span className={`badge badge-${risk==='high'?'red':risk==='medium'?'yellow':'green'}`}>{risk==='high'?'Alto':risk==='medium'?'Médio':'Baixo'}</span>;}
+function nextEventFor(events,patientId){
+  const t=todayISO();
+  return events.filter(e=>e.patientId===patientId&&e.date>=t).sort((a,b)=>a.date.localeCompare(b.date))[0]||null;
+}
+
+function PatientsPage({setPage,openPatient}){
+  const {patients,events}=useStore();
   const [search,setSearch]=useState('');
   const [filter,setFilter]=useState('all');
-  const filtered=SAMPLE_PATIENTS.filter(p=>{
+  const filtered=patients.filter(p=>{
     const ms=p.name.toLowerCase().includes(search.toLowerCase());
-    const mf=filter==='all'||(filter==='high'&&p.risk==='high')||(filter==='medium'&&p.risk==='medium')||(filter==='low'&&p.risk==='low');
+    const mf=filter==='all'||p.risk===filter;
     return ms&&mf;
   });
   return(
     <div className="page">
-      <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:20}}>
-        <div><h2 style={{fontSize:22,fontWeight:800,color:'#0f172a'}}>Gestão de Pacientes</h2><p style={{color:'#64748b',fontSize:14}}>{SAMPLE_PATIENTS.length} pacientes ativos</p></div>
-        <div style={{display:'flex',gap:10}}>
+      <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:20,gap:12,flexWrap:'wrap'}}>
+        <div><h2 style={{fontSize:22,fontWeight:800,color:'#0f172a'}}>Gestão de Pacientes</h2><p style={{color:'#64748b',fontSize:14}}>{patients.length} {patients.length===1?'paciente ativo':'pacientes ativos'}</p></div>
+        <div style={{display:'flex',gap:10,flexWrap:'wrap'}}>
           <select style={{width:160}} value={filter} onChange={e=>setFilter(e.target.value)}>
             <option value="all">Todos os riscos</option><option value="high">Risco alto</option><option value="medium">Risco médio</option><option value="low">Risco baixo</option>
           </select>
@@ -1700,51 +1852,235 @@ function PatientsPage({setPage,setSelectedPatient}){
         </div>
       </div>
       <div className="card">
-        <table className="table">
+        {patients.length===0?(
+          <div style={{textAlign:'center',padding:'40px 20px',color:'#64748b'}}>
+            <div style={{fontSize:40,marginBottom:8}}>👥</div>
+            <div style={{fontWeight:700,color:'#0f172a',marginBottom:4}}>Ainda não há pacientes</div>
+            <p style={{fontSize:14,marginBottom:16}}>Crie o primeiro paciente para começar a registar sessões e avaliações.</p>
+            <button className="btn btn-primary" onClick={()=>setPage('new-patient')}>+ Novo Paciente</button>
+          </div>
+        ):(
+        <div className="table-scroll"><table className="table">
           <thead><tr><th>Paciente</th><th>Idade</th><th>Diagnóstico</th><th>MMSE</th><th>Módulo</th><th>Sessões</th><th>Risco</th><th>Próxima</th><th></th></tr></thead>
           <tbody>
+            {filtered.length===0&&<tr><td colSpan={9} style={{textAlign:'center',color:'#64748b',padding:20}}>Nenhum paciente corresponde à pesquisa.</td></tr>}
             {filtered.map(p=>{
-              const mod=MODULES.find(m=>m.id===p.module);
+              const mod=MODULES.find(m=>m.id===+p.module);
+              const nx=nextEventFor(events,p.id);
               return(
                 <tr key={p.id}>
-                  <td><div style={{display:'flex',alignItems:'center',gap:10}}><div className="avatar" style={{background:p.avatar}}>{p.initials}</div><div><div style={{fontWeight:600}}>{p.name}</div><div style={{fontSize:12,color:'#64748b'}}>{p.gender==='F'?'Feminino':'Masculino'}</div></div></div></td>
-                  <td>{p.age} anos</td>
-                  <td style={{maxWidth:180,fontSize:13}}>{p.diagnosis}</td>
-                  <td><span style={{fontWeight:700,fontSize:15,color:p.mmse<20?'#dc2626':p.mmse<25?'#d97706':'#16a34a'}}>{p.mmse}</span></td>
+                  <td><div style={{display:'flex',alignItems:'center',gap:10}}><div className="avatar" style={{background:p.avatar}}>{p.initials}</div><div><div style={{fontWeight:600}}>{p.name}</div><div style={{fontSize:12,color:'#64748b'}}>{p.gender==='F'?'Feminino':p.gender==='M'?'Masculino':'Outro'}</div></div></div></td>
+                  <td>{p.age!=null?`${p.age} anos`:'—'}</td>
+                  <td style={{maxWidth:180,fontSize:13}}>{p.diagnosis||'—'}</td>
+                  <td><span style={{fontWeight:700,fontSize:15,color:mmseColor(p.mmse)}}>{p.mmse??'—'}</span></td>
                   <td>{mod&&<span style={{fontSize:12}}>{mod.icon} {mod.name.split(' ')[0]}</span>}</td>
-                  <td style={{color:'#64748b',fontSize:13}}>{p.sessions}</td>
-                  <td><span className={`badge badge-${p.risk==='high'?'red':p.risk==='medium'?'yellow':'green'}`}>{p.risk==='high'?'Alto':p.risk==='medium'?'Médio':'Baixo'}</span></td>
-                  <td style={{fontSize:13,color:'#64748b'}}>{p.nextSession}</td>
-                  <td><button className="btn btn-sm btn-secondary" onClick={()=>{setSelectedPatient(p);setPage('patient-profile');}}>Ver</button></td>
+                  <td style={{color:'#64748b',fontSize:13}}>{p.sessions||0}</td>
+                  <td>{riskBadge(p.risk)}</td>
+                  <td style={{fontSize:13,color:'#64748b'}}>{nx?fmtDate(nx.date):'—'}</td>
+                  <td><button className="btn btn-sm btn-secondary" onClick={()=>openPatient(p.id)}>Ver</button></td>
                 </tr>
               );
             })}
           </tbody>
-        </table>
+        </table></div>
+        )}
       </div>
     </div>
   );
 }
 
+function Modal({title,onClose,children}){
+  return(
+    <div className="modal-overlay" onClick={e=>{if(e.target===e.currentTarget)onClose();}}>
+      <div className="modal">
+        <div className="modal-header"><div className="modal-title">{title}</div><button className="close-btn" onClick={onClose}>×</button></div>
+        {children}
+      </div>
+    </div>
+  );
+}
+
+function NewSessionModal({patient,onClose}){
+  const {addSession,prefs}=useStore();
+  const [f,setF]=useState({date:todayISO(),moduleId:String(patient.module||1),exercises:'3',duration:prefs.duration||'45',performance:'Bom',notes:''});
+  const set=(k,v)=>setF(x=>({...x,[k]:v}));
+  const save=()=>{
+    if(!f.date) return;
+    addSession({patientId:patient.id,date:f.date,moduleId:+f.moduleId,exercises:+f.exercises||0,duration:+f.duration||0,performance:f.performance,notes:f.notes.trim()});
+    onClose();
+  };
+  return(
+    <Modal title={`Nova Sessão — ${patient.name}`} onClose={onClose}>
+      <div className="grid-2">
+        <div className="form-group"><label>Data *</label><input type="date" value={f.date} onChange={e=>set('date',e.target.value)}/></div>
+        <div className="form-group"><label>Módulo</label><select value={f.moduleId} onChange={e=>set('moduleId',e.target.value)}>{MODULES.map(m=><option key={m.id} value={m.id}>{m.icon} {m.name}</option>)}</select></div>
+        <div className="form-group"><label>Nº de exercícios</label><input type="number" min={0} value={f.exercises} onChange={e=>set('exercises',e.target.value)}/></div>
+        <div className="form-group"><label>Duração (min)</label><input type="number" min={0} value={f.duration} onChange={e=>set('duration',e.target.value)}/></div>
+      </div>
+      <div className="form-group"><label>Desempenho</label><select value={f.performance} onChange={e=>set('performance',e.target.value)}>{['Excelente','Bom','Razoável','Fraco'].map(x=><option key={x}>{x}</option>)}</select></div>
+      <div className="form-group"><label>Notas da sessão</label><textarea rows={3} value={f.notes} onChange={e=>set('notes',e.target.value)} placeholder="Observações, dificuldades, ajustes..."/></div>
+      <div style={{display:'flex',gap:10,justifyContent:'flex-end',marginTop:16}}>
+        <button className="btn btn-secondary" onClick={onClose}>Cancelar</button>
+        <button className="btn btn-primary" onClick={save}>Guardar Sessão</button>
+      </div>
+    </Modal>
+  );
+}
+
+function NewAssessmentModal({patient,onClose}){
+  const {addAssessments}=useStore();
+  const [date,setDate]=useState(todayISO());
+  const [vals,setVals]=useState({mmse:'',gds:'',barthel:'',moca:''});
+  const [notes,setNotes]=useState('');
+  const [err,setErr]=useState('');
+  const save=()=>{
+    const parsed={};
+    for(const [k,v] of Object.entries(vals)){
+      const n=numOrNull(v);
+      if(n!=null&&(n<0||n>SCALES[k].max)){setErr(`${SCALES[k].name}: valor entre 0 e ${SCALES[k].max}.`);return;}
+      parsed[k]=n;
+    }
+    if(Object.values(parsed).every(v=>v==null)){setErr('Preencha pelo menos uma escala.');return;}
+    addAssessments(patient.id,date,parsed,notes.trim());
+    onClose();
+  };
+  return(
+    <Modal title={`Nova Avaliação — ${patient.name}`} onClose={onClose}>
+      {err&&<div className="alert alert-warning" style={{marginBottom:12}}>{err}</div>}
+      <div className="form-group"><label>Data *</label><input type="date" value={date} onChange={e=>setDate(e.target.value)}/></div>
+      <div className="grid-2">
+        {Object.entries(SCALES).map(([k,s])=>(
+          <div key={k} className="form-group"><label>{s.name} (0–{s.max})</label><input type="number" min={0} max={s.max} value={vals[k]} onChange={e=>setVals(v=>({...v,[k]:e.target.value}))} placeholder={patient[k]!=null?`Atual: ${patient[k]}`:'—'}/></div>
+        ))}
+      </div>
+      <div className="form-group"><label>Notas</label><input value={notes} onChange={e=>setNotes(e.target.value)} placeholder="Condições de aplicação, observações..."/></div>
+      <div style={{display:'flex',gap:10,justifyContent:'flex-end',marginTop:16}}>
+        <button className="btn btn-secondary" onClick={onClose}>Cancelar</button>
+        <button className="btn btn-primary" onClick={save}>Guardar Avaliação</button>
+      </div>
+    </Modal>
+  );
+}
+
+// ─── GRÁFICO DE EVOLUÇÃO DAS ESCALAS ───────────────────────────────────────
+const SCALE_BANDS={
+  mmse:{cuts:[{v:27,label:'Normal ≥27'},{v:24,label:'DCL 24'}],inverse:false},
+  moca:{cuts:[{v:26,label:'Normal ≥26'}],inverse:false},
+  gds:{cuts:[{v:5,label:'Normal ≤5'},{v:10,label:'Leve ≤10'}],inverse:true},
+  barthel:{cuts:[{v:95,label:'Indep. ≥95'},{v:75,label:'Leve ≥75'}],inverse:false},
+};
+function ScaleChart({points,scale}){
+  const [hover,setHover]=useState(null);
+  const max=SCALES[scale].max, band=SCALE_BANDS[scale];
+  const narrow=useNarrow();
+  const W=narrow?400:1000,H=narrow?250:260,ml=narrow?32:44,mr=narrow?10:20,mt=18,mb=30,iw=W-ml-mr,ih=H-mt-mb,pad=points.length>1?Math.min(60,iw/(points.length*2)):0;
+  // Posição ordinal: cada avaliação tem o seu lugar, mesmo que no mesmo dia
+  const idx=new Map(points.map((p,i)=>[p.id,i]));
+  const xi=i=>points.length===1?ml+iw/2:ml+pad+(i/(points.length-1))*(iw-2*pad);
+  const xp=p=>xi(idx.get(p.id));
+  const y=v=>mt+ih-(v/max)*ih;
+  const step=max===15?5:max===30?10:25;const ticks=[];for(let t=0;t<=max;t+=step)ticks.push(t);
+  const path=points.map((p,i)=>`${i?'L':'M'}${xi(i).toFixed(1)},${y(p.value).toFixed(1)}`).join(' ');
+  const first=points[0].value,last=points[points.length-1].value,delta=last-first;
+  const better=band.inverse?delta<0:delta>0;
+  const xLabels=points.length<=(narrow?4:8)?points:[points[0],points[Math.floor(points.length/2)],points[points.length-1]];
+  return(
+    <div>
+      <div style={{display:'flex',gap:20,marginBottom:8,fontSize:13,color:'#64748b',flexWrap:'wrap'}}>
+        <span>Atual: <strong style={{color:'#0f172a',fontSize:16}}>{last}</strong>/{max}</span>
+        {points.length>1&&<span>Variação desde {fmtDate(points[0].date)}: <strong style={{color:delta===0?'#64748b':better?'#16a34a':'#dc2626'}}>{delta>0?'+':''}{delta}</strong></span>}
+        <span>{points.length} {points.length===1?'registo':'registos'}</span>
+      </div>
+      <div style={{position:'relative'}}>
+        <svg viewBox={`0 0 ${W} ${H}`} style={{width:'100%',height:'auto',display:'block'}} role="img" aria-label={`Evolução ${SCALES[scale].name}`}>
+          {ticks.map(t=>(
+            <g key={t}>
+              <line x1={ml} x2={W-mr} y1={y(t)} y2={y(t)} stroke="#f1f5f9"/>
+              <text x={ml-8} y={y(t)+4} textAnchor="end" fontSize="11" fill="#94a3b8">{t}</text>
+            </g>
+          ))}
+          {band.cuts.map(c=>(
+            <g key={c.v}>
+              <line x1={ml} x2={W-mr} y1={y(c.v)} y2={y(c.v)} stroke="#cbd5e1" strokeDasharray="4 4"/>
+              <text x={W-mr} y={y(c.v)-4} textAnchor="end" fontSize="10" fill="#94a3b8">{c.label}</text>
+            </g>
+          ))}
+          {xLabels.map(p=><text key={'x'+p.id} x={xp(p)} y={H-10} textAnchor="middle" fontSize="11" fill="#94a3b8">{fmtDate(p.date).slice(0,5)}/{p.date.slice(2,4)}</text>)}
+          {points.length>1&&<path d={path} fill="none" stroke="#4361EE" strokeWidth="2" strokeLinejoin="round" strokeLinecap="round"/>}
+          {points.map((p,i)=>(
+            <g key={p.id} onMouseEnter={()=>setHover(i)} onMouseLeave={()=>setHover(null)} style={{cursor:'default'}}>
+              <circle cx={xp(p)} cy={y(p.value)} r="12" fill="transparent"/>
+              <circle cx={xp(p)} cy={y(p.value)} r={hover===i?5:3.5} fill="#4361EE" stroke="#fff" strokeWidth="2" style={{pointerEvents:'none'}}/>
+            </g>
+          ))}
+          {points.length<=(narrow?6:8)&&points.map(p=><text key={'v'+p.id} x={xp(p)} y={y(p.value)-10} textAnchor="middle" fontSize="11" fontWeight="700" fill="#334155" style={{pointerEvents:'none'}}>{p.value}</text>)}
+        </svg>
+        {hover!=null&&(()=>{const p=points[hover];return(
+          <div style={{position:'absolute',left:`${xp(p)/W*100}%`,top:`${y(p.value)/H*100}%`,transform:'translate(-50%,calc(-100% - 14px))',background:'#0f172a',color:'#fff',fontSize:12,padding:'6px 10px',borderRadius:6,whiteSpace:'nowrap',pointerEvents:'none'}}>
+            <strong>{p.value}/{max}</strong> · {fmtDate(p.date)}{p.notes?<div style={{color:'#cbd5e1',maxWidth:240,whiteSpace:'normal'}}>{p.notes}</div>:null}
+          </div>);})()}
+      </div>
+    </div>
+  );
+}
+function ScaleEvolution({assessments}){
+  const available=Object.keys(SCALES).filter(k=>assessments.some(a=>a.scale===k));
+  const [scale,setScale]=useState(available[0]||'mmse');
+  if(!available.length) return null;
+  const cur=available.includes(scale)?scale:available[0];
+  const points=assessments.filter(a=>a.scale===cur).slice().sort((a,b)=>a.date.localeCompare(b.date)||a.id-b.id);
+  return(
+    <div className="card">
+      <div className="card-header" style={{marginBottom:12,flexWrap:'wrap',gap:8}}>
+        <div className="card-title">Evolução das Escalas</div>
+        <div style={{display:'flex',gap:6,flexWrap:'wrap'}}>
+          {available.map(k=><button key={k} className={`btn btn-sm ${k===cur?'btn-primary':'btn-secondary'}`} onClick={()=>setScale(k)}>{SCALES[k].name}</button>)}
+        </div>
+      </div>
+      <ScaleChart key={cur} points={points} scale={cur}/>
+    </div>
+  );
+}
+
 function PatientProfile({patient,setPage}){
+  const {sessions,assessments,events,deletePatient,deleteSession,updatePatient,profile}=useStore();
   const [tab,setTab]=useState('overview');
-  const mod=MODULES.find(m=>m.id===patient.module);
+  const [modal,setModal]=useState(null);
+  const [editNotes,setEditNotes]=useState(null);
+  const mod=MODULES.find(m=>m.id===+patient.module);
+  const pSessions=sessions.filter(s=>s.patientId===patient.id).sort((a,b)=>b.date.localeCompare(a.date));
+  const pAssess=assessments.filter(a=>a.patientId===patient.id).sort((a,b)=>b.date.localeCompare(a.date)||b.id-a.id);
+  const nx=nextEventFor(events,patient.id);
+  const goodPerf=pSessions.filter(s=>s.performance==='Excelente'||s.performance==='Bom').length;
+  const remove=()=>{
+    if(!confirm(`Eliminar ${patient.name} e todo o seu historial (sessões, avaliações e eventos)? Esta ação não pode ser desfeita.`)) return;
+    deletePatient(patient.id);setPage('patients');
+  };
+  const scaleRows=[
+    {name:'MMSE',val:patient.mmse,max:30,good:27,warn:24,label:v=>v>=27?'Normal':v>=24?'DCL possível':'Défice'},
+    {name:'MoCA',val:patient.moca,max:30,good:26,warn:22,label:v=>v>=26?'Normal':'Défice cognitivo'},
+    {name:'GDS-15',val:patient.gds,max:15,inverse:true,good:5,warn:10,label:v=>v<=5?'Sem depressão':v<=10?'Dep. leve':'Dep. grave'},
+    {name:'Barthel',val:patient.barthel,max:100,good:95,warn:75,label:v=>v>=95?'Independente':v>=75?'Dep. leve':'Dep. moderada'},
+  ].filter(s=>s.val!=null);
+  const lvl=s=>s.inverse?(s.val<=s.good?'g':s.val<=s.warn?'w':'r'):(s.val>=s.good?'g':s.val>=s.warn?'w':'r');
+  const lvlColor={g:'#16a34a',w:'#d97706',r:'#dc2626'},lvlBadge={g:'green',w:'yellow',r:'red'};
   return(
     <div className="page">
-      <div style={{display:'flex',alignItems:'center',gap:12,marginBottom:20}}>
+      <div style={{display:'flex',alignItems:'center',gap:12,marginBottom:20,flexWrap:'wrap'}}>
         <button className="btn btn-secondary btn-sm" onClick={()=>setPage('patients')}>← Voltar</button>
         <div className="avatar" style={{background:patient.avatar,width:52,height:52,fontSize:18}}>{patient.initials}</div>
         <div style={{flex:1}}>
           <h2 style={{fontSize:20,fontWeight:800,color:'#0f172a'}}>{patient.name}</h2>
           <div style={{display:'flex',gap:10,alignItems:'center',marginTop:4}}>
-            <span style={{fontSize:13,color:'#64748b'}}>{patient.age} anos · {patient.gender==='F'?'Feminino':'Masculino'}</span>
+            <span style={{fontSize:13,color:'#64748b'}}>{patient.age!=null?`${patient.age} anos · `:''}{patient.gender==='F'?'Feminino':patient.gender==='M'?'Masculino':'Outro'}</span>
             <span className={`badge badge-${patient.risk==='high'?'red':patient.risk==='medium'?'yellow':'green'}`}>Risco {patient.risk==='high'?'Alto':patient.risk==='medium'?'Médio':'Baixo'}</span>
           </div>
         </div>
-        <button className="btn btn-primary btn-sm">+ Nova Sessão</button>
+        <button className="btn btn-secondary btn-sm" onClick={()=>setModal('assessment')}>+ Avaliação</button>
+        <button className="btn btn-primary btn-sm" onClick={()=>setModal('session')}>+ Nova Sessão</button>
       </div>
       <div className="tab-bar">
-        {[['overview','Visão Geral'],['assessments','Avaliações'],['sessions','Sessões']].map(([id,label])=>(
+        {[['overview','Visão Geral'],['assessments',`Avaliações (${pAssess.length})`],['sessions',`Sessões (${pSessions.length})`]].map(([id,label])=>(
           <div key={id} className={`tab${tab===id?' active':''}`} onClick={()=>setTab(id)}>{label}</div>
         ))}
       </div>
@@ -1753,80 +2089,118 @@ function PatientProfile({patient,setPage}){
           <div>
             <div className="card">
               <div className="card-title" style={{marginBottom:14}}>Informação Clínica</div>
-              {[['Diagnóstico',patient.diagnosis],['Módulo',mod?`${mod.icon} ${mod.name}`:'—'],['Cuidador',patient.caregiver],['Contacto',patient.phone],['Email',patient.email]].map(([k,v])=>(
+              {[['Diagnóstico',patient.diagnosis],['Módulo',mod?`${mod.icon} ${mod.name}`:'—'],['Cuidador',patient.caregiver+(patient.caregiverPhone?` · ${patient.caregiverPhone}`:'')],['Contacto',patient.phone],['Email',patient.email],['Referenciação',patient.referral]].filter(([k,v])=>k!=='Referenciação'||v).map(([k,v])=>(
                 <div key={k} style={{display:'flex',justifyContent:'space-between',padding:'8px 0',borderBottom:'1px solid #f1f5f9',fontSize:14}}>
-                  <span style={{color:'#64748b'}}>{k}</span><span style={{fontWeight:600,textAlign:'right',maxWidth:240}}>{v}</span>
+                  <span style={{color:'#64748b'}}>{k}</span><span style={{fontWeight:600,textAlign:'right',maxWidth:240}}>{v||'—'}</span>
                 </div>
               ))}
             </div>
-            <div className="card"><div className="card-title" style={{marginBottom:10}}>Notas Clínicas</div><p style={{fontSize:14,color:'#334155',lineHeight:1.6}}>{patient.notes}</p></div>
+            {patient.goals&&<div className="card"><div className="card-title" style={{marginBottom:10}}>Objetivos Terapêuticos</div><p style={{fontSize:14,color:'#334155',lineHeight:1.6,whiteSpace:'pre-wrap'}}>{patient.goals}</p></div>}
+            <div className="card">
+              <div className="card-header" style={{marginBottom:10}}><div className="card-title">Notas Clínicas</div>{editNotes==null&&<button className="btn btn-sm btn-secondary" onClick={()=>setEditNotes(patient.notes||'')}>Editar</button>}</div>
+              {editNotes==null
+                ?<p style={{fontSize:14,color:'#334155',lineHeight:1.6,whiteSpace:'pre-wrap'}}>{patient.notes||'Sem notas.'}</p>
+                :<div><textarea rows={5} value={editNotes} onChange={e=>setEditNotes(e.target.value)}/><div style={{display:'flex',gap:8,justifyContent:'flex-end',marginTop:8}}><button className="btn btn-sm btn-secondary" onClick={()=>setEditNotes(null)}>Cancelar</button><button className="btn btn-sm btn-primary" onClick={()=>{updatePatient(patient.id,{notes:editNotes});setEditNotes(null);}}>Guardar</button></div></div>}
+            </div>
           </div>
           <div>
             <div className="card">
               <div className="card-title" style={{marginBottom:14}}>Escalas de Avaliação</div>
-              {[
-                {name:'MMSE',val:patient.mmse,max:30,good:27,warn:24,label:patient.mmse>=27?'Normal':patient.mmse>=24?'DCL possível':'Défice'},
-                {name:'GDS-15',val:patient.gds,max:15,good:5,warn:10,label:patient.gds<=5?'Sem depressão':patient.gds<=10?'Dep. leve':'Dep. grave'},
-                {name:'Barthel',val:patient.barthel,max:100,good:95,warn:75,label:patient.barthel>=95?'Independente':patient.barthel>=75?'Dep. leve':'Dep. moderada'},
-              ].map(s=>(
+              {scaleRows.length===0&&<p style={{fontSize:14,color:'#64748b'}}>Sem avaliações registadas. <a href="#" onClick={e=>{e.preventDefault();setModal('assessment');}}>Registar avaliação</a></p>}
+              {scaleRows.map(s=>{const l=lvl(s);return(
                 <div key={s.name} style={{marginBottom:16}}>
                   <div style={{display:'flex',justifyContent:'space-between',marginBottom:6}}>
                     <span style={{fontWeight:700,fontSize:14}}>{s.name}</span>
                     <div style={{display:'flex',gap:8,alignItems:'center'}}>
-                      <span style={{fontWeight:800,fontSize:16,color:s.val>=s.good?'#16a34a':s.val>=s.warn?'#d97706':'#dc2626'}}>{s.val}<span style={{fontSize:12,color:'#94a3b8',fontWeight:400}}>/{s.max}</span></span>
-                      <span className={`badge badge-${s.val>=s.good?'green':s.val>=s.warn?'yellow':'red'}`} style={{fontSize:11}}>{s.label}</span>
+                      <span style={{fontWeight:800,fontSize:16,color:lvlColor[l]}}>{s.val}<span style={{fontSize:12,color:'#94a3b8',fontWeight:400}}>/{s.max}</span></span>
+                      <span className={`badge badge-${lvlBadge[l]}`} style={{fontSize:11}}>{s.label(s.val)}</span>
                     </div>
                   </div>
-                  <div className="progress-bar"><div className="progress-fill" style={{width:`${(s.val/s.max)*100}%`,background:s.val>=s.good?'#16a34a':s.val>=s.warn?'#d97706':'#dc2626'}}/></div>
+                  <div className="progress-bar"><div className="progress-fill" style={{width:`${(s.val/s.max)*100}%`,background:lvlColor[l]}}/></div>
                 </div>
-              ))}
+              );})}
             </div>
             <div className="card">
               <div className="card-title" style={{marginBottom:14}}>Progresso</div>
               <div style={{display:'flex',justifyContent:'space-around'}}>
-                <div style={{textAlign:'center'}}><div style={{fontSize:28,fontWeight:800}}>{patient.sessions}</div><div style={{fontSize:12,color:'#64748b'}}>Sessões</div></div>
-                <div style={{textAlign:'center'}}><div style={{fontSize:28,fontWeight:800,color:'#16a34a'}}>78%</div><div style={{fontSize:12,color:'#64748b'}}>Adesão</div></div>
-                <div style={{textAlign:'center'}}><div style={{fontSize:22,fontWeight:800,color:'#2563eb'}}>{patient.nextSession.split('-').slice(1).join('/')}</div><div style={{fontSize:12,color:'#64748b'}}>Próxima</div></div>
+                <div style={{textAlign:'center'}}><div style={{fontSize:28,fontWeight:800}}>{patient.sessions||0}</div><div style={{fontSize:12,color:'#64748b'}}>Sessões</div></div>
+                <div style={{textAlign:'center'}}><div style={{fontSize:28,fontWeight:800,color:'#16a34a'}}>{pSessions.length?Math.round(goodPerf/pSessions.length*100)+'%':'—'}</div><div style={{fontSize:12,color:'#64748b'}}>Desempenho bom+</div></div>
+                <div style={{textAlign:'center'}}><div style={{fontSize:22,fontWeight:800,color:'#4361EE'}}>{nx?fmtDate(nx.date).slice(0,5):'—'}</div><div style={{fontSize:12,color:'#64748b'}}>Próxima</div></div>
               </div>
             </div>
+            <div style={{textAlign:'right'}}><button className="btn btn-danger btn-sm" onClick={remove}>Eliminar paciente</button></div>
           </div>
         </div>
       )}
       {tab==='assessments'&&(
+        <div>
+        <ScaleEvolution assessments={pAssess}/>
         <div className="card">
-          <div className="card-title" style={{marginBottom:16}}>Histórico de Avaliações</div>
-          <table className="table">
+          <div className="card-header" style={{marginBottom:16}}><div className="card-title">Histórico de Avaliações</div><button className="btn btn-sm btn-primary" onClick={()=>setModal('assessment')}>+ Avaliação</button></div>
+          {pAssess.length===0?<p style={{fontSize:14,color:'#64748b'}}>Sem avaliações registadas.</p>:(
+          <div className="table-scroll"><table className="table">
             <thead><tr><th>Data</th><th>Avaliação</th><th>Resultado</th><th>Terapeuta</th><th>Notas</th></tr></thead>
             <tbody>
-              {[{date:'2026-05-15',name:'MMSE',result:patient.mmse+'/30',notes:'Aplicado em condições standard'},{date:'2026-05-15',name:'GDS-15',result:patient.gds+'/15',notes:'Humor estável'},{date:'2026-05-15',name:'Índice de Barthel',result:patient.barthel+'/100',notes:'AVDs preservadas'},{date:'2026-04-10',name:'MMSE',result:(patient.mmse+1)+'/30',notes:'Ligeira descida face ao mês anterior'}].map((a,i)=>(
-                <tr key={i}><td>{a.date}</td><td style={{fontWeight:600}}>{a.name}</td><td style={{fontWeight:700,color:'#2563eb'}}>{a.result}</td><td>Dra. Ana Santos</td><td style={{fontSize:13,color:'#64748b'}}>{a.notes}</td></tr>
+              {pAssess.map(a=>(
+                <tr key={a.id}><td>{fmtDate(a.date)}</td><td style={{fontWeight:600}}>{SCALES[a.scale]?.name||a.scale}</td><td style={{fontWeight:700,color:'#4361EE'}}>{a.value}/{SCALES[a.scale]?.max}</td><td>{a.therapist||profile.name}</td><td style={{fontSize:13,color:'#64748b'}}>{a.notes||'—'}</td></tr>
               ))}
             </tbody>
-          </table>
+          </table></div>)}
+        </div>
         </div>
       )}
       {tab==='sessions'&&(
         <div className="card">
-          <div className="card-title" style={{marginBottom:16}}>Histórico de Sessões</div>
-          <table className="table">
-            <thead><tr><th>Data</th><th>Módulo</th><th>Exercícios</th><th>Duração</th><th>Desempenho</th><th>Estado</th></tr></thead>
+          <div className="card-header" style={{marginBottom:16}}><div className="card-title">Histórico de Sessões</div><button className="btn btn-sm btn-primary" onClick={()=>setModal('session')}>+ Nova Sessão</button></div>
+          {pSessions.length===0?<p style={{fontSize:14,color:'#64748b'}}>Sem sessões registadas.</p>:(
+          <div className="table-scroll"><table className="table">
+            <thead><tr><th>Data</th><th>Módulo</th><th>Exercícios</th><th>Duração</th><th>Desempenho</th><th>Notas</th><th></th></tr></thead>
             <tbody>
-              {['Excelente','Bom','Bom','Razoável','Bom'].map((perf,i)=>(
-                <tr key={i}><td>2026-{String(6-Math.floor(i/2)).padStart(2,'0')}-{String(30-i*7<1?1:30-i*7).padStart(2,'0')}</td><td>{mod?.name||'Memória'}</td><td>3 exercícios</td><td>45 min</td><td><span className={`badge badge-${perf==='Excelente'?'green':perf==='Bom'?'blue':'yellow'}`}>{perf}</span></td><td><span className="badge badge-green">Concluída</span></td></tr>
-              ))}
+              {pSessions.map(s=>{const m=MODULES.find(x=>x.id===+s.moduleId);return(
+                <tr key={s.id}><td>{fmtDate(s.date)}</td><td>{m?`${m.icon} ${m.name}`:'—'}</td><td>{s.exercises} exercícios</td><td>{s.duration} min</td><td><span className={`badge badge-${s.performance==='Excelente'?'green':s.performance==='Bom'?'blue':s.performance==='Fraco'?'red':'yellow'}`}>{s.performance}</span></td><td style={{fontSize:13,color:'#64748b',maxWidth:220}}>{s.notes||'—'}</td>
+                <td><button className="btn btn-sm btn-secondary" title="Eliminar sessão" onClick={()=>{if(confirm('Eliminar esta sessão?'))deleteSession(s);}}>🗑</button></td></tr>
+              );})}
             </tbody>
-          </table>
+          </table></div>)}
         </div>
       )}
+      {modal==='session'&&<NewSessionModal patient={patient} onClose={()=>setModal(null)}/>}
+      {modal==='assessment'&&<NewAssessmentModal patient={patient} onClose={()=>setModal(null)}/>}
     </div>
   );
 }
 
-function NewPatientPage({setPage}){
+function NewPatientPage({setPage,openPatient}){
+  const {addPatient,addAssessments}=useStore();
   const [step,setStep]=useState(1);
+  const [err,setErr]=useState('');
   const [form,setForm]=useState({name:'',dob:'',gender:'F',phone:'',email:'',address:'',caregiver:'',caregiverPhone:'',diagnosis:'',module:'1',referral:'',mmse:'',gds:'',barthel:'',moca:'',notes:'',goals:'',frequency:'weekly'});
   const set=(k,v)=>setForm(f=>({...f,[k]:v}));
   const steps=[{n:1,label:'Dados Pessoais'},{n:2,label:'Clínico'},{n:3,label:'Avaliações'},{n:4,label:'Plano'}];
+  const validate=st=>{
+    if(st===1){
+      if(!form.name.trim()) return 'Indique o nome completo.';
+      if(!form.dob) return 'Indique a data de nascimento.';
+      const a=ageFromDob(form.dob); if(a==null||a<0||a>120) return 'Data de nascimento inválida.';
+    }
+    if(st===2&&!form.diagnosis) return 'Selecione o diagnóstico principal.';
+    if(st===3){
+      for(const k of Object.keys(SCALES)){const n=numOrNull(form[k]);if(n!=null&&(n<0||n>SCALES[k].max))return `${SCALES[k].name}: valor entre 0 e ${SCALES[k].max}.`;}
+    }
+    return '';
+  };
+  const next=()=>{
+    const e=validate(step); setErr(e); if(e) return;
+    if(step<4){setStep(s=>s+1);return;}
+    const scores={mmse:numOrNull(form.mmse),gds:numOrNull(form.gds),barthel:numOrNull(form.barthel),moca:numOrNull(form.moca)};
+    const t=todayISO();
+    const lastAssessed={};Object.entries(scores).forEach(([k,v])=>{if(v!=null)lastAssessed[k]=t;});
+    const p=addPatient({name:form.name.trim(),dob:form.dob,age:ageFromDob(form.dob),gender:form.gender,phone:form.phone.trim(),email:form.email.trim(),address:form.address.trim(),
+      caregiver:form.caregiver.trim(),caregiverPhone:form.caregiverPhone.trim(),diagnosis:form.diagnosis,module:+form.module,frequency:form.frequency,referral:form.referral.trim(),
+      ...scores,lastAssessed,goals:form.goals.trim(),notes:form.notes.trim()});
+    addAssessments(p.id,t,scores,'Avaliação inicial');
+    openPatient(p.id);
+  };
   return(
     <div className="page" style={{maxWidth:700,margin:'0 auto'}}>
       <div style={{display:'flex',alignItems:'center',gap:12,marginBottom:24}}>
@@ -1837,7 +2211,7 @@ function NewPatientPage({setPage}){
         {steps.map((s,i)=>(
           <React.Fragment key={s.n}>
             <div style={{display:'flex',flexDirection:'column',alignItems:'center',flex:1}}>
-              <div style={{width:32,height:32,borderRadius:'50%',display:'flex',alignItems:'center',justifyContent:'center',fontWeight:700,fontSize:14,background:step>s.n?'#16a34a':step===s.n?'#2563eb':'#e2e8f0',color:step>=s.n?'#fff':'#64748b'}}>{step>s.n?'✓':s.n}</div>
+              <div style={{width:32,height:32,borderRadius:'50%',display:'flex',alignItems:'center',justifyContent:'center',fontWeight:700,fontSize:14,background:step>s.n?'#16a34a':step===s.n?'#4361EE':'#e2e8f0',color:step>=s.n?'#fff':'#64748b'}}>{step>s.n?'✓':s.n}</div>
               <div style={{fontSize:11,marginTop:4,fontWeight:step===s.n?700:400,color:step===s.n?'#0f172a':'#64748b'}}>{s.label}</div>
             </div>
             {i<steps.length-1&&<div style={{flex:1,height:2,background:step>s.n?'#16a34a':'#e2e8f0',marginTop:16,alignSelf:'flex-start'}}/>}
@@ -1845,6 +2219,7 @@ function NewPatientPage({setPage}){
         ))}
       </div>
       <div className="card">
+        {err&&<div className="alert alert-warning">{err}</div>}
         {step===1&&(
           <div>
             <div className="card-title" style={{marginBottom:16}}>Dados Pessoais</div>
@@ -1910,8 +2285,8 @@ function NewPatientPage({setPage}){
           </div>
         )}
         <div style={{display:'flex',justifyContent:'space-between',marginTop:24}}>
-          <button className="btn btn-secondary" onClick={()=>step>1?setStep(s=>s-1):setPage('patients')}>{step===1?'Cancelar':'← Anterior'}</button>
-          <button className="btn btn-primary" onClick={()=>{if(step<4)setStep(s=>s+1);else{alert('Paciente criado com sucesso!');setPage('patients');}}}>{step===4?'✓ Criar Paciente':'Seguinte →'}</button>
+          <button className="btn btn-secondary" onClick={()=>{setErr('');step>1?setStep(s=>s-1):setPage('patients');}}>{step===1?'Cancelar':'← Anterior'}</button>
+          <button className="btn btn-primary" onClick={next}>{step===4?'✓ Criar Paciente':'Seguinte →'}</button>
         </div>
       </div>
     </div>
@@ -1919,11 +2294,14 @@ function NewPatientPage({setPage}){
 }
 
 function CalendarPage(){
-  const [cur,setCur]=useState({y:2026,m:5});
-  const [events,setEvents]=useState(SAMPLE_EVENTS);
+  const {events,setEvents,patients}=useStore();
+  const NOW=new Date();
+  const [cur,setCur]=useState({y:NOW.getFullYear(),m:NOW.getMonth()});
   const [showModal,setShowModal]=useState(false);
   const [selDate,setSelDate]=useState('');
-  const [newEv,setNewEv]=useState({title:'',type:'session',patientId:''});
+  const [newEv,setNewEv]=useState({title:'',type:'session',patientId:'',time:''});
+  const [selEvent,setSelEvent]=useState(null);
+  const [evErr,setEvErr]=useState('');
   const daysInMonth=(y,m)=>new Date(y,m+1,0).getDate();
   const firstDow=(y,m)=>(new Date(y,m,1).getDay()+6)%7;
   const totalDays=daysInMonth(cur.y,cur.m);
@@ -1938,9 +2316,15 @@ function CalendarPage(){
   const typeColors={session:'#eff6ff',meeting:'#f0fdf4',training:'#fffbeb'};
   const typeText={session:'#1d4ed8',meeting:'#15803d',training:'#b45309'};
   const addEvent=()=>{
-    if(!newEv.title||!selDate) return;
-    setEvents(ev=>[...ev,{id:Date.now(),date:selDate,title:newEv.title,type:newEv.type,color:typeText[newEv.type]||'#2563eb'}]);
-    setShowModal(false);setNewEv({title:'',type:'session',patientId:''});
+    const pat=newEv.type==='session'&&newEv.patientId?patients.find(p=>p.id===+newEv.patientId):null;
+    const title=newEv.title.trim()||(pat?`${pat.name.split(' ')[0]} ${pat.name.split(' ').slice(-1)[0]} - Sessão`:'');
+    if(!selDate){setEvErr('Escolha a data.');return;}
+    if(!title){setEvErr('Indique um título ou selecione um paciente.');return;}
+    const ev={id:Date.now(),date:selDate,title,type:newEv.type,color:typeText[newEv.type]||'#2563eb'};
+    if(newEv.time) ev.time=newEv.time;
+    if(pat) ev.patientId=pat.id;
+    setEvents(es=>[...es,ev]);
+    setShowModal(false);setEvErr('');setNewEv({title:'',type:'session',patientId:'',time:''});
   };
   return(
     <div className="page">
@@ -1948,9 +2332,9 @@ function CalendarPage(){
         <div><h2 style={{fontSize:22,fontWeight:800,color:'#0f172a'}}>Calendário Clínico</h2><p style={{color:'#64748b',fontSize:14}}>{monthName} {cur.y}</p></div>
         <div style={{display:'flex',gap:10}}>
           <button className="btn btn-secondary btn-sm" onClick={()=>setCur(c=>{const m=c.m===0?11:c.m-1,y=c.m===0?c.y-1:c.y;return{y,m};})}>← Anterior</button>
-          <button className="btn btn-secondary btn-sm" onClick={()=>setCur({y:2026,m:5})}>Hoje</button>
+          <button className="btn btn-secondary btn-sm" onClick={()=>setCur({y:NOW.getFullYear(),m:NOW.getMonth()})}>Hoje</button>
           <button className="btn btn-secondary btn-sm" onClick={()=>setCur(c=>{const m=c.m===11?0:c.m+1,y=c.m===11?c.y+1:c.y;return{y,m};})}>Seguinte →</button>
-          <button className="btn btn-primary btn-sm" onClick={()=>{setSelDate(`${cur.y}-${String(cur.m+1).padStart(2,'0')}-05`);setShowModal(true);}}>+ Evento</button>
+          <button className="btn btn-primary btn-sm" onClick={()=>{const sameMonth=cur.y===NOW.getFullYear()&&cur.m===NOW.getMonth();setSelDate(sameMonth?todayISO():`${cur.y}-${String(cur.m+1).padStart(2,'0')}-01`);setShowModal(true);}}>+ Evento</button>
         </div>
       </div>
       <div className="card">
@@ -1958,17 +2342,29 @@ function CalendarPage(){
         <div className="cal-grid">
           {cells.map((c,i)=>{
             const evs=c.cur?eventsOnDay(c.day):[];
-            const isToday=c.cur&&cur.y===2026&&cur.m===5&&c.day===5;
+            const isToday=c.cur&&cur.y===NOW.getFullYear()&&cur.m===NOW.getMonth()&&c.day===NOW.getDate();
             return(
               <div key={i} className={`cal-day${isToday?' today':''}${!c.cur?' other-month':''}`}
                 onClick={()=>{if(c.cur){setSelDate(`${cur.y}-${String(cur.m+1).padStart(2,'0')}-${String(c.day).padStart(2,'0')}`);setShowModal(true);}}}>
-                <div className="day-num" style={{color:isToday?'#2563eb':'#475569',fontWeight:isToday?800:700}}>{c.day}</div>
-                {evs.map(e=><div key={e.id} className="cal-event" style={{background:typeColors[e.type]||'#f1f5f9',color:typeText[e.type]||'#475569'}}>{e.title}</div>)}
+                <div className="day-num" style={{color:isToday?'#4361EE':'#475569',fontWeight:isToday?800:700}}>{c.day}</div>
+                {evs.map(e=><div key={e.id} className="cal-event" title={e.title} onClick={ev=>{ev.stopPropagation();setSelEvent(e);}} style={{cursor:'pointer',background:typeColors[e.type]||'#f1f5f9',color:typeText[e.type]||'#475569'}}>{e.time?`${e.time} `:''}{e.title}</div>)}
               </div>
             );
           })}
         </div>
       </div>
+      {(()=>{const monthEvs=events.filter(e=>{const[ey,em]=e.date.split('-').map(Number);return ey===cur.y&&em-1===cur.m;}).sort((a,b)=>(a.date+(a.time||'')).localeCompare(b.date+(b.time||'')));return(
+        <div className="card mobile-only" style={{marginTop:12}}>
+          <div className="card-title" style={{marginBottom:8}}>Eventos de {monthName}</div>
+          {monthEvs.length===0&&<p style={{fontSize:14,color:'#64748b'}}>Sem eventos este mês. Toque num dia para adicionar.</p>}
+          {monthEvs.map(e=>(
+            <div key={e.id} onClick={()=>setSelEvent(e)} style={{display:'flex',alignItems:'center',gap:10,padding:'10px 0',borderBottom:'1px solid #f1f5f9',cursor:'pointer'}}>
+              <div style={{width:4,alignSelf:'stretch',borderRadius:2,background:typeText[e.type]||'#64748b'}}/>
+              <div style={{width:58,fontSize:13,fontWeight:700,color:'#475569'}}>{fmtDate(e.date).slice(0,5)}{e.time&&<div style={{fontWeight:400,fontSize:12}}>{e.time}</div>}</div>
+              <div style={{flex:1,fontSize:14,fontWeight:600,color:'#0f172a'}}>{e.title}</div>
+            </div>
+          ))}
+        </div>);})()}
       <div style={{display:'flex',gap:16,marginTop:8}}>
         {[['session','Sessão','#eff6ff','#1d4ed8'],['meeting','Reunião','#f0fdf4','#15803d'],['training','Formação','#fffbeb','#b45309']].map(([t,l,bg,col])=>(
           <div key={t} style={{display:'flex',alignItems:'center',gap:6,fontSize:13}}><div style={{width:12,height:12,borderRadius:3,background:bg,border:`1px solid ${col}`}}/><span style={{color:'#64748b'}}>{l}</span></div>
@@ -1977,14 +2373,19 @@ function CalendarPage(){
       {showModal&&(
         <div className="modal-overlay" onClick={e=>{if(e.target===e.currentTarget)setShowModal(false);}}>
           <div className="modal">
-            <div className="modal-header"><div className="modal-title">Novo Evento — {selDate}</div><button className="close-btn" onClick={()=>setShowModal(false)}>×</button></div>
-            <div className="form-group"><label>Título *</label><input value={newEv.title} onChange={e=>setNewEv(v=>({...v,title:e.target.value}))} placeholder="Descrição do evento"/></div>
+            <div className="modal-header"><div className="modal-title">Novo Evento</div><button className="close-btn" onClick={()=>setShowModal(false)}>×</button></div>
+            {evErr&&<div className="alert alert-warning">{evErr}</div>}
+            <div className="grid-2">
+              <div className="form-group"><label>Data *</label><input type="date" value={selDate} onChange={e=>setSelDate(e.target.value)}/></div>
+              <div className="form-group"><label>Hora</label><input type="time" value={newEv.time} onChange={e=>setNewEv(v=>({...v,time:e.target.value}))}/></div>
+            </div>
+            <div className="form-group"><label>Título{newEv.type==='session'?' (opcional se escolher paciente)':' *'}</label><input value={newEv.title} onChange={e=>setNewEv(v=>({...v,title:e.target.value}))} placeholder="Descrição do evento"/></div>
             <div className="form-group"><label>Tipo</label>
               <select value={newEv.type} onChange={e=>setNewEv(v=>({...v,type:e.target.value}))}>
                 <option value="session">Sessão com Paciente</option><option value="meeting">Reunião</option><option value="training">Formação</option>
               </select>
             </div>
-            {newEv.type==='session'&&<div className="form-group"><label>Paciente</label><select value={newEv.patientId} onChange={e=>setNewEv(v=>({...v,patientId:e.target.value}))}><option value="">Selecionar...</option>{SAMPLE_PATIENTS.map(p=><option key={p.id} value={p.id}>{p.name}</option>)}</select></div>}
+            {newEv.type==='session'&&<div className="form-group"><label>Paciente</label><select value={newEv.patientId} onChange={e=>setNewEv(v=>({...v,patientId:e.target.value}))}><option value="">Selecionar...</option>{patients.map(p=><option key={p.id} value={p.id}>{p.name}</option>)}</select></div>}
             <div style={{display:'flex',gap:10,justifyContent:'flex-end',marginTop:20}}>
               <button className="btn btn-secondary" onClick={()=>setShowModal(false)}>Cancelar</button>
               <button className="btn btn-primary" onClick={addEvent}>Criar Evento</button>
@@ -1992,24 +2393,39 @@ function CalendarPage(){
           </div>
         </div>
       )}
+      {selEvent&&(
+        <Modal title={selEvent.title} onClose={()=>setSelEvent(null)}>
+          <div style={{fontSize:14,color:'#334155',lineHeight:1.8}}>
+            <div><strong>Data:</strong> {fmtDate(selEvent.date)}{selEvent.time?` às ${selEvent.time}`:''}</div>
+            <div><strong>Tipo:</strong> {selEvent.type==='session'?'Sessão com Paciente':selEvent.type==='meeting'?'Reunião':'Formação'}</div>
+            {selEvent.patientId&&<div><strong>Paciente:</strong> {patients.find(p=>p.id===selEvent.patientId)?.name||'—'}</div>}
+          </div>
+          <div style={{display:'flex',gap:10,justifyContent:'flex-end',marginTop:20}}>
+            <button className="btn btn-danger" onClick={()=>{if(confirm('Eliminar este evento?')){setEvents(es=>es.filter(x=>x.id!==selEvent.id));setSelEvent(null);}}}>Eliminar</button>
+            <button className="btn btn-secondary" onClick={()=>setSelEvent(null)}>Fechar</button>
+          </div>
+        </Modal>
+      )}
     </div>
   );
 }
 
 function ForumPage(){
-  const [posts,setPosts]=useState(INITIAL_POSTS);
+  const {posts,setPosts,profile}=useStore();
+  const me={author:profile.name,role:profile.role,avatar:'#4361EE',initials:initialsOf(profile.name.replace(/^(Dra?|Enf|Prof)\.?\s+/i,''))};
+  const timeLabel=p=>p.createdAt?new Date(p.createdAt).toLocaleString('pt-PT',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'}):p.time;
   const [showNew,setShowNew]=useState(false);
   const [reply,setReply]=useState({});
   const [newPost,setNewPost]=useState({title:'',body:''});
   const [expanded,setExpanded]=useState({});
   const submit=()=>{
     if(!newPost.title||!newPost.body) return;
-    setPosts(p=>[{id:Date.now(),author:'Dra. Ana Santos',role:'Neuropsicóloga',avatar:'#4f46e5',initials:'AS',title:newPost.title,body:newPost.body,time:'agora',likes:0,replies:[]},...p]);
+    setPosts(p=>[{id:Date.now(),...me,title:newPost.title,body:newPost.body,createdAt:new Date().toISOString(),likes:0,replies:[]},...p]);
     setNewPost({title:'',body:''});setShowNew(false);
   };
   const addReply=pid=>{
     if(!reply[pid]) return;
-    setPosts(ps=>ps.map(p=>p.id===pid?{...p,replies:[...p.replies,{author:'Dra. Ana Santos',initials:'AS',avatar:'#4f46e5',text:reply[pid],time:'agora'}]}:p));
+    setPosts(ps=>ps.map(p=>p.id===pid?{...p,replies:[...p.replies,{author:me.author,initials:me.initials,avatar:me.avatar,text:reply[pid],createdAt:new Date().toISOString()}]}:p));
     setReply(r=>({...r,[pid]:''}));
   };
   return(
@@ -2035,7 +2451,7 @@ function ForumPage(){
             <div className="avatar" style={{background:post.avatar}}>{post.initials}</div>
             <div style={{flex:1}}>
               <div style={{display:'flex',alignItems:'flex-start',justifyContent:'space-between',gap:8}}>
-                <div><div style={{fontWeight:700,fontSize:16,marginBottom:2}}>{post.title}</div><div style={{fontSize:12,color:'#64748b'}}>{post.author} · {post.role} · {post.time}</div></div>
+                <div><div style={{fontWeight:700,fontSize:16,marginBottom:2}}>{post.title}</div><div style={{fontSize:12,color:'#64748b'}}>{post.author} · {post.role} · {timeLabel(post)}</div></div>
                 <span className="badge badge-blue" style={{fontSize:11,flexShrink:0}}>🔬 Clínico</span>
               </div>
               <p style={{margin:'10px 0',color:'#334155',fontSize:14,lineHeight:1.6}}>{post.body}</p>
@@ -2049,7 +2465,7 @@ function ForumPage(){
                     <div key={i} style={{display:'flex',gap:10,marginBottom:10}}>
                       <div className="avatar" style={{background:r.avatar,width:30,height:30,fontSize:12}}>{r.initials}</div>
                       <div style={{flex:1,background:'#f8fafc',borderRadius:8,padding:'8px 12px'}}>
-                        <div style={{fontSize:12,fontWeight:700}}>{r.author} <span style={{fontWeight:400,color:'#94a3b8'}}>· {r.time}</span></div>
+                        <div style={{fontSize:12,fontWeight:700}}>{r.author} <span style={{fontWeight:400,color:'#94a3b8'}}>· {timeLabel(r)}</span></div>
                         <div style={{fontSize:13,color:'#334155',marginTop:3}}>{r.text}</div>
                       </div>
                     </div>
@@ -2069,75 +2485,125 @@ function ForumPage(){
 }
 
 function SettingsPage(){
+  const store=useStore();
+  const {profile,setProfile,prefs,setPrefs,patients,sessions,assessments,events,posts}=store;
   const [tab,setTab]=useState('profile');
-  const [saved,setSaved]=useState(false);
-  const save=()=>{setSaved(true);setTimeout(()=>setSaved(false),2000);};
+  const [msg,setMsg]=useState(null);
+  const [draft,setDraft]=useState(profile);
+  const [pdraft,setPdraft]=useState(prefs);
+  const fileRef=React.useRef(null);
+  useEffect(()=>{setDraft(profile);},[profile]);
+  useEffect(()=>{setPdraft(prefs);},[prefs]);
+  const flash=(type,text)=>{setMsg({type,text});setTimeout(()=>setMsg(null),3500);};
+  const saveProfile=()=>{if(!draft.name.trim()){flash('warning','O nome profissional é obrigatório.');return;}setProfile({...draft,name:draft.name.trim()});flash('success','✓ Perfil guardado!');};
+  const savePrefs=()=>{setPrefs(pdraft);flash('success','✓ Definições guardadas!');};
+  const P=(k,label,type='text')=><div className="form-group"><label>{label}</label><input type={type} value={draft[k]||''} onChange={e=>setDraft(d=>({...d,[k]:e.target.value}))}/></div>;
+  const Toggle=(k,label)=>(
+    <div key={k} style={{display:'flex',justifyContent:'space-between',alignItems:'center',padding:'12px 0',borderBottom:'1px solid #f1f5f9'}}>
+      <span style={{fontSize:14,color:'#334155'}}>{label}</span>
+      <input type="checkbox" checked={!!pdraft[k]} onChange={e=>setPdraft(d=>({...d,[k]:e.target.checked}))} style={{width:'auto',transform:'scale(1.3)'}}/>
+    </div>
+  );
+  const doExport=()=>{downloadJSON(store.exportData(),`age-in-move-backup-${todayISO()}.json`);flash('success','✓ Backup descarregado.');};
+  const doImport=e=>{
+    const file=e.target.files&&e.target.files[0]; e.target.value='';
+    if(!file) return;
+    const r=new FileReader();
+    r.onload=()=>{
+      try{
+        const json=JSON.parse(r.result);
+        const n=(json.data&&json.data.patients||[]).length;
+        if(!confirm(`Importar este backup (${n} pacientes)? Os dados atuais neste browser serão substituídos.`)) return;
+        store.importData(json);flash('success','✓ Backup importado com sucesso.');
+      }catch(err){flash('warning','Não foi possível importar: '+err.message);}
+    };
+    r.readAsText(file);
+  };
   return(
     <div className="page" style={{maxWidth:760}}>
       <h2 style={{fontSize:22,fontWeight:800,color:'#0f172a',marginBottom:4}}>Definições</h2>
-      <p style={{color:'#64748b',fontSize:14,marginBottom:20}}>Gerir perfil, notificações e preferências clínicas</p>
+      <p style={{color:'#64748b',fontSize:14,marginBottom:20}}>Gerir perfil, notificações, preferências clínicas e dados</p>
       <div className="tab-bar">
-        {[['profile','Perfil'],['clinical','Clínico'],['notifications','Notificações'],['security','Segurança']].map(([id,l])=>(
+        {[['profile','Perfil'],['clinical','Clínico'],['notifications','Notificações'],['data','Dados & Backup'],['security','Segurança']].map(([id,l])=>(
           <div key={id} className={`tab${tab===id?' active':''}`} onClick={()=>setTab(id)}>{l}</div>
         ))}
       </div>
-      {saved&&<div className="alert alert-success">✓ Definições guardadas!</div>}
+      {msg&&<div className={`alert alert-${msg.type}`}>{msg.text}</div>}
       {tab==='profile'&&(
         <div className="card">
           <div style={{display:'flex',gap:16,alignItems:'center',marginBottom:20,padding:'0 0 16px',borderBottom:'1px solid #f1f5f9'}}>
-            <div className="avatar" style={{background:'#4f46e5',width:64,height:64,fontSize:22}}>AS</div>
-            <div><div style={{fontWeight:700,fontSize:16}}>Dra. Ana Santos</div><div style={{color:'#64748b',fontSize:13}}>Neuropsicóloga · CRP 12345</div><button className="btn btn-secondary btn-sm" style={{marginTop:8}}>Alterar foto</button></div>
+            <div className="avatar" style={{background:'#4361EE',width:64,height:64,fontSize:22}}>{initialsOf(profile.name.replace(/^(Dra?|Enf|Prof)\.?\s+/i,''))}</div>
+            <div><div style={{fontWeight:700,fontSize:16}}>{profile.name}</div><div style={{color:'#64748b',fontSize:13}}>{profile.role} · {profile.license}</div></div>
           </div>
           <div className="grid-2">
-            <div className="form-group"><label>Nome Profissional</label><input defaultValue="Dra. Ana Santos"/></div>
-            <div className="form-group"><label>Nº Cédula</label><input defaultValue="CRP 12345"/></div>
-            <div className="form-group"><label>Email</label><input type="email" defaultValue="ana.santos@gerocare.pt"/></div>
-            <div className="form-group"><label>Telefone</label><input defaultValue="+351 912 345 678"/></div>
-            <div className="form-group"><label>Especialidade</label><input defaultValue="Neuropsicologia Geriátrica"/></div>
-            <div className="form-group"><label>Instituição</label><input defaultValue="Centro de Saúde Lisboa Norte"/></div>
+            {P('name','Nome Profissional *')}
+            {P('role','Profissão')}
+            {P('license','Nº Cédula')}
+            {P('email','Email','email')}
+            {P('phone','Telefone')}
+            {P('specialty','Especialidade')}
+            {P('institution','Instituição')}
           </div>
-          <button className="btn btn-primary" onClick={save}>Guardar Alterações</button>
+          <button className="btn btn-primary" onClick={saveProfile}>Guardar Alterações</button>
         </div>
       )}
       {tab==='clinical'&&(
         <div className="card">
           <div className="card-title" style={{marginBottom:16}}>Preferências Clínicas</div>
           <div className="grid-2">
-            <div className="form-group"><label>Duração padrão</label><select defaultValue="45"><option value="30">30 min</option><option value="45">45 min</option><option value="60">60 min</option></select></div>
-            <div className="form-group"><label>Escala preferida</label><select defaultValue="mmse"><option value="mmse">MMSE</option><option value="moca">MoCA</option><option value="both">Ambas</option></select></div>
+            <div className="form-group"><label>Duração padrão da sessão</label><select value={pdraft.duration} onChange={e=>setPdraft(d=>({...d,duration:e.target.value}))}><option value="30">30 min</option><option value="45">45 min</option><option value="60">60 min</option></select></div>
+            <div className="form-group"><label>Escala preferida</label><select value={pdraft.scale} onChange={e=>setPdraft(d=>({...d,scale:e.target.value}))}><option value="mmse">MMSE</option><option value="moca">MoCA</option><option value="both">Ambas</option></select></div>
           </div>
-          {[['Recordatórios automáticos de sessões',true],['Alertas de declínio cognitivo',true],['Relatórios mensais automáticos',false]].map(([l,def])=>(
-            <div key={l} style={{display:'flex',justifyContent:'space-between',alignItems:'center',padding:'12px 0',borderBottom:'1px solid #f1f5f9'}}>
-              <span style={{fontSize:14,color:'#334155'}}>{l}</span>
-              <input type="checkbox" defaultChecked={def} style={{width:'auto',transform:'scale(1.3)'}}/>
-            </div>
-          ))}
-          <button className="btn btn-primary" style={{marginTop:16}} onClick={save}>Guardar</button>
+          {Toggle('reminders','Recordatórios automáticos de sessões')}
+          {Toggle('declineAlerts','Alertas de declínio cognitivo')}
+          {Toggle('monthlyReports','Relatórios mensais automáticos')}
+          <button className="btn btn-primary" style={{marginTop:16}} onClick={savePrefs}>Guardar</button>
         </div>
       )}
       {tab==='notifications'&&(
         <div className="card">
           <div className="card-title" style={{marginBottom:16}}>Notificações</div>
-          {[['Sessões agendadas',true],['Alertas de pacientes em risco',true],['Mensagens do fórum',false],['Atualizações da plataforma',true]].map(([l,def])=>(
-            <div key={l} style={{display:'flex',justifyContent:'space-between',alignItems:'center',padding:'12px 0',borderBottom:'1px solid #f1f5f9'}}>
-              <span style={{fontSize:14,color:'#334155'}}>{l}</span>
-              <input type="checkbox" defaultChecked={def} style={{width:'auto',transform:'scale(1.3)'}}/>
+          {Toggle('nSessions','Sessões agendadas')}
+          {Toggle('nRisk','Alertas de pacientes em risco')}
+          {Toggle('nForum','Mensagens do fórum')}
+          {Toggle('nUpdates','Atualizações da plataforma')}
+          <button className="btn btn-primary" style={{marginTop:16}} onClick={savePrefs}>Guardar</button>
+        </div>
+      )}
+      {tab==='data'&&(
+        <div>
+          <div className="card">
+            <div className="card-title" style={{marginBottom:8}}>Dados guardados neste browser</div>
+            <p style={{fontSize:13,color:'#64748b',marginBottom:14}}>Tudo o que regista fica guardado automaticamente neste browser, neste computador. Não é enviado para nenhum servidor.</p>
+            <div className="grid-4" style={{marginBottom:6}}>
+              {[['Pacientes',patients.length],['Sessões',sessions.length],['Avaliações',assessments.length],['Eventos',events.length]].map(([l,v])=>(
+                <div key={l} style={{textAlign:'center',padding:12,background:'#f8fafc',borderRadius:8,border:'1px solid #e2e8f0'}}><div style={{fontSize:24,fontWeight:800}}>{v}</div><div style={{fontSize:12,color:'#64748b'}}>{l}</div></div>
+              ))}
             </div>
-          ))}
-          <button className="btn btn-primary" style={{marginTop:16}} onClick={save}>Guardar</button>
+          </div>
+          <div className="card">
+            <div className="card-title" style={{marginBottom:8}}>Backup</div>
+            <p style={{fontSize:13,color:'#64748b',marginBottom:14}}>Limpar o histórico do browser apaga estes dados. Descarregue um backup regularmente e guarde-o em local seguro (ex.: OneDrive). Também pode usá-lo para passar os dados para outro computador.</p>
+            <div style={{display:'flex',gap:10,flexWrap:'wrap'}}>
+              <button className="btn btn-primary" onClick={doExport}>⬇ Exportar backup (JSON)</button>
+              <button className="btn btn-secondary" onClick={()=>fileRef.current&&fileRef.current.click()}>⬆ Importar backup</button>
+              <input ref={fileRef} type="file" accept="application/json,.json" style={{display:'none'}} onChange={doImport}/>
+            </div>
+          </div>
+          <div className="alert alert-warning"><strong>RGPD:</strong> estes dados são de saúde (categoria especial). Use este computador apenas com conta protegida por password e guarde os ficheiros de backup de forma cifrada. Não partilhe backups por email.</div>
+          <div className="card" style={{border:'1px solid #fecaca',background:'#fef2f2'}}>
+            <div style={{fontWeight:700,color:'#991b1b',marginBottom:10}}>⚠️ Zona de Perigo</div>
+            <div style={{display:'flex',gap:10,flexWrap:'wrap'}}>
+              <button className="btn btn-secondary btn-sm" onClick={()=>{if(confirm('Repor os dados de demonstração? Os dados atuais serão substituídos.')){store.resetDemo();flash('success','✓ Dados de demonstração repostos.');}}}>Repor dados de demonstração</button>
+              <button className="btn btn-danger btn-sm" onClick={()=>{if(confirm('Apagar TODOS os pacientes, sessões, avaliações e eventos? Recomenda-se exportar um backup antes.')&&confirm('Tem a certeza? Esta ação não pode ser desfeita.')){store.clearAll();flash('success','✓ Dados apagados. Pode começar com dados reais.');}}}>Apagar todos os dados</button>
+            </div>
+          </div>
         </div>
       )}
       {tab==='security'&&(
         <div className="card">
           <div className="card-title" style={{marginBottom:16}}>Segurança</div>
-          <div className="form-group"><label>Password Atual</label><input type="password" placeholder="••••••••"/></div>
-          <div className="form-group"><label>Nova Password</label><input type="password" placeholder="Nova password"/></div>
-          <div className="form-group"><label>Confirmar</label><input type="password" placeholder="Repetir"/></div>
-          <button className="btn btn-primary" onClick={save}>Alterar Password</button>
-          <div style={{marginTop:20,padding:16,background:'#fef2f2',borderRadius:8,border:'1px solid #fecaca'}}>
-            <div style={{fontWeight:700,color:'#991b1b',marginBottom:6}}>⚠️ Zona de Perigo</div>
-            <button className="btn btn-danger btn-sm">Eliminar conta</button>
-          </div>
+          <div className="alert alert-info">Esta versão funciona sem servidor, por isso ainda não há contas nem passwords reais. A proteção dos dados depende do acesso ao computador.</div>
         </div>
       )}
     </div>
@@ -2145,16 +2611,20 @@ function SettingsPage(){
 }
 
 function DashboardLayout({children,page,setPage,onLogout,title}){
+  const {profile}=useStore();
+  const [menuOpen,setMenuOpen]=useState(false);
+  useEffect(()=>{setMenuOpen(false);},[page]);
   return(
     <div>
-      <Sidebar page={page} setPage={setPage} onLogout={onLogout}/>
+      <Sidebar page={page} setPage={setPage} onLogout={onLogout} open={menuOpen} onClose={()=>setMenuOpen(false)}/>
       <div className="main">
         <div className="topbar">
+          <button className="menu-toggle" aria-label="Abrir menu" aria-expanded={menuOpen} onClick={()=>setMenuOpen(o=>!o)}>☰</button>
           <div className="topbar-title">{title}</div>
           <div className="topbar-actions">
-            <button className="btn btn-secondary btn-sm">🔔</button>
-            <button className="btn btn-secondary btn-sm">❓</button>
-            <div className="avatar" style={{background:'#4f46e5',cursor:'pointer'}}>AS</div>
+            <button className="btn btn-secondary btn-sm hide-mobile">🔔</button>
+            <button className="btn btn-secondary btn-sm hide-mobile">❓</button>
+            <div className="avatar" style={{background:'#4361EE',cursor:'pointer'}} title="Definições" onClick={()=>setPage('settings')}>{initialsOf(profile.name.replace(/^(Dra?|Enf|Prof)\.?\s+/i,''))}</div>
           </div>
         </div>
         {children}
@@ -2163,27 +2633,40 @@ function DashboardLayout({children,page,setPage,onLogout,title}){
   );
 }
 
-function App(){
+function AppInner(){
+  const {patients}=useStore();
   const [screen,setScreen]=useState('landing');
   const [page,setPage]=useState('dashboard');
   const [selectedModule,setSelectedModule]=useState(null);
-  const [selectedPatient,setSelectedPatient]=useState(null);
+  const [selectedPatientId,setSelectedPatientId]=useState(null);
+  const selectedPatient=patients.find(p=>p.id===selectedPatientId)||null;
+  const openPatient=id=>{setSelectedPatientId(id);setPage('patient-profile');};
+  useEffect(()=>{window.scrollTo(0,0);},[page]);
   const titles={dashboard:'Dashboard',modules:'Módulos','module-detail':selectedModule?.name||'Módulo',patients:'Pacientes','patient-profile':selectedPatient?.name||'Paciente','new-patient':'Novo Paciente',calendar:'Calendário',forum:'Fórum Clínico',settings:'Definições'};
   if(screen==='landing') return <LandingPage onEnter={()=>setScreen('auth')}/>;
   if(screen==='auth') return <AuthPage onLogin={()=>setScreen('dashboard')}/>;
   return(
-    <DashboardLayout page={page} setPage={setPage} onLogout={()=>setScreen('landing')} title={titles[page]||'GeroCare Pro'}>
-      {page==='dashboard'&&<DashboardHome setPage={setPage}/>}
+    <DashboardLayout page={page} setPage={setPage} onLogout={()=>setScreen('landing')} title={titles[page]||'Age in Move'}>
+      {page==='dashboard'&&<DashboardHome setPage={setPage} openPatient={openPatient}/>}
       {page==='modules'&&<ModulesPage setPage={setPage} setSelectedModule={setSelectedModule}/>}
       {page==='module-detail'&&selectedModule&&<ModuleDetail mod={selectedModule} setPage={setPage}/>}
-      {page==='patients'&&<PatientsPage setPage={setPage} setSelectedPatient={setSelectedPatient}/>}
-      {page==='patient-profile'&&selectedPatient&&<PatientProfile patient={selectedPatient} setPage={setPage}/>}
-      {page==='new-patient'&&<NewPatientPage setPage={setPage}/>}
+      {page==='patients'&&<PatientsPage setPage={setPage} openPatient={openPatient}/>}
+      {page==='patient-profile'&&(selectedPatient?<PatientProfile key={selectedPatient.id} patient={selectedPatient} setPage={setPage}/>:<PatientsPage setPage={setPage} openPatient={openPatient}/>)}
+      {page==='new-patient'&&<NewPatientPage setPage={setPage} openPatient={openPatient}/>}
       {page==='calendar'&&<CalendarPage/>}
       {page==='forum'&&<ForumPage/>}
       {page==='settings'&&<SettingsPage/>}
     </DashboardLayout>
   );
+}
+
+function App(){
+  return <StoreProvider><AppInner/></StoreProvider>;
+}
+
+// Instalação como app (ecrã principal) e funcionamento offline — só quando servida por http(s)
+if('serviceWorker' in navigator && /^https?:$/.test(location.protocol)){
+  window.addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').catch(e=>console.warn('Service worker não registado',e));});
 }
 
 ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
