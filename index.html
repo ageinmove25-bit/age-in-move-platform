@@ -140,6 +140,62 @@ label{display:block;font-size:13px;font-weight:600;color:#374151;margin-bottom:5
 .btn-outline-white{background:transparent;border:1px solid rgba(255,255,255,.3);color:#fff}
 .btn-outline-white:hover{background:rgba(255,255,255,.1)}
 .pricing-note{text-align:center;color:#64748b;font-size:12px;margin-top:20px}
+
+/* ─── Telemóvel e tablet ───────────────────────────────────────────────── */
+.menu-toggle{display:none;width:38px;height:38px;border-radius:8px;border:1px solid #e2e8f0;background:#f8fafc;font-size:20px;line-height:1;cursor:pointer;color:#0f172a;align-items:center;justify-content:center;flex-shrink:0}
+.sidebar-backdrop{display:none}
+.mobile-only{display:none}
+.sidebar-close{display:none;margin-left:auto;width:34px;height:34px;border-radius:8px;border:1px solid #2c3a78;background:transparent;color:#cbd5e1;font-size:16px;cursor:pointer}
+.table-scroll{width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+@media(max-width:860px){
+  .menu-toggle{display:inline-flex}
+  .sidebar{transform:translateX(-100%);transition:transform .25s ease;width:min(280px,82vw);box-shadow:0 0 40px rgba(0,0,0,.35);z-index:200}
+  .sidebar.open{transform:none}
+  .sidebar-close{display:inline-flex;align-items:center;justify-content:center}
+  .sidebar-backdrop.open{display:block;position:fixed;inset:0;background:rgba(10,16,40,.45);z-index:150}
+  .nav-item{padding:12px 12px;font-size:15px}
+  .main{margin-left:0}
+  .topbar{padding:0 12px;gap:10px;height:56px}
+  .topbar-title{font-size:16px;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .topbar-actions{gap:8px}
+  .topbar-actions .hide-mobile{display:none}
+  .page{padding:14px}
+  .page h2{font-size:19px!important}
+  .card{padding:14px;border-radius:10px}
+  .grid-2,.grid-3{grid-template-columns:1fr}
+  .grid-4{grid-template-columns:1fr 1fr;gap:10px}
+  .stat-card{padding:12px;gap:10px;flex-direction:column}
+  .stat-icon{width:38px;height:38px;font-size:18px}
+  .stat-value{font-size:22px}
+  [style*="space-between"]{flex-wrap:wrap;gap:10px}
+  .page input[style*="width"],.page select[style*="width"]{width:100%!important;flex:1 1 100%}
+  input,select,textarea{font-size:16px}
+  .tab-bar{overflow-x:auto;flex-wrap:nowrap;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+  .tab{white-space:nowrap;padding:10px 12px}
+  .table th,.table td{padding:9px 8px;white-space:nowrap}
+  .table td[style*="maxWidth"],.table td[style*="max-width"]{white-space:normal;min-width:140px}
+  .modal-overlay{padding:10px;align-items:flex-end}
+  .modal{padding:18px;border-radius:16px 16px 12px 12px;max-height:92vh}
+  .cal-dow{font-size:11px;padding:4px 0}
+  .cal-day{min-height:46px;padding:4px;border-radius:6px}
+  .cal-event{font-size:0;height:5px;padding:0;margin-bottom:2px;border-radius:3px}
+  .mobile-only{display:block}
+  .landing-nav{padding:14px 16px}
+  .landing-nav .btn{padding:8px 12px;font-size:13px}
+  .landing-hero{padding:40px 18px 40px}
+  .landing-hero h1{font-size:40px}
+  .landing-hero h1 .line-accent{font-size:26px}
+  .landing-hero .hero-sub{font-size:16px}
+  .landing-pill{font-size:11px;padding:6px 12px;margin-bottom:20px}
+  .landing-features{grid-template-columns:1fr;padding:0 16px 40px;gap:14px}
+  .pricing-section{padding:30px 16px 50px}
+  .pricing-section h2{font-size:28px}
+  .pricing-grid{grid-template-columns:1fr;gap:28px}
+  .pricing-card.featured,.pricing-card.featured:hover{transform:none}
+  .landing-footer{padding:20px 16px!important;flex-direction:column;align-items:flex-start!important}
+  .auth-page{padding:16px}
+  .auth-card{padding:26px 20px}
+}
 </style>
 </head>
 <body>
@@ -378,6 +434,12 @@ function computeRisk(p){
   return 'low';
 }
 const mmseColor=v=>v==null?'#94a3b8':v<20?'#dc2626':v<25?'#d97706':'#16a34a';
+function useNarrow(bp=640){
+  const get=()=>typeof window!=='undefined'&&window.innerWidth<bp;
+  const [n,setN]=useState(get);
+  useEffect(()=>{const f=()=>setN(get());window.addEventListener('resize',f);return()=>window.removeEventListener('resize',f);},[]);
+  return n;
+}
 const nextId=list=>list.reduce((m,x)=>Math.max(m,+x.id||0),0)+1;
 
 function seedSessions(){
@@ -1412,7 +1474,7 @@ function LandingPage({onEnter}){
       </div>
 
       {/* ── RODAPÉ ── */}
-      <div style={{borderTop:'1px solid rgba(255,255,255,.08)',padding:'24px 60px',display:'flex',justifyContent:'space-between',alignItems:'center',flexWrap:'wrap',gap:12}}>
+      <div className="landing-footer" style={{borderTop:'1px solid rgba(255,255,255,.08)',padding:'24px 60px',display:'flex',justifyContent:'space-between',alignItems:'center',flexWrap:'wrap',gap:12}}>
         <div style={{display:'flex',alignItems:'center',gap:10}}>
           <LogoPreview size={30}/>
           <span style={{color:'#64748b',fontSize:13}}>Age in Move © 2026 · idade em movimento · @age_in_move</span>
@@ -1455,7 +1517,7 @@ function AuthPage({onLogin}){
   );
 }
 
-function Sidebar({page,setPage,onLogout}){
+function Sidebar({page,setPage,onLogout,open,onClose}){
   const {patients,posts,profile}=useStore();
   const nav=[
     {section:'Principal'},
@@ -1469,19 +1531,22 @@ function Sidebar({page,setPage,onLogout}){
     {id:'settings',label:'Definições',icon:'⚙️'},
   ];
   return(
-    <div className="sidebar">
+    <>
+    <div className={`sidebar-backdrop${open?' open':''}`} onClick={onClose}/>
+    <div className={`sidebar${open?' open':''}`}>
       <div className="sidebar-logo" style={{background:'linear-gradient(135deg,#16224f,#1d2a63)',borderBottom:'1px solid #2c3a78'}}>
         <LogoPreview size={38}/>
         <div>
           <div style={{fontWeight:800,fontSize:13,color:'#fff',lineHeight:1.2}}>Age in Move</div>
           <div style={{fontSize:9,color:'#E9A6D6',fontStyle:'italic',letterSpacing:'.02em'}}>idade em movimento</div>
         </div>
+        <button className="sidebar-close" aria-label="Fechar menu" onClick={onClose}>✕</button>
       </div>
       <nav className="sidebar-nav">
         {nav.map((item,i)=>
           item.section
             ?<div key={i} className="nav-section">{item.section}</div>
-            :<div key={item.id} className={`nav-item${page===item.id?' active':''}`} onClick={()=>setPage(item.id)}>
+            :<div key={item.id} className={`nav-item${page===item.id?' active':''}`} onClick={()=>{setPage(item.id);onClose&&onClose();}}>
               <span className="icon">{item.icon}</span>
               <span>{item.label}</span>
               {item.badge&&<span className="badge">{item.badge}</span>}
@@ -1499,6 +1564,7 @@ function Sidebar({page,setPage,onLogout}){
         <div className="nav-item" onClick={onLogout}><span className="icon">🚪</span><span>Sair</span></div>
       </div>
     </div>
+    </>
   );
 }
 
@@ -1781,7 +1847,7 @@ function PatientsPage({setPage,openPatient}){
             <button className="btn btn-primary" onClick={()=>setPage('new-patient')}>+ Novo Paciente</button>
           </div>
         ):(
-        <table className="table">
+        <div className="table-scroll"><table className="table">
           <thead><tr><th>Paciente</th><th>Idade</th><th>Diagnóstico</th><th>MMSE</th><th>Módulo</th><th>Sessões</th><th>Risco</th><th>Próxima</th><th></th></tr></thead>
           <tbody>
             {filtered.length===0&&<tr><td colSpan={9} style={{textAlign:'center',color:'#64748b',padding:20}}>Nenhum paciente corresponde à pesquisa.</td></tr>}
@@ -1803,7 +1869,7 @@ function PatientsPage({setPage,openPatient}){
               );
             })}
           </tbody>
-        </table>
+        </table></div>
         )}
       </div>
     </div>
@@ -1893,7 +1959,8 @@ const SCALE_BANDS={
 function ScaleChart({points,scale}){
   const [hover,setHover]=useState(null);
   const max=SCALES[scale].max, band=SCALE_BANDS[scale];
-  const W=1000,H=260,ml=44,mr=20,mt=18,mb=30,iw=W-ml-mr,ih=H-mt-mb,pad=points.length>1?Math.min(60,iw/(points.length*2)):0;
+  const narrow=useNarrow();
+  const W=narrow?400:1000,H=narrow?250:260,ml=narrow?32:44,mr=narrow?10:20,mt=18,mb=30,iw=W-ml-mr,ih=H-mt-mb,pad=points.length>1?Math.min(60,iw/(points.length*2)):0;
   // Posição ordinal: cada avaliação tem o seu lugar, mesmo que no mesmo dia
   const idx=new Map(points.map((p,i)=>[p.id,i]));
   const xi=i=>points.length===1?ml+iw/2:ml+pad+(i/(points.length-1))*(iw-2*pad);
@@ -1903,7 +1970,7 @@ function ScaleChart({points,scale}){
   const path=points.map((p,i)=>`${i?'L':'M'}${xi(i).toFixed(1)},${y(p.value).toFixed(1)}`).join(' ');
   const first=points[0].value,last=points[points.length-1].value,delta=last-first;
   const better=band.inverse?delta<0:delta>0;
-  const xLabels=points.length<=8?points:[points[0],points[Math.floor(points.length/2)],points[points.length-1]];
+  const xLabels=points.length<=(narrow?4:8)?points:[points[0],points[Math.floor(points.length/2)],points[points.length-1]];
   return(
     <div>
       <div style={{display:'flex',gap:20,marginBottom:8,fontSize:13,color:'#64748b',flexWrap:'wrap'}}>
@@ -1933,7 +2000,7 @@ function ScaleChart({points,scale}){
               <circle cx={xp(p)} cy={y(p.value)} r={hover===i?5:3.5} fill="#4361EE" stroke="#fff" strokeWidth="2" style={{pointerEvents:'none'}}/>
             </g>
           ))}
-          {points.length<=8&&points.map(p=><text key={'v'+p.id} x={xp(p)} y={y(p.value)-10} textAnchor="middle" fontSize="11" fontWeight="700" fill="#334155" style={{pointerEvents:'none'}}>{p.value}</text>)}
+          {points.length<=(narrow?6:8)&&points.map(p=><text key={'v'+p.id} x={xp(p)} y={y(p.value)-10} textAnchor="middle" fontSize="11" fontWeight="700" fill="#334155" style={{pointerEvents:'none'}}>{p.value}</text>)}
         </svg>
         {hover!=null&&(()=>{const p=points[hover];return(
           <div style={{position:'absolute',left:`${xp(p)/W*100}%`,top:`${y(p.value)/H*100}%`,transform:'translate(-50%,calc(-100% - 14px))',background:'#0f172a',color:'#fff',fontSize:12,padding:'6px 10px',borderRadius:6,whiteSpace:'nowrap',pointerEvents:'none'}}>
@@ -2058,14 +2125,14 @@ function PatientProfile({patient,setPage}){
         <div className="card">
           <div className="card-header" style={{marginBottom:16}}><div className="card-title">Histórico de Avaliações</div><button className="btn btn-sm btn-primary" onClick={()=>setModal('assessment')}>+ Avaliação</button></div>
           {pAssess.length===0?<p style={{fontSize:14,color:'#64748b'}}>Sem avaliações registadas.</p>:(
-          <table className="table">
+          <div className="table-scroll"><table className="table">
             <thead><tr><th>Data</th><th>Avaliação</th><th>Resultado</th><th>Terapeuta</th><th>Notas</th></tr></thead>
             <tbody>
               {pAssess.map(a=>(
                 <tr key={a.id}><td>{fmtDate(a.date)}</td><td style={{fontWeight:600}}>{SCALES[a.scale]?.name||a.scale}</td><td style={{fontWeight:700,color:'#4361EE'}}>{a.value}/{SCALES[a.scale]?.max}</td><td>{a.therapist||profile.name}</td><td style={{fontSize:13,color:'#64748b'}}>{a.notes||'—'}</td></tr>
               ))}
             </tbody>
-          </table>)}
+          </table></div>)}
         </div>
         </div>
       )}
@@ -2073,7 +2140,7 @@ function PatientProfile({patient,setPage}){
         <div className="card">
           <div className="card-header" style={{marginBottom:16}}><div className="card-title">Histórico de Sessões</div><button className="btn btn-sm btn-primary" onClick={()=>setModal('session')}>+ Nova Sessão</button></div>
           {pSessions.length===0?<p style={{fontSize:14,color:'#64748b'}}>Sem sessões registadas.</p>:(
-          <table className="table">
+          <div className="table-scroll"><table className="table">
             <thead><tr><th>Data</th><th>Módulo</th><th>Exercícios</th><th>Duração</th><th>Desempenho</th><th>Notas</th><th></th></tr></thead>
             <tbody>
               {pSessions.map(s=>{const m=MODULES.find(x=>x.id===+s.moduleId);return(
@@ -2081,7 +2148,7 @@ function PatientProfile({patient,setPage}){
                 <td><button className="btn btn-sm btn-secondary" title="Eliminar sessão" onClick={()=>{if(confirm('Eliminar esta sessão?'))deleteSession(s);}}>🗑</button></td></tr>
               );})}
             </tbody>
-          </table>)}
+          </table></div>)}
         </div>
       )}
       {modal==='session'&&<NewSessionModal patient={patient} onClose={()=>setModal(null)}/>}
@@ -2273,6 +2340,18 @@ function CalendarPage(){
           })}
         </div>
       </div>
+      {(()=>{const monthEvs=events.filter(e=>{const[ey,em]=e.date.split('-').map(Number);return ey===cur.y&&em-1===cur.m;}).sort((a,b)=>(a.date+(a.time||'')).localeCompare(b.date+(b.time||'')));return(
+        <div className="card mobile-only" style={{marginTop:12}}>
+          <div className="card-title" style={{marginBottom:8}}>Eventos de {monthName}</div>
+          {monthEvs.length===0&&<p style={{fontSize:14,color:'#64748b'}}>Sem eventos este mês. Toque num dia para adicionar.</p>}
+          {monthEvs.map(e=>(
+            <div key={e.id} onClick={()=>setSelEvent(e)} style={{display:'flex',alignItems:'center',gap:10,padding:'10px 0',borderBottom:'1px solid #f1f5f9',cursor:'pointer'}}>
+              <div style={{width:4,alignSelf:'stretch',borderRadius:2,background:typeText[e.type]||'#64748b'}}/>
+              <div style={{width:58,fontSize:13,fontWeight:700,color:'#475569'}}>{fmtDate(e.date).slice(0,5)}{e.time&&<div style={{fontWeight:400,fontSize:12}}>{e.time}</div>}</div>
+              <div style={{flex:1,fontSize:14,fontWeight:600,color:'#0f172a'}}>{e.title}</div>
+            </div>
+          ))}
+        </div>);})()}
       <div style={{display:'flex',gap:16,marginTop:8}}>
         {[['session','Sessão','#eff6ff','#1d4ed8'],['meeting','Reunião','#f0fdf4','#15803d'],['training','Formação','#fffbeb','#b45309']].map(([t,l,bg,col])=>(
           <div key={t} style={{display:'flex',alignItems:'center',gap:6,fontSize:13}}><div style={{width:12,height:12,borderRadius:3,background:bg,border:`1px solid ${col}`}}/><span style={{color:'#64748b'}}>{l}</span></div>
@@ -2520,15 +2599,18 @@ function SettingsPage(){
 
 function DashboardLayout({children,page,setPage,onLogout,title}){
   const {profile}=useStore();
+  const [menuOpen,setMenuOpen]=useState(false);
+  useEffect(()=>{setMenuOpen(false);},[page]);
   return(
     <div>
-      <Sidebar page={page} setPage={setPage} onLogout={onLogout}/>
+      <Sidebar page={page} setPage={setPage} onLogout={onLogout} open={menuOpen} onClose={()=>setMenuOpen(false)}/>
       <div className="main">
         <div className="topbar">
+          <button className="menu-toggle" aria-label="Abrir menu" aria-expanded={menuOpen} onClick={()=>setMenuOpen(o=>!o)}>☰</button>
           <div className="topbar-title">{title}</div>
           <div className="topbar-actions">
-            <button className="btn btn-secondary btn-sm">🔔</button>
-            <button className="btn btn-secondary btn-sm">❓</button>
+            <button className="btn btn-secondary btn-sm hide-mobile">🔔</button>
+            <button className="btn btn-secondary btn-sm hide-mobile">❓</button>
             <div className="avatar" style={{background:'#4361EE',cursor:'pointer'}} title="Definições" onClick={()=>setPage('settings')}>{initialsOf(profile.name.replace(/^(Dra?|Enf|Prof)\.?\s+/i,''))}</div>
           </div>
         </div>

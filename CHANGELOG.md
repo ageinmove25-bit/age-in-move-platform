@@ -1,5 +1,17 @@
 # Changelog — Age in Move Platform
 
+## [1.4.0] — 2026-11-18
+
+### Versão para telemóvel
+- Menu lateral passa a abrir com o botão ☰ no topo e fecha com ✕, ao tocar fora ou ao escolher uma página
+- Todas as páginas cabem no ecrã do telemóvel (sem deslocamento lateral da página)
+- Cartões e colunas passam a uma coluna; estatísticas do dashboard em grelha 2×2
+- Tabelas deslizam lateralmente dentro do seu cartão
+- Separadores deslizam lateralmente; janelas (nova sessão, avaliação, evento) abrem a partir de baixo
+- Calendário compacto, com lista "Eventos do mês" por baixo para tocar e ver detalhes
+- Gráfico de evolução redimensionado para ser legível em ecrã pequeno
+- Landing page, preçário e login adaptados; campos com letra de 16px para o iPhone não fazer zoom
+
 ## [1.3.0] — 2026-11-17
 
 ### Identidade visual azul-noite (alinhada com o Instagram @age_in_move)
