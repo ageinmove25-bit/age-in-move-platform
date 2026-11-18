@@ -17,6 +17,10 @@ Plataforma clínica integrada de **exercício físico** e **estimulação cognit
 - 📥 **PDFs profissionais** com branding Age in Move — 3 variantes por exercício (Simples / Standard / Criativa)
 - 💶 **Preçário** — Básico (€0), Profissional (€29/mês), Clínica (€79/mês)
 
+## Materiais (ebooks e PowerPoints)
+
+A pasta [`materiais/`](materiais/README.md) tem 7 ebooks em PDF (coleção *Fatores Psicomotores*) e 6 PowerPoints temáticos para sessões de grupo.
+
 ## Como usar
 
 Abrir `index.html` diretamente no browser (Chrome/Edge recomendado).
