@@ -8,8 +8,12 @@ Plataforma clínica integrada de **exercício físico** e **estimulação cognit
 
 - 🧠 **6 módulos cognitivos** — Memória, Linguagem, Executivas, Espacial, Visuo-Espacial, Praxias
 - 🏃 **5 módulos físicos** — Equilíbrio, Força, Mobilidade, Aeróbico, Coordenação
-- 📊 **Dashboard clínico** com alertas de risco e escalas validadas (MMSE, MoCA, GDS, Barthel)
+- 📊 **Dashboard clínico** com painel "Precisa de atenção" (declínio, reavaliação em atraso, faltas, quedas)
+- 🩺 **Escalas validadas** — MMSE (ajustado à escolaridade), MoCA, GDS-15, Barthel, TUG, Berg, Tinetti, SPPB, levantar-sentar 30 s, Zarit
 - 📈 **Gráficos de evolução** das escalas por paciente
+- 📝 **Registo de sessão** — exercícios do plano, sinais vitais, Borg, adesão, nota SOAP, ocorrências, faltas
+- 🏁 **Alta** — estados do processo, nota de alta em PDF com comparação inicial/final, reabertura
+- 📄 **Relatórios em PDF** — relatório clínico, relatório de sessão, nota de alta e ficha para casa
 - 💾 **Dados guardados no browser** com exportação/importação de backup
 - 👥 **Gestão de pacientes** — historial, avaliações, sessões, cuidadores
 - 📅 **Calendário clínico** com agendamento de sessões

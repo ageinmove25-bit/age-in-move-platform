@@ -1,5 +1,44 @@
 # Changelog — Age in Move Platform
 
+## [1.7.0] — 2026-11-19
+
+### Alta e estados do processo
+- Estados do paciente: **Ativo, Suspenso, Alta, Transferido, Falecido**, com data e histórico do processo
+- **Dar alta**: motivo, objetivos atingidos, resumo da evolução, recomendações, encaminhamento e plano de manutenção em casa; compara automaticamente a avaliação inicial com a final e junta a assiduidade
+- **Nota de alta em PDF** e **reabrir processo**; pacientes com alta ficam no separador "Alta / arquivo" em vez de serem apagados
+- Novo separador **Processo** no perfil do paciente
+
+### Sessão completa
+- Estado da sessão: **realizada, falta ou cancelada** (com motivo); assiduidade calculada
+- Marcar os **exercícios do plano** feitos, com séries, repetições/tempo e carga
+- **Sinais vitais** antes e depois (TA, FC, SpO₂), com aviso de valores a vigiar, e **esforço percebido (Borg CR10)**
+- **Adesão ao plano de casa**, **nota clínica SOAP** e **ocorrências** (queda, quase-queda, dor, tonturas…)
+- Editar sessões; **relatório de sessão em PDF**
+- O número de sessões passa a ser calculado a partir dos registos realizados
+
+### Avaliação
+- Novas escalas: **TUG, Berg, Tinetti (POMA), SPPB, levantar-sentar 30 s** e **Zarit** (versão portuguesa 22–110)
+- **MMSE ajustado à escolaridade** (cortes de Guerreiro et al., 1994)
+- Editar e eliminar avaliações, com recálculo dos valores atuais e do risco
+- Risco clínico passa a incluir risco de queda (TUG, Berg, Tinetti, SPPB, quedas no último ano) e mostra os motivos
+
+### Dados do paciente
+- **Editar todos os dados** do paciente
+- Novos campos: escolaridade, nº de utente do SNS, medicação, antecedentes, quedas nos últimos 12 meses, contacto de emergência e **consentimento informado (RGPD)**, obrigatório ao criar o processo
+
+### Calendário
+- Sessões **recorrentes** (semanal, quinzenal, 2x por semana) durante N semanas
+- No evento: **Registar sessão**, **Marcar falta** ou **Cancelada**; o evento fica marcado ✓/✗
+- Eliminar só um evento ou o resto da série
+
+### Acompanhamento
+- Painel **"Precisa de atenção"** no dashboard, agrupado por paciente: declínio entre avaliações, reavaliação em atraso, sem sessões nem agendamento, faltas seguidas, quedas nas sessões, sobrecarga do cuidador e consentimento em falta
+- Definições → **Clínico e alertas** controla estes alertas; retiradas as opções que não tinham efeito
+
+### PDFs
+- Todos os PDFs passam a ter **acentos portugueses**; corrigida a gralha "Esfoco" (agora "Esforço")
+- Relatório clínico atualizado com as novas escalas, assiduidade, ocorrências e alta
+
 ## [1.6.0] — 2026-11-18
 
 ### Plano de exercícios por paciente
