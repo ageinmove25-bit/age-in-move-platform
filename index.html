@@ -195,6 +195,8 @@ label{display:block;font-size:13px;font-weight:600;color:#374151;margin-bottom:5
   .cal-event{font-size:0;height:5px;padding:0;margin-bottom:2px;border-radius:3px}
   .mobile-only{display:block}
   .lib-ease{grid-template-columns:1fr!important}
+  .gs-row{grid-template-columns:1fr 1fr!important}
+  .gs-row input{grid-column:1/-1}
   .landing-nav{padding:calc(14px + env(safe-area-inset-top)) 16px 14px}
   .landing-nav .btn{padding:8px 12px;font-size:13px}
   .landing-hero{padding:40px 18px 40px}
@@ -421,7 +423,7 @@ const EBOOK_MODULES=EBOOKS.map(v=>({id:100+v.vol,name:`Vol. ${v.vol} — ${v.tit
 // ─── PERSISTÊNCIA LOCAL (localStorage) ─────────────────────────────────────
 // Todos os dados ficam guardados apenas neste browser, neste computador.
 const STORAGE_PREFIX='aim_v1_';
-const STORE_KEYS=['patients','sessions','assessments','events','posts','profile','prefs'];
+const STORE_KEYS=['patients','sessions','assessments','events','posts','profile','prefs','groups'];
 const AVATAR_COLORS=['#4f46e5','#0891b2','#059669','#d97706','#7c3aed','#e11d48','#0d9488','#ea580c'];
 const DEFAULT_PROFILE={name:'Dra. Ana Santos',license:'CRP 12345',email:'ana.santos@exemplo.pt',phone:'+351 912 345 678',specialty:'Neuropsicologia Geriátrica',role:'Neuropsicóloga',institution:'Centro de Saúde Lisboa Norte'};
 const DEFAULT_PREFS={duration:'45',scale:'mmse',declineAlerts:true,reassessDays:90,inactiveDays:21,consentAlerts:true};
@@ -584,6 +586,10 @@ const SEED={
   posts:()=>INITIAL_POSTS,
   profile:()=>DEFAULT_PROFILE,
   prefs:()=>DEFAULT_PREFS,
+  groups:()=>[
+    {id:1,name:'Equilíbrio em movimento',type:'fisico',capacity:6,patientIds:[1,3,5],weekday:2,time:'10:00',theme:'',notes:'Circuito de equilíbrio e força com cadeira.',createdAt:'2026-03-01'},
+    {id:2,name:'Memória em grupo',type:'cognitivo',capacity:6,patientIds:[1,2,4],weekday:4,time:'15:00',theme:'santos-populares',notes:'Sessões temáticas com PowerPoint.',createdAt:'2026-03-01'},
+  ],
 };
 
 const StoreContext=createContext(null);
@@ -597,7 +603,8 @@ function StoreProvider({children}){
   const [posts,setPosts]=usePersistentState('posts',SEED.posts);
   const [profile,setProfile]=usePersistentState('profile',SEED.profile);
   const [prefs,setPrefs]=usePersistentState('prefs',SEED.prefs);
-  const setters={patients:setPatients,sessions:setSessions,assessments:setAssessments,events:setEvents,posts:setPosts,profile:setProfile,prefs:setPrefs};
+  const [groups,setGroups]=usePersistentState('groups',SEED.groups);
+  const setters={patients:setPatients,sessions:setSessions,assessments:setAssessments,events:setEvents,posts:setPosts,profile:setProfile,prefs:setPrefs,groups:setGroups};
 
   const withRisk=p=>{const n={...p};n.risk=computeRisk(n);return n;};
   // Recalcula os valores atuais e o risco de um paciente a partir da lista de avaliações
@@ -630,6 +637,7 @@ function StoreProvider({children}){
   };
   const deletePatient=id=>{
     setPatients(ps=>ps.filter(p=>p.id!==id));
+    setGroups(gs=>gs.map(g=>({...g,patientIds:g.patientIds.filter(x=>x!==id)})));
     setSessions(ss=>ss.filter(s=>s.patientId!==id));
     setAssessments(as=>as.filter(a=>a.patientId!==id));
     setEvents(es=>es.filter(e=>e.patientId!==id));
@@ -665,22 +673,39 @@ function StoreProvider({children}){
     const next=assessments.filter(x=>x.id!==id);
     setAssessments(next);syncScores(a.patientId,next);
   };
+  // ─── Grupos ───
+  const addGroup=g=>{const id=nextId(groups);setGroups(gs=>[...gs,{...g,id,createdAt:todayISO()}]);return id;};
+  const updateGroup=(id,patch)=>setGroups(gs=>gs.map(g=>g.id===id?{...g,...patch}:g));
+  const deleteGroup=id=>{setGroups(gs=>gs.filter(g=>g.id!==id));setEvents(es=>es.filter(e=>!(e.groupId===id&&!e.done)));};
+  // Uma sessão de grupo cria uma sessão individual (realizada ou falta) para cada membro
+  const addGroupSession=(group,{date,duration,theme,notes,attendance,eventId})=>{
+    const gsid='g'+Date.now();
+    let id=nextId(sessions);
+    const list=Object.entries(attendance).map(([pid,a])=>({id:id++,patientId:+pid,date,groupId:group.id,groupSessionId:gsid,groupName:group.name,
+      status:a.present?'done':'missed',reason:a.present?'':(a.reason||'Falta à sessão de grupo'),moduleId:group.type==='fisico'?7:1,duration:a.present?+duration||0:0,
+      exercises:a.present?1:0,otherExercises:a.present?`Sessão de grupo: ${group.name}${theme?' — '+theme:''}`:'',performance:a.performance||'Bom',
+      soap:{s:'',o:a.note||'',a:'',p:''},notes:notes||'',incidents:a.incident?[a.incident]:[],incidentNotes:a.incident?(a.note||''):''}));
+    setSessions(ss=>[...ss,...list]);
+    if(eventId)setEvents(es=>es.map(e=>e.id===eventId?{...e,done:'done',groupSessionId:gsid}:e));
+    return gsid;
+  };
   const addEvents=list=>{let id=Date.now();setEvents(es=>[...es,...list.map(e=>({...e,id:id++}))]);};
   const updateEvent=(id,patch)=>setEvents(es=>es.map(e=>e.id===id?{...e,...patch}:e));
 
-  const exportData=()=>({app:'age-in-move',version:1,exportedAt:new Date().toISOString(),data:{patients,sessions,assessments,events,posts,profile,prefs}});
+  const exportData=()=>({app:'age-in-move',version:1,exportedAt:new Date().toISOString(),data:{patients,sessions,assessments,events,posts,profile,prefs,groups}});
   const importData=json=>{
     const d=json&&json.data;
     if(!d||json.app!=='age-in-move') throw new Error('Ficheiro não reconhecido como backup Age in Move.');
-    ['patients','sessions','assessments','events','posts'].forEach(k=>{if(d[k]!=null&&!Array.isArray(d[k]))throw new Error(`Campo "${k}" inválido.`);});
+    ['patients','sessions','assessments','events','posts','groups'].forEach(k=>{if(d[k]!=null&&!Array.isArray(d[k]))throw new Error(`Campo "${k}" inválido.`);});
     STORE_KEYS.forEach(k=>{if(d[k]!=null)setters[k](d[k]);});
   };
   const resetDemo=()=>STORE_KEYS.forEach(k=>setters[k](SEED[k]()));
-  const clearAll=()=>{['patients','sessions','assessments','events'].forEach(k=>setters[k]([]));setPosts(SEED.posts());};
+  const clearAll=()=>{['patients','sessions','assessments','events','groups'].forEach(k=>setters[k]([]));setPosts(SEED.posts());};
 
   const value={patients,sessions,assessments,events,posts,profile,prefs,
     setEvents,setPosts,setProfile,setPrefs,
     addPatient,updatePatient,setPatientStatus,deletePatient,addSession,updateSession,deleteSession,addAssessments,updateAssessment,deleteAssessment,addEvents,updateEvent,
+    groups,addGroup,updateGroup,deleteGroup,addGroupSession,
     exportData,importData,resetDemo,clearAll};
   return <StoreContext.Provider value={value}>{children}</StoreContext.Provider>;
 }
@@ -1781,7 +1806,247 @@ body{font-family:Arial,sans-serif;color:#1a202c;font-size:10.5pt;line-height:1.5
   w.document.close();
 }
 
-function LandingPage({onEnter}){
+// ─── TESTE PÚBLICO "IDADE EM MOVIMENTO" ────────────────────────────────────
+// Estimativa indicativa: cada teste é comparado com valores de referência por idade e sexo e convertido
+// na idade cuja mediana corresponde ao desempenho; a idade em movimento é a média dessas idades.
+// Referências (valores aproximados das medianas):
+//  · Levantar-sentar 30 s — Rikli & Jones, Senior Fitness Test (2013): ponto médio do intervalo normal por faixa etária
+//  · Equilíbrio num pé, olhos abertos — Springer et al., J Geriatr Phys Ther 2007; <5 s associado a risco de queda (Vellas et al., 1997)
+//  · Velocidade de marcha — Bohannon & Andrews, Physiotherapy 2011; <0,8 m/s associado a maior risco
+const MT_NORMS={
+  chair:{F:[[55,15.5],[62,14.5],[67,13.5],[72,12.5],[77,12.5],[82,11.5],[87,10.5],[92,7.5]],M:[[55,17.5],[62,16.5],[67,15],[72,14.5],[77,14],[82,12.5],[87,11],[92,9.5]]},
+  balance:{F:[[45,40],[55,37],[65,27],[75,15],[85,6]],M:[[45,40],[55,37],[65,27],[75,17],[85,6]]},
+  gait:{F:[[45,1.40],[55,1.40],[65,1.24],[75,1.13],[85,0.94]],M:[[45,1.46],[55,1.43],[65,1.36],[75,1.33],[85,1.08]]},
+};
+// Idade cuja mediana corresponde ao desempenho (tabela com valores a descer com a idade)
+function mtAgeFor(table,perf){
+  const lo=table[0],hi=table[table.length-1];
+  // Fora da tabela, extrapola com prudência: no máximo 5 anos para lá dos limites
+  if(perf>=lo[1]) return lo[0]-Math.min(5,(perf-lo[1])/(lo[1]||1)*10);
+  if(perf<=hi[1]) return hi[0]+Math.min(5,(hi[1]-perf)/(hi[1]||1)*10);
+  for(let i=0;i<table.length-1;i++){
+    const [a1,v1]=table[i],[a2,v2]=table[i+1];
+    if(perf<=v1&&perf>=v2){ if(v1===v2) return (a1+a2)/2; return a1+(v1-perf)/(v1-v2)*(a2-a1); }
+  }
+  return null;
+}
+// Valor esperado (mediana) para uma idade
+function mtExpected(table,age){
+  if(age<=table[0][0]) return table[0][1];
+  if(age>=table[table.length-1][0]) return table[table.length-1][1];
+  for(let i=0;i<table.length-1;i++){const [a1,v1]=table[i],[a2,v2]=table[i+1];if(age>=a1&&age<=a2)return v1+(age-a1)/(a2-a1)*(v2-v1);}
+  return null;
+}
+const MT_WORDS=['MAÇÃ','CADEIRA','LUA','CASACO','RIO','SINO','PÃO','FLOR','JANELA','CAVALO','LIVRO','PRAIA','CHAVE','BOLO','NUVEM'];
+function mtResult(st){
+  const sex=st.sex==='M'?'M':'F', age=+st.age;
+  const tests=[];
+  const rate=(val,exp)=>val>=exp*1.1?{t:'Acima do esperado para a idade',c:'g'}:val>=exp*0.9?{t:'Dentro do esperado para a idade',c:'g'}:val>=exp*0.75?{t:'Um pouco abaixo do esperado',c:'w'}:{t:'Abaixo do esperado para a idade',c:'r'};
+  if(st.chair!==''&&st.chair!=null){const v=+st.chair,t=MT_NORMS.chair[sex];tests.push({k:'chair',name:'Força das pernas',detail:`${v} levantamentos em 30 s`,eq:mtAgeFor(t,v),r:rate(v,mtExpected(t,age)),exp:`esperado ≈ ${Math.round(mtExpected(t,age))}`});}
+  if(st.balance!=null&&st.balance!==''){const v=Math.min(30,+st.balance),t=MT_NORMS.balance[sex];
+    // O teste para aos 30 s: quem chega aos 30 não "fica mais novo" do que a idade correspondente a 30 s
+    tests.push({k:'balance',name:'Equilíbrio',detail:`${String(Math.round(v*10)/10).replace('.',',')} s num pé`,eq:v>=30?Math.min(mtAgeFor(t,v),age):mtAgeFor(t,v),r:rate(v,Math.min(30,mtExpected(t,age))),exp:`esperado ≈ ${Math.round(Math.min(30,mtExpected(t,age)))} s`});}
+  if(st.gait!=null&&st.gait!==''&&+st.gait>0){const sp=4/(+st.gait),t=MT_NORMS.gait[sex];tests.push({k:'gait',name:'Velocidade a andar',detail:`${String(Math.round(sp*100)/100).replace('.',',')} m/s (4 m em ${String(st.gait).replace('.',',')} s)`,eq:mtAgeFor(t,sp),r:rate(sp,mtExpected(t,age)),exp:`esperado ≈ ${String(Math.round(mtExpected(t,age)*100)/100).replace('.',',')} m/s`});}
+  const eqs=tests.map(t=>t.eq).filter(x=>x!=null);
+  const mAge=eqs.length?Math.round(eqs.reduce((a,b)=>a+b,0)/eqs.length):null;
+  const flags=[];
+  if(st.balance!==''&&st.balance!=null&&+st.balance<5) flags.push('Equilíbrio num pé abaixo de 5 segundos — associado a maior risco de queda.');
+  if(st.gait&&4/(+st.gait)<0.8) flags.push('Velocidade de marcha abaixo de 0,8 m/s — vale a pena uma avaliação da mobilidade.');
+  if(st.chair!==''&&st.chair!=null&&+st.chair<8) flags.push('Menos de 8 levantamentos em 30 s — sinal de força reduzida nas pernas.');
+  if(st.falls==='yes') flags.push('Teve uma queda no último ano — recomenda-se avaliação do risco de queda.');
+  if(st.fear==='yes') flags.push('Tem medo de cair — é tratável e vale a pena falar disso com um profissional.');
+  const recalled=st.words.filter(w=>st.recall.map(norm).includes(norm(w))).length;
+  if(st.recall.length&&recalled<=2) flags.push('Lembrou-se de poucas palavras. Pode ser cansaço ou distração; se notar esquecimentos no dia a dia, fale com o seu médico.');
+  return {age,sex,mAge,tests,flags,recalled};
+}
+
+function Stopwatch({limit,countdown,onDone,running,setRunning,value}){
+  const [t,setT]=useState(0);
+  const ref=React.useRef(null);
+  useEffect(()=>{
+    if(!running) return;
+    const start=performance.now()-t*1000;
+    ref.current=setInterval(()=>{
+      const el=(performance.now()-start)/1000;
+      if(limit&&el>=limit){setT(limit);setRunning(false);clearInterval(ref.current);try{navigator.vibrate&&navigator.vibrate([200,100,200]);}catch(e){}onDone&&onDone(limit);return;}
+      setT(el);
+    },100);
+    return()=>clearInterval(ref.current);
+  },[running]);
+  useEffect(()=>{if(value===null)setT(0);},[value]);
+  const shown=countdown?Math.max(0,limit-t):t;
+  return <div style={{fontSize:56,fontWeight:800,fontVariantNumeric:'tabular-nums',textAlign:'center',color:running?'#4361EE':'#16224f',lineHeight:1}}>{(countdown?Math.ceil(shown):shown.toFixed(1)).toString().replace('.',',')}<span style={{fontSize:20,color:'#94a3b8'}}> s</span></div>;
+}
+
+function MovementTest({onExit,onEnter}){
+  const [step,setStep]=useState(0);
+  const [st,setSt]=useState(()=>({age:'',sex:'F',safety:{},words:[...MT_WORDS].sort(()=>Math.random()-.5).slice(0,5),chair:'',balance:'',bal1:'',bal2:'',gait:'',recallText:'',recall:[],falls:'',fear:''}));
+  const [running,setRunning]=useState(false);
+  const [reps,setReps]=useState(0);
+  const [err,setErr]=useState('');
+  const [swKey,setSwKey]=useState(0);
+  const set=(k,v)=>setSt(s=>({...s,[k]:v}));
+  const unsafe=['chest','dizzy','surgery'].some(k=>st.safety[k]);
+  const res=step===8?mtResult(st):null;
+  const STEPS=['Início','Sobre si','Segurança','Memorizar','Força','Equilíbrio','Marcha','Para terminar','Resultado'];
+  const next=()=>{
+    setErr('');
+    if(step===1){const a=+st.age;if(!st.age||a<40||a>105){setErr('Indique uma idade entre 40 e 105 anos.');return;}}
+    if(step===4&&st.chair===''){setErr('Faça o teste ou carregue em "Saltar este teste".');return;}
+    if(step===5&&st.balance===''){setErr('Registe pelo menos uma tentativa ou salte o teste.');return;}
+    setRunning(false);setSwKey(k=>k+1);setStep(s=>s+1);window.scrollTo(0,0);
+  };
+  const back=()=>{setErr('');setRunning(false);setStep(s=>Math.max(0,s-1));};
+  const skip=k=>{set(k,null);setRunning(false);setSwKey(x=>x+1);setStep(s=>s+1);};
+  const pdf=()=>{
+    const g=newBrandedDoc();if(!g)return;const {doc}=g;
+    pdfTitle(g,'Teste Idade em Movimento',[`Realizado em ${fmtDate(todayISO())}`,'Resultado indicativo — não substitui avaliação por um profissional de saúde']);
+    pdfSection(g,'Resultado');
+    pdfKV(g,[['Idade',`${res.age} anos`],['Idade em movimento',res.mAge!=null?`≈ ${res.mAge} anos`:'—'],['Sexo',res.sex==='M'?'Masculino':'Feminino'],['Memória',st.recall.length?`${res.recalled} de 5 palavras`:'—']]);
+    pdfSection(g,'Testes');
+    pdfTable(g,['Teste','Resultado','Referência','Avaliação'],res.tests.map(t=>[t.name,t.detail,t.exp,t.r.t]),[40,50,40,48]);
+    if(res.flags.length){pdfSection(g,'A ter em atenção');res.flags.forEach(f=>pdfParagraph(g,'• '+f));}
+    pdfSection(g,'Referências');
+    pdfParagraph(g,'Rikli & Jones, Senior Fitness Test Manual (2013) · Springer et al., J Geriatr Phys Ther (2007) · Bohannon & Andrews, Physiotherapy (2011) · Vellas et al., J Am Geriatr Soc (1997). Valores de referência aproximados.',8.5,PDF_GREY);
+    deliverPDF(g.finish(),`ageinmove-teste-idade-em-movimento-${todayISO()}.pdf`);
+  };
+  const Big=({children,...p})=><button className="btn btn-primary" style={{width:'100%',justifyContent:'center',padding:'14px',fontSize:17,borderRadius:12}} {...p}>{children}</button>;
+  const Choice=({k,opts})=><div style={{display:'flex',gap:8,flexWrap:'wrap'}}>{opts.map(([v,l])=><button key={v} type="button" className={`btn ${st[k]===v?'btn-primary':'btn-secondary'}`} style={{padding:'12px 18px',fontSize:15}} onClick={()=>set(k,v)}>{l}</button>)}</div>;
+  const Safety=()=><div className="alert alert-warning" style={{fontSize:14}}>Faça os testes com uma cadeira estável encostada à parede e, se possível, com alguém ao seu lado. Pare se sentir dor, tonturas ou falta de ar.</div>;
+  return(
+    <div style={{minHeight:'100vh',background:'#f5f6fb',color:'#16224f'}}>
+      <div style={{background:'linear-gradient(135deg,#16224f,#4f3c94)',color:'#fff',padding:'calc(14px + env(safe-area-inset-top)) 16px 14px'}}>
+        <div style={{maxWidth:680,margin:'0 auto',display:'flex',gap:12,alignItems:'center'}}>
+          <LogoPreview size={40}/>
+          <div style={{flex:1}}><div style={{fontWeight:800,fontSize:17}}>Idade em Movimento</div><div style={{color:'#E9A6D6',fontSize:12}}>Teste grátis · cerca de 5 minutos</div></div>
+          <button className="btn btn-sm btn-outline-white" onClick={onExit}>Sair</button>
+        </div>
+      </div>
+      {step>0&&step<8&&<div style={{height:5,background:'#dfe3f5'}}><div style={{height:'100%',width:`${step/8*100}%`,background:'linear-gradient(90deg,#4361EE,#E58BD3)',transition:'width .3s'}}/></div>}
+      <div style={{maxWidth:680,margin:'0 auto',padding:'20px 16px calc(40px + env(safe-area-inset-bottom))'}}>
+        {step>0&&step<8&&<div style={{fontSize:12.5,color:'#64748b',marginBottom:8}}>Passo {step} de 7 · {STEPS[step]}</div>}
+        {err&&<div className="alert alert-warning">{err}</div>}
+        {step===0&&(<div className="card">
+          <h1 style={{fontSize:26,fontWeight:800,marginBottom:8}}>Qual é a sua idade em movimento?</h1>
+          <p style={{fontSize:16,lineHeight:1.6,color:'#334155',marginBottom:14}}>Três testes simples de força, equilíbrio e marcha, e um pequeno exercício de memória. No fim, compara os seus resultados com os valores de referência para a sua idade.</p>
+          <ul style={{fontSize:15,color:'#334155',lineHeight:1.8,margin:'0 0 16px 20px'}}><li>Precisa de uma cadeira estável e de um espaço de 4 metros</li><li>Os resultados ficam só neste aparelho</li><li>É indicativo: não substitui uma avaliação profissional</li></ul>
+          <Big onClick={()=>setStep(1)}>Começar</Big>
+        </div>)}
+        {step===1&&(<div className="card">
+          <h2 style={{fontSize:20,fontWeight:800,marginBottom:12}}>Sobre si</h2>
+          <div className="form-group"><label>Idade</label><input type="number" inputMode="numeric" min={40} max={105} value={st.age} onChange={e=>set('age',e.target.value)} style={{fontSize:22,maxWidth:160}} placeholder="Ex.: 72"/></div>
+          <div className="form-group"><label>Sexo (os valores de referência são diferentes)</label><Choice k="sex" opts={[['F','Feminino'],['M','Masculino']]}/></div>
+          <Big onClick={next}>Continuar</Big>
+        </div>)}
+        {step===2&&(<div className="card">
+          <h2 style={{fontSize:20,fontWeight:800,marginBottom:6}}>Antes de começar</h2>
+          <p style={{fontSize:15,color:'#475569',marginBottom:12}}>Assinale o que se aplica a si:</p>
+          {[['chest','Dor no peito ou falta de ar em repouso'],['dizzy','Tonturas frequentes ou desmaios recentes'],['surgery','Cirurgia, fratura ou internamento nas últimas 6 semanas'],['help','Não consigo levantar-me de uma cadeira sem ajuda']].map(([k,l])=>(
+            <label key={k} style={{display:'flex',gap:10,alignItems:'center',fontSize:15,fontWeight:400,padding:'10px 0',borderBottom:'1px solid #f1f5f9',cursor:'pointer'}}><input type="checkbox" checked={!!st.safety[k]} onChange={e=>set('safety',{...st.safety,[k]:e.target.checked})}/>{l}</label>
+          ))}
+          {unsafe&&<div className="alert alert-warning" style={{marginTop:12}}>Com estas situações, não faça os testes físicos sem falar primeiro com o seu médico ou terapeuta. Pode fazer só o exercício de memória: os testes físicos vão ser saltados.</div>}
+          {st.safety.help&&!unsafe&&<div className="alert alert-info" style={{marginTop:12}}>O teste de força vai ser saltado. Faça os outros apenas com alguém ao seu lado.</div>}
+          <div style={{marginTop:14}}><Big onClick={()=>{if(unsafe){setSt(s=>({...s,chair:null,balance:null,gait:null}));setStep(3);}else{if(st.safety.help)set('chair',null);next();}}}>Continuar</Big></div>
+        </div>)}
+        {step===3&&(<div className="card" style={{textAlign:'center'}}>
+          <h2 style={{fontSize:20,fontWeight:800,marginBottom:6}}>Memorize estas 5 palavras</h2>
+          <p style={{fontSize:15,color:'#475569',marginBottom:16}}>Vamos perguntar por elas no fim do teste.</p>
+          <div style={{display:'flex',flexWrap:'wrap',gap:10,justifyContent:'center',marginBottom:20}}>{st.words.map(w=><span key={w} style={{fontSize:24,fontWeight:800,background:'#eef1ff',color:'#3448C5',padding:'10px 16px',borderRadius:12,letterSpacing:'.04em'}}>{w}</span>)}</div>
+          <Big onClick={()=>{setStep(unsafe?7:st.chair===null?5:4);}}>Já memorizei</Big>
+        </div>)}
+        {step===4&&(<div className="card">
+          <h2 style={{fontSize:20,fontWeight:800,marginBottom:6}}>Força: levantar e sentar durante 30 segundos</h2>
+          <Safety/>
+          <ol style={{fontSize:15,lineHeight:1.7,margin:'0 0 14px 20px',color:'#334155'}}><li>Sente-se a meio da cadeira, com os braços cruzados sobre o peito.</li><li>Ao sinal, levante-se completamente e volte a sentar, o mais depressa que conseguir em segurança.</li><li>Conte quantas vezes fica de pé em 30 segundos (quem estiver consigo pode tocar no botão +1).</li></ol>
+          <Stopwatch key={'c'+swKey} limit={30} countdown running={running} setRunning={setRunning} onDone={()=>set('chair',String(reps))}/>
+          <div style={{display:'flex',gap:10,margin:'14px 0'}}>
+            {!running?<button className="btn btn-primary" style={{flex:1,justifyContent:'center',padding:14,fontSize:16}} onClick={()=>{setReps(0);set('chair','');setRunning(true);}}>{st.chair!==''?'Repetir':'Iniciar 30 s'}</button>
+              :<button className="btn btn-primary" style={{flex:1,justifyContent:'center',padding:'22px 14px',fontSize:22,background:'#16a34a'}} onClick={()=>setReps(r=>r+1)}>+1 &nbsp; ({reps})</button>}
+          </div>
+          <div className="form-group"><label>Número de vezes que ficou de pé</label><input type="number" inputMode="numeric" min={0} max={50} value={st.chair??''} onChange={e=>set('chair',e.target.value)} style={{fontSize:22,maxWidth:140}}/></div>
+          <Big onClick={next}>Continuar</Big>
+          <button className="btn btn-secondary" style={{width:'100%',justifyContent:'center',marginTop:8}} onClick={()=>skip('chair')}>Saltar este teste</button>
+        </div>)}
+        {step===5&&(<div className="card">
+          <h2 style={{fontSize:20,fontWeight:800,marginBottom:6}}>Equilíbrio num pé</h2>
+          <Safety/>
+          <ol style={{fontSize:15,lineHeight:1.7,margin:'0 0 14px 20px',color:'#334155'}}><li>De pé, ao lado da cadeira ou da parede, olhos abertos.</li><li>Levante um pé do chão e carregue em Iniciar.</li><li>Carregue em Parar quando apoiar o pé ou se agarrar. O máximo é 30 s. Pode fazer 2 tentativas.</li></ol>
+          <Stopwatch key={'b'+swKey} limit={30} running={running} setRunning={setRunning}/>
+          <div style={{display:'flex',gap:10,margin:'14px 0'}}>
+            {!running?<button className="btn btn-primary" style={{flex:1,justifyContent:'center',padding:14,fontSize:16}} disabled={st.bal1!==''&&st.bal2!==''} onClick={()=>{setSwKey(k=>k+1);setTimeout(()=>setRunning(true),30);}}>{st.bal1===''?'Iniciar 1.ª tentativa':st.bal2===''?'Iniciar 2.ª tentativa':'Tentativas feitas'}</button>
+              :<button className="btn btn-danger" style={{flex:1,justifyContent:'center',padding:'20px 14px',fontSize:20}} onClick={()=>setRunning(false)}>Parar</button>}
+          </div>
+          <StopCapture running={running} max={30} onStop={secs=>{const k=st.bal1===''?'bal1':'bal2';setSt(s=>{const n={...s,[k]:String(Math.round(secs*10)/10)};n.balance=String(Math.max(+n.bal1||0,+n.bal2||0));return n;});}}/>
+          <p style={{fontSize:15,color:'#334155'}}>Tentativas: <strong>{st.bal1!==''?st.bal1.replace('.',',')+' s':'—'}</strong> · <strong>{st.bal2!==''?st.bal2.replace('.',',')+' s':'—'}</strong>{st.balance!==''&&st.balance!=null?<> · melhor: <strong>{String(st.balance).replace('.',',')} s</strong></>:null}</p>
+          <Big onClick={next}>Continuar</Big>
+          <button className="btn btn-secondary" style={{width:'100%',justifyContent:'center',marginTop:8}} onClick={()=>skip('balance')}>Saltar este teste</button>
+        </div>)}
+        {step===6&&(<div className="card">
+          <h2 style={{fontSize:20,fontWeight:800,marginBottom:6}}>Marcha: andar 4 metros</h2>
+          <Safety/>
+          <ol style={{fontSize:15,lineHeight:1.7,margin:'0 0 14px 20px',color:'#334155'}}><li>Marque 4 metros no chão (cerca de 5 passos grandes).</li><li>Comece parado na linha de partida. Ande ao seu ritmo normal, como na rua.</li><li>Quem estiver consigo carrega em Iniciar quando começa e em Parar quando passa a linha dos 4 m.</li></ol>
+          <Stopwatch key={'g'+swKey} running={running} setRunning={setRunning}/>
+          <div style={{display:'flex',gap:10,margin:'14px 0'}}>
+            {!running?<button className="btn btn-primary" style={{flex:1,justifyContent:'center',padding:14,fontSize:16}} onClick={()=>{setSwKey(k=>k+1);setTimeout(()=>setRunning(true),30);}}>{st.gait?'Repetir':'Iniciar'}</button>
+              :<button className="btn btn-danger" style={{flex:1,justifyContent:'center',padding:'20px 14px',fontSize:20}} onClick={()=>setRunning(false)}>Parar</button>}
+          </div>
+          <StopCapture running={running} onStop={secs=>set('gait',String(Math.round(secs*10)/10))}/>
+          <div className="form-group"><label>Tempo para os 4 metros (segundos)</label><input type="number" inputMode="decimal" step="0.1" min={0} value={st.gait??''} onChange={e=>set('gait',e.target.value)} style={{fontSize:22,maxWidth:140}}/></div>
+          <Big onClick={next}>Continuar</Big>
+          <button className="btn btn-secondary" style={{width:'100%',justifyContent:'center',marginTop:8}} onClick={()=>skip('gait')}>Não tenho espaço — saltar</button>
+        </div>)}
+        {step===7&&(<div className="card">
+          <h2 style={{fontSize:20,fontWeight:800,marginBottom:12}}>Para terminar</h2>
+          <div className="form-group"><label>Lembra-se das 5 palavras do início? Escreva as que se lembrar.</label>
+            <input value={st.recallText} onChange={e=>setSt(s=>({...s,recallText:e.target.value,recall:e.target.value.split(/[\s,;]+/).filter(Boolean)}))} placeholder="Separe com espaços" style={{fontSize:18}} autoCapitalize="characters"/></div>
+          <div className="form-group"><label>Caiu alguma vez no último ano?</label><Choice k="falls" opts={[['no','Não'],['yes','Sim']]}/></div>
+          <div className="form-group"><label>Tem medo de cair?</label><Choice k="fear" opts={[['no','Não'],['yes','Sim']]}/></div>
+          <Big onClick={()=>{setRunning(false);setStep(8);window.scrollTo(0,0);}}>Ver o meu resultado</Big>
+        </div>)}
+        {step===8&&res&&(<>
+          <div className="card" style={{textAlign:'center',background:'linear-gradient(135deg,#16224f,#4f3c94)',color:'#fff'}}>
+            <div style={{fontSize:14,color:'#E9A6D6',fontWeight:700,letterSpacing:'.08em',textTransform:'uppercase'}}>A sua idade em movimento</div>
+            {res.mAge!=null?<>
+              <div style={{fontSize:72,fontWeight:900,lineHeight:1.1,margin:'6px 0'}}>{res.mAge}<span style={{fontSize:22,fontWeight:600}}> anos</span></div>
+              <div style={{fontSize:17}}>{res.mAge<res.age-1?`${res.age-res.mAge} anos mais novo(a) do que a sua idade (${res.age})`:res.mAge>res.age+1?`${res.mAge-res.age} anos acima da sua idade (${res.age}) — há margem para melhorar`:`Em linha com a sua idade (${res.age})`}</div>
+            </>:<div style={{fontSize:17,margin:'10px 0'}}>Sem testes físicos suficientes para calcular.</div>}
+            <div style={{fontSize:12.5,color:'#cfd6f7',marginTop:10}}>Estimativa indicativa, calculada a partir de valores de referência por idade e sexo.</div>
+          </div>
+          {res.tests.map(t=>(
+            <div key={t.k} className="card" style={{display:'flex',gap:12,alignItems:'center',flexWrap:'wrap'}}>
+              <div style={{flex:1,minWidth:180}}><div style={{fontWeight:800,fontSize:16}}>{t.name}</div><div style={{fontSize:14,color:'#475569'}}>{t.detail} · {t.exp}</div></div>
+              <span className={`badge badge-${LEVEL_BADGE[t.r.c]}`} style={{fontSize:13}}>{t.r.t}</span>
+            </div>
+          ))}
+          {st.recall.length>0&&<div className="card"><div style={{fontWeight:800,fontSize:16}}>Memória</div><div style={{fontSize:14,color:'#475569'}}>Lembrou-se de {res.recalled} de 5 palavras ({st.words.join(', ').toLowerCase()}).</div></div>}
+          {res.flags.length>0&&<div className="card" style={{borderLeft:'4px solid #d97706'}}><div style={{fontWeight:800,fontSize:16,marginBottom:6}}>A ter em atenção</div><ul style={{margin:'0 0 0 18px',fontSize:14.5,lineHeight:1.7,color:'#334155'}}>{res.flags.map(f=><li key={f}>{f}</li>)}</ul></div>}
+          <div className="card">
+            <div style={{fontWeight:800,fontSize:16,marginBottom:6}}>E agora?</div>
+            <p style={{fontSize:14.5,color:'#334155',lineHeight:1.6,marginBottom:12}}>Força, equilíbrio, marcha e memória treinam-se em qualquer idade. Um profissional pode fazer uma avaliação completa e preparar um plano de exercício físico e estimulação cognitiva à sua medida.</p>
+            <div style={{display:'flex',gap:8,flexWrap:'wrap'}}>
+              <button className="btn btn-primary" onClick={pdf}>📄 Guardar resultado (PDF)</button>
+              <button className="btn btn-secondary" onClick={()=>{setSt(s=>({...s,chair:'',balance:'',bal1:'',bal2:'',gait:'',recallText:'',recall:[],falls:'',fear:'',words:[...MT_WORDS].sort(()=>Math.random()-.5).slice(0,5)}));setStep(1);}}>Repetir o teste</button>
+              <button className="btn btn-secondary" onClick={onEnter}>Sou profissional — entrar na plataforma</button>
+            </div>
+          </div>
+          <p style={{fontSize:12,color:'#94a3b8',lineHeight:1.6}}>Este teste é indicativo e não substitui uma avaliação por um profissional de saúde. Referências: Rikli & Jones, Senior Fitness Test (2013); Springer et al., J Geriatr Phys Ther (2007); Bohannon & Andrews, Physiotherapy (2011); Vellas et al., J Am Geriatr Soc (1997). Valores de referência aproximados.</p>
+        </>)}
+        {step>0&&step<8&&<button className="btn btn-secondary btn-sm" style={{marginTop:12}} onClick={back}>← Voltar</button>}
+      </div>
+    </div>
+  );
+}
+// Mede o tempo entre o início e o fim de um cronómetro (para registar o resultado ao carregar em Parar)
+function StopCapture({running,onStop,max}){
+  const t0=React.useRef(null);
+  useEffect(()=>{
+    if(running){t0.current=performance.now();}
+    else if(t0.current!=null){const secs=(performance.now()-t0.current)/1000;t0.current=null;onStop(max?Math.min(max,secs):secs);}
+  },[running]);
+  return null;
+}
+
+function LandingPage({onEnter,onTest}){
   return(
     <div className="landing">
       <nav className="landing-nav">
@@ -1815,9 +2080,15 @@ function LandingPage({onEnter}){
           <button className="btn btn-primary" style={{fontSize:16,padding:'13px 32px',borderRadius:12,fontWeight:700,boxShadow:'0 4px 20px rgba(37,99,235,.4)'}} onClick={onEnter}>
             Começar Gratuitamente →
           </button>
-          <button className="btn btn-secondary" style={{fontSize:16,padding:'13px 28px',borderRadius:12,background:'rgba(255,255,255,.08)',color:'#e2e8f0',border:'1px solid rgba(255,255,255,.15)'}}>
-            Ver Demonstração
+          <button className="btn btn-secondary" style={{fontSize:16,padding:'13px 28px',borderRadius:12,background:'rgba(255,255,255,.08)',color:'#e2e8f0',border:'1px solid rgba(255,255,255,.15)'}} onClick={onTest}>
+            Fazer o teste grátis
           </button>
+        </div>
+        {/* Teste público */}
+        <div onClick={onTest} role="button" tabIndex={0} onKeyDown={e=>{if(e.key==='Enter')onTest();}} style={{margin:'32px auto 0',maxWidth:560,display:'flex',gap:14,alignItems:'center',textAlign:'left',background:'rgba(255,255,255,.08)',border:'1px solid rgba(233,166,214,.45)',borderRadius:16,padding:'14px 18px',cursor:'pointer'}}>
+          <div style={{fontSize:34}}>⏱️</div>
+          <div style={{flex:1}}><div style={{fontWeight:800,fontSize:17,color:'#fff'}}>Qual é a sua idade em movimento?</div><div style={{fontSize:14,color:'#cfd6f7'}}>Teste grátis de 5 minutos: força, equilíbrio, marcha e memória, comparados com a sua idade.</div></div>
+          <div style={{color:'#E9A6D6',fontWeight:800,fontSize:22}}>→</div>
         </div>
 
         {/* Trust badges */}
@@ -1978,6 +2249,7 @@ function Sidebar({page,setPage,onLogout,open,onClose}){
     {id:'patients',label:'Pacientes',icon:'👥',badge:patients.length?String(patients.length):null},
     {section:'Gestão'},
     {id:'calendar',label:'Calendário',icon:'📅'},
+    {id:'groups',label:'Grupos',icon:'🫂'},
     {id:'forum',label:'Fórum Clínico',icon:'💬',badge:posts.length?String(posts.length):null},
     {section:'Configuração'},
     {id:'settings',label:'Definições',icon:'⚙️'},
@@ -2561,6 +2833,7 @@ function SessionCard({s,patient,onEdit,onDelete,onPDF}){
       <div style={{display:'flex',gap:10,alignItems:'center',flexWrap:'wrap',cursor:'pointer'}} onClick={()=>setOpen(o=>!o)}>
         <div style={{width:86,fontWeight:700,fontSize:14}}>{fmtDate(s.date)}</div>
         <span className={`badge badge-${st.badge}`}>{st.label}</span>
+        {s.groupId&&<span className="badge badge-purple" title={s.groupName}>👥 Grupo</span>}
         {sessionStatus(s)==='done'?<>
           <span style={{fontSize:13,color:'#475569',flex:1,minWidth:140}}>{s.exercises} exerc. · {s.duration} min{s.rpe!=null?` · RPE ${s.rpe}`:''}</span>
           <span className={`badge badge-${s.performance==='Excelente'?'green':s.performance==='Bom'?'blue':s.performance==='Fraco'?'red':'yellow'}`}>{s.performance}</span>
@@ -3194,7 +3467,8 @@ function FamilyView({payload}){
 }
 
 function PatientProfile({patient,setPage}){
-  const {sessions,assessments,events,deletePatient,deleteSession,updatePatient,setPatientStatus,profile}=useStore();
+  const {sessions,assessments,events,deletePatient,deleteSession,updatePatient,setPatientStatus,profile,groups}=useStore();
+  const myGroups=(groups||[]).filter(g=>g.patientIds.includes(patient.id));
   const [tab,setTab]=useState('overview');
   const [modal,setModal]=useState(null);
   const [editNotes,setEditNotes]=useState(null);
@@ -3264,7 +3538,7 @@ function PatientProfile({patient,setPage}){
             <div className="card">
               <div className="card-title" style={{marginBottom:6}}>Informação clínica</div>
               <InfoRows rows={[['Diagnóstico',patient.diagnosis],['Módulo principal',mod?`${mod.icon} ${mod.name}`:''],['Frequência',FREQ_LABEL[patient.frequency]],['Referenciação',patient.referral],
-                ['Quedas (12 meses)',patient.falls12m!=null?String(patient.falls12m):''],['Medicação',patient.medication],['Antecedentes',patient.history]]}/>
+                ['Quedas (12 meses)',patient.falls12m!=null?String(patient.falls12m):''],['Grupos',myGroups.map(g=>`${g.name} (${groupSchedule(g)})`).join('\n')],['Medicação',patient.medication],['Antecedentes',patient.history]]}/>
             </div>
             {patient.goals&&<div className="card"><div className="card-title" style={{marginBottom:10}}>Objetivos Terapêuticos</div><p style={{fontSize:14,color:'#334155',lineHeight:1.6,whiteSpace:'pre-wrap'}}>{patient.goals}</p></div>}
             <div className="card">
@@ -3499,7 +3773,8 @@ const EVENT_DONE={done:{icon:'✓',label:'Realizada',badge:'green'},missed:{icon
 const REPEAT={none:{label:'Não repetir',days:0},weekly:{label:'Todas as semanas',days:7},biweekly:{label:'De 15 em 15 dias',days:14},twice:{label:'2x por semana (+3 dias)',days:0}};
 function addDaysISO(iso,n){const d=new Date(iso+'T12:00:00');d.setDate(d.getDate()+n);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;}
 function CalendarPage({openPatient}){
-  const {events,setEvents,addEvents,patients}=useStore();
+  const {events,setEvents,addEvents,patients,groups}=useStore();
+  const [groupFor,setGroupFor]=useState(null);
   const NOW=new Date();
   const [cur,setCur]=useState({y:NOW.getFullYear(),m:NOW.getMonth()});
   const [showModal,setShowModal]=useState(false);
@@ -3521,18 +3796,21 @@ function CalendarPage({openPatient}){
   for(let d=1;d<=totalDays;d++) cells.push({day:d,cur:true});
   while(cells.length%7!==0) cells.push({day:cells.length-offset-totalDays+1,cur:false});
   const eventsOnDay=d=>events.filter(e=>{const[ey,em,ed]=e.date.split('-').map(Number);return ey===cur.y&&em-1===cur.m&&ed===d;}).sort((a,b)=>(a.time||'').localeCompare(b.time||''));
-  const typeColors={session:'#eff6ff',meeting:'#f0fdf4',training:'#fffbeb'};
-  const typeText={session:'#1d4ed8',meeting:'#15803d',training:'#b45309'};
+  const typeColors={session:'#eff6ff',meeting:'#f0fdf4',training:'#fffbeb',group:'#f5f3ff'};
+  const typeText={session:'#1d4ed8',meeting:'#15803d',training:'#b45309',group:'#6d28d9'};
   const evLabel=e=>`${e.done?EVENT_DONE[e.done].icon+' ':''}${e.time?e.time+' ':''}${e.title}`;
   const addEvent=()=>{
     const pat=newEv.type==='session'&&newEv.patientId?patients.find(p=>p.id===+newEv.patientId):null;
-    const title=newEv.title.trim()||(pat?`${pat.name.split(' ')[0]} ${pat.name.split(' ').slice(-1)[0]} - Sessão`:'');
+    const grp=newEv.type==='group'&&newEv.groupId?groups.find(g=>g.id===+newEv.groupId):null;
+    if(newEv.type==='group'&&!grp){setEvErr('Escolha o grupo.');return;}
+    const title=newEv.title.trim()||(pat?`${pat.name.split(' ')[0]} ${pat.name.split(' ').slice(-1)[0]} - Sessão`:grp?`Grupo: ${grp.name}`:'');
     if(!selDate){setEvErr('Escolha a data.');return;}
     if(!title){setEvErr('Indique um título ou selecione um paciente.');return;}
     const weeks=Math.max(1,Math.min(52,+newEv.weeks||1));
     const base={title,type:newEv.type,color:typeText[newEv.type]||'#2563eb'};
     if(newEv.time) base.time=newEv.time;
     if(pat) base.patientId=pat.id;
+    if(grp) base.groupId=grp.id;
     let dates=[selDate];
     if(newEv.repeat==='weekly') dates=Array.from({length:weeks},(_,i)=>addDaysISO(selDate,i*7));
     if(newEv.repeat==='biweekly') dates=Array.from({length:Math.ceil(weeks/2)},(_,i)=>addDaysISO(selDate,i*14));
@@ -3590,7 +3868,7 @@ function CalendarPage({openPatient}){
           ))}
         </div>);})()}
       <div style={{display:'flex',gap:16,marginTop:8,flexWrap:'wrap'}}>
-        {[['session','Sessão','#eff6ff','#1d4ed8'],['meeting','Reunião','#f0fdf4','#15803d'],['training','Formação','#fffbeb','#b45309']].map(([t,l,bg,col])=>(
+        {[['session','Sessão','#eff6ff','#1d4ed8'],['group','Grupo','#f5f3ff','#6d28d9'],['meeting','Reunião','#f0fdf4','#15803d'],['training','Formação','#fffbeb','#b45309']].map(([t,l,bg,col])=>(
           <div key={t} style={{display:'flex',alignItems:'center',gap:6,fontSize:13}}><div style={{width:12,height:12,borderRadius:3,background:bg,border:`1px solid ${col}`}}/><span style={{color:'#64748b'}}>{l}</span></div>
         ))}
         <span style={{fontSize:13,color:'#64748b'}}>✓ realizada · ✗ falta</span>
@@ -3604,9 +3882,10 @@ function CalendarPage({openPatient}){
           </div>
           <div className="form-group"><label>Tipo</label>
             <select value={newEv.type} onChange={e=>setNewEv(v=>({...v,type:e.target.value}))}>
-              <option value="session">Sessão com paciente</option><option value="meeting">Reunião</option><option value="training">Formação</option>
+              <option value="session">Sessão com paciente</option><option value="group">Sessão de grupo</option><option value="meeting">Reunião</option><option value="training">Formação</option>
             </select>
           </div>
+          {newEv.type==='group'&&<div className="form-group"><label>Grupo</label><select value={newEv.groupId||''} onChange={e=>{const g=groups.find(x=>x.id===+e.target.value);setNewEv(v=>({...v,groupId:e.target.value,time:v.time||(g&&g.time)||''}));}}><option value="">Selecionar...</option>{groups.map(g=><option key={g.id} value={g.id}>{g.name} ({g.patientIds.length}/{g.capacity})</option>)}</select></div>}
           {newEv.type==='session'&&<div className="form-group"><label>Paciente</label><select value={newEv.patientId} onChange={e=>{const p=patients.find(x=>x.id===+e.target.value);setNewEv(v=>({...v,patientId:e.target.value,repeat:p&&v.repeat==='none'&&p.frequency==='weekly'?'weekly':p&&v.repeat==='none'&&p.frequency==='biweekly'?'biweekly':p&&v.repeat==='none'&&p.frequency==='3week'?'twice':v.repeat}));}}><option value="">Selecionar...</option>{activePatients.map(p=><option key={p.id} value={p.id}>{p.name}</option>)}</select></div>}
           <div className="form-group"><label>Título{newEv.type==='session'?' (opcional se escolher paciente)':' *'}</label><input value={newEv.title} onChange={e=>setNewEv(v=>({...v,title:e.target.value}))} placeholder="Descrição do evento"/></div>
           <div className="grid-2">
@@ -3620,11 +3899,12 @@ function CalendarPage({openPatient}){
           </div>
         </Modal>
       )}
-      {selEvent&&!sessionFor&&(
+      {selEvent&&!sessionFor&&!groupFor&&(
         <Modal title={selEvent.title} onClose={()=>setSelEvent(null)}>
           <div style={{fontSize:14,color:'#334155',lineHeight:1.8}}>
             <div><strong>Data:</strong> {fmtDate(selEvent.date)}{selEvent.time?` às ${selEvent.time}`:''}</div>
-            <div><strong>Tipo:</strong> {selEvent.type==='session'?'Sessão com paciente':selEvent.type==='meeting'?'Reunião':'Formação'}</div>
+            <div><strong>Tipo:</strong> {selEvent.type==='session'?'Sessão com paciente':selEvent.type==='group'?'Sessão de grupo':selEvent.type==='meeting'?'Reunião':'Formação'}</div>
+            {selEvent.groupId&&(()=>{const g=groups.find(x=>x.id===selEvent.groupId);return g?<div><strong>Grupo:</strong> {g.name} · {g.patientIds.length}/{g.capacity} participantes</div>:null;})()}
             {selPatient&&<div><strong>Paciente:</strong> {selPatient.name} {!isActive(selPatient)&&statusBadge(selPatient)}</div>}
             {selEvent.seriesId&&<div><strong>Série:</strong> {seriesLeft} eventos por realizar a partir deste</div>}
             {selEvent.done&&<div><strong>Estado:</strong> <span className={`badge badge-${EVENT_DONE[selEvent.done].badge}`}>{EVENT_DONE[selEvent.done].label}</span></div>}
@@ -3634,6 +3914,12 @@ function CalendarPage({openPatient}){
               <button className="btn btn-primary" onClick={()=>setSessionFor({status:'done'})}>✓ Registar sessão</button>
               <button className="btn btn-secondary" onClick={()=>setSessionFor({status:'missed'})}>Marcar falta</button>
               <button className="btn btn-secondary" onClick={()=>setSessionFor({status:'cancelled'})}>Cancelada</button>
+            </div>
+          )}
+          {selEvent.groupId&&!selEvent.done&&groups.find(x=>x.id===selEvent.groupId)&&(
+            <div style={{display:'flex',gap:8,flexWrap:'wrap',marginTop:14}}>
+              <button className="btn btn-primary" onClick={()=>setGroupFor(groups.find(x=>x.id===selEvent.groupId))}>✓ Registar sessão de grupo</button>
+              <button className="btn btn-secondary" onClick={()=>{setEvents(es=>es.map(x=>x.id===selEvent.id?{...x,done:'cancelled'}:x));setSelEvent(null);}}>Cancelada</button>
             </div>
           )}
           {confirmDel&&<div className="alert alert-warning" style={{marginTop:14,display:'flex',gap:8,flexWrap:'wrap',alignItems:'center'}}>
@@ -3651,6 +3937,7 @@ function CalendarPage({openPatient}){
           </div>
         </Modal>
       )}
+      {groupFor&&selEvent&&<GroupSessionModal group={groupFor} eventId={selEvent.id} defaultDate={selEvent.date} onClose={()=>{setGroupFor(null);setSelEvent(null);}}/>}
       {sessionFor&&selPatient&&<SessionModal patient={selPatient} eventId={selEvent.id} defaultDate={selEvent.date} defaultStatus={sessionFor.status} onClose={()=>{setSessionFor(null);setSelEvent(null);}}/>}
     </div>
   );
@@ -3793,6 +4080,188 @@ function LibraryPage({openPatient}){
         </Modal>
       )}
       {planFor&&<AddPlanModal patient={planFor.patient} preset={planFor.preset} onClose={()=>{setCheck({id:planFor.patient.id,before:(planFor.patient.plan||[]).length});setPlanFor(null);}}/>}
+    </div>
+  );
+}
+
+// ─── GRUPOS (sessões em grupo pequeno, com limite de participantes) ─────────
+const GROUP_TYPES={fisico:{label:'Físico',badge:'green'},cognitivo:{label:'Cognitivo',badge:'purple'},misto:{label:'Misto',badge:'blue'}};
+const WEEKDAYS=['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
+const groupSchedule=g=>g.weekday!=null&&g.weekday!==''?`${WEEKDAYS[g.weekday]}s${g.time?' às '+g.time:''}`:(g.time?`às ${g.time}`:'Sem horário fixo');
+const pptTitle=slug=>(PPTS.find(t=>t.slug===slug)||{}).titulo||slug;
+function nextWeekdayISO(wd){const d=new Date();d.setHours(12);const diff=((+wd)-d.getDay()+7)%7;d.setDate(d.getDate()+diff);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;}
+
+function GroupModal({group,onClose}){
+  const {patients,addGroup,updateGroup,deleteGroup}=useStore();
+  const active=patients.filter(p=>isActive(p)||(group&&group.patientIds.includes(p.id)));
+  const [f,setF]=useState(()=>group?{...group,capacity:String(group.capacity),weekday:group.weekday==null?'':String(group.weekday)}:{name:'',type:'fisico',capacity:'6',patientIds:[],weekday:'',time:'',theme:'',notes:''});
+  const [err,setErr]=useState('');
+  const [confirmDel,setConfirmDel]=useState(false);
+  const set=(k,v)=>setF(x=>({...x,[k]:v}));
+  const cap=Math.max(2,Math.min(12,+f.capacity||6));
+  const toggle=id=>set('patientIds',f.patientIds.includes(id)?f.patientIds.filter(x=>x!==id):(f.patientIds.length>=cap?f.patientIds:[...f.patientIds,id]));
+  const save=()=>{
+    if(!f.name.trim()){setErr('Dê um nome ao grupo.');return;}
+    if(+f.capacity<2||+f.capacity>12){setErr('O limite de participantes é entre 2 e 12.');return;}
+    if(f.patientIds.length>cap){setErr(`O grupo tem ${f.patientIds.length} participantes e o limite é ${cap}.`);return;}
+    const data={name:f.name.trim(),type:f.type,capacity:cap,patientIds:f.patientIds,weekday:f.weekday===''?null:+f.weekday,time:f.time,theme:f.theme,notes:f.notes.trim()};
+    group?updateGroup(group.id,data):addGroup(data);onClose();
+  };
+  return(
+    <Modal title={group?'Editar grupo':'Novo grupo'} onClose={onClose} wide>
+      {err&&<div className="alert alert-warning">{err}</div>}
+      {confirmDel&&<ConfirmBar text="Eliminar este grupo? As sessões já registadas ficam no historial de cada paciente; os eventos futuros do grupo são apagados." onNo={()=>setConfirmDel(false)} onYes={()=>{deleteGroup(group.id);onClose();}}/>}
+      <div className="grid-2">
+        <div className="form-group"><label>Nome *</label><input value={f.name} onChange={e=>set('name',e.target.value)} placeholder="Ex.: Equilíbrio em movimento"/></div>
+        <div className="form-group"><label>Tipo</label><select value={f.type} onChange={e=>set('type',e.target.value)}>{Object.entries(GROUP_TYPES).map(([k,t])=><option key={k} value={k}>{t.label}</option>)}</select></div>
+        <div className="form-group"><label>Limite de participantes (2–12)</label><input type="number" min={2} max={12} value={f.capacity} onChange={e=>set('capacity',e.target.value)}/></div>
+        <div className="form-group"><label>Tema / material (opcional)</label><select value={f.theme} onChange={e=>set('theme',e.target.value)}><option value="">—</option>{PPTS.map(t=><option key={t.slug} value={t.slug}>PowerPoint: {t.titulo}</option>)}</select></div>
+        <div className="form-group"><label>Dia da semana</label><select value={f.weekday} onChange={e=>set('weekday',e.target.value)}><option value="">Sem dia fixo</option>{WEEKDAYS.map((d,i)=><option key={i} value={i}>{d}</option>)}</select></div>
+        <div className="form-group"><label>Hora</label><input type="time" value={f.time} onChange={e=>set('time',e.target.value)}/></div>
+      </div>
+      <Section title={`Participantes (${f.patientIds.length}/${cap})`}/>
+      {active.length===0?<p style={{fontSize:14,color:'#64748b'}}>Não há pacientes ativos.</p>:
+        <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(220px,1fr))',gap:6}}>
+          {active.map(p=>{const on=f.patientIds.includes(p.id);const full=!on&&f.patientIds.length>=cap;return(
+            <label key={p.id} style={{display:'flex',gap:8,alignItems:'center',fontWeight:400,fontSize:14,padding:'6px 8px',borderRadius:8,border:'1px solid '+(on?'#4361EE':'#e2e8f0'),background:on?'#eef1ff':'#fff',opacity:full?.45:1,cursor:full?'not-allowed':'pointer',margin:0}}>
+              <input type="checkbox" checked={on} disabled={full} onChange={()=>toggle(p.id)}/>{p.name}
+            </label>);})}
+        </div>}
+      {f.patientIds.length>=cap&&<p style={{fontSize:12.5,color:'#b45309',marginTop:6}}>Grupo completo. Aumente o limite para juntar mais participantes.</p>}
+      <div className="form-group" style={{marginTop:12}}><label>Notas</label><textarea rows={2} value={f.notes} onChange={e=>set('notes',e.target.value)} placeholder="Objetivo do grupo, cuidados, material"/></div>
+      <div style={{display:'flex',gap:10,justifyContent:'space-between',marginTop:16,flexWrap:'wrap'}}>
+        {group?<button className="btn btn-danger" onClick={()=>setConfirmDel(true)}>Eliminar grupo</button>:<span/>}
+        <div style={{display:'flex',gap:10}}><button className="btn btn-secondary" onClick={onClose}>Cancelar</button><button className="btn btn-primary" onClick={save}>Guardar</button></div>
+      </div>
+    </Modal>
+  );
+}
+
+function GroupSessionModal({group,eventId,defaultDate,onClose}){
+  const {patients,addGroupSession,prefs}=useStore();
+  const members=group.patientIds.map(id=>patients.find(p=>p.id===id)).filter(Boolean);
+  const [date,setDate]=useState(defaultDate||todayISO());
+  const [duration,setDuration]=useState(String(prefs.duration||45));
+  const [theme,setTheme]=useState(group.theme?pptTitle(group.theme):'');
+  const [notes,setNotes]=useState('');
+  const [att,setAtt]=useState(()=>Object.fromEntries(members.map(p=>[p.id,{present:true,performance:'Bom',note:'',incident:'',reason:''}])));
+  const [err,setErr]=useState('');
+  const setA=(id,k,v)=>setAtt(a=>({...a,[id]:{...a[id],[k]:v}}));
+  const present=Object.values(att).filter(a=>a.present).length;
+  const save=()=>{
+    if(!date){setErr('Indique a data.');return;}
+    if(!members.length){setErr('O grupo não tem participantes.');return;}
+    addGroupSession(group,{date,duration,theme:theme.trim(),notes:notes.trim(),attendance:att,eventId});onClose();
+  };
+  return(
+    <Modal title={`Sessão de grupo — ${group.name}`} onClose={onClose} wide>
+      {err&&<div className="alert alert-warning">{err}</div>}
+      <div className="grid-3">
+        <div className="form-group"><label>Data</label><input type="date" value={date} onChange={e=>setDate(e.target.value)}/></div>
+        <div className="form-group"><label>Duração (min)</label><input type="number" min={0} value={duration} onChange={e=>setDuration(e.target.value)}/></div>
+        <div className="form-group"><label>Tema / atividade</label><input value={theme} onChange={e=>setTheme(e.target.value)} placeholder="Ex.: Circuito de equilíbrio"/></div>
+      </div>
+      <Section title={`Presenças (${present}/${members.length})`}/>
+      <div style={{display:'flex',flexDirection:'column',gap:8}}>
+        {members.map(p=>{const a=att[p.id];return(
+          <div key={p.id} style={{border:'1px solid #e2e8f0',borderRadius:10,padding:'10px 12px',background:a.present?'#fff':'#fef2f2'}}>
+            <div style={{display:'flex',gap:10,alignItems:'center',flexWrap:'wrap'}}>
+              <div className="avatar" style={{background:p.avatar,width:30,height:30,fontSize:12}}>{p.initials}</div>
+              <strong style={{flex:1,minWidth:140}}>{p.name}</strong>
+              <div style={{display:'flex',gap:6}}>
+                <button type="button" className={`btn btn-sm ${a.present?'btn-primary':'btn-secondary'}`} onClick={()=>setA(p.id,'present',true)}>Presente</button>
+                <button type="button" className={`btn btn-sm ${!a.present?'btn-danger':'btn-secondary'}`} onClick={()=>setA(p.id,'present',false)}>Faltou</button>
+              </div>
+            </div>
+            {a.present?(
+              <div style={{display:'grid',gridTemplateColumns:'130px 150px 1fr',gap:8,marginTop:8}} className="gs-row">
+                <select aria-label="Desempenho" value={a.performance} onChange={e=>setA(p.id,'performance',e.target.value)}>{['Excelente','Bom','Razoável','Fraco'].map(x=><option key={x}>{x}</option>)}</select>
+                <select aria-label="Ocorrência" value={a.incident} onChange={e=>setA(p.id,'incident',e.target.value)}><option value="">Sem ocorrências</option>{INCIDENTS.map(x=><option key={x}>{x}</option>)}</select>
+                <input aria-label="Observação" value={a.note} onChange={e=>setA(p.id,'note',e.target.value)} placeholder="Observação (opcional)"/>
+              </div>
+            ):(
+              <input aria-label="Motivo da falta" style={{marginTop:8}} value={a.reason} onChange={e=>setA(p.id,'reason',e.target.value)} placeholder="Motivo da falta (opcional)"/>
+            )}
+          </div>);})}
+      </div>
+      <div className="form-group" style={{marginTop:12}}><label>Notas da sessão</label><textarea rows={2} value={notes} onChange={e=>setNotes(e.target.value)} placeholder="Como correu, ajustes para a próxima"/></div>
+      <p style={{fontSize:12.5,color:'#64748b'}}>Cada participante fica com a sessão (ou a falta) no seu historial, e a assiduidade e os alertas são atualizados.</p>
+      <div style={{display:'flex',gap:10,justifyContent:'flex-end',marginTop:12}}>
+        <button className="btn btn-secondary" onClick={onClose}>Cancelar</button>
+        <button className="btn btn-primary" onClick={save}>Guardar sessão de grupo</button>
+      </div>
+    </Modal>
+  );
+}
+
+function GroupScheduleModal({group,onClose}){
+  const {addEvents}=useStore();
+  const [start,setStart]=useState(group.weekday!=null&&group.weekday!==''?nextWeekdayISO(group.weekday):todayISO());
+  const [time,setTime]=useState(group.time||'');
+  const [weeks,setWeeks]=useState('8');
+  const save=()=>{
+    const n=Math.max(1,Math.min(52,+weeks||1));const seriesId='s'+Date.now();
+    addEvents(Array.from({length:n},(_,i)=>({date:addDaysISO(start,i*7),time:time||undefined,title:`Grupo: ${group.name}`,type:'group',groupId:group.id,seriesId:n>1?seriesId:undefined,color:'#6d28d9'})));
+    onClose();
+  };
+  return(
+    <Modal title={`Agendar — ${group.name}`} onClose={onClose}>
+      <div className="grid-3">
+        <div className="form-group"><label>Primeira sessão</label><input type="date" value={start} onChange={e=>setStart(e.target.value)}/></div>
+        <div className="form-group"><label>Hora</label><input type="time" value={time} onChange={e=>setTime(e.target.value)}/></div>
+        <div className="form-group"><label>Semanas</label><input type="number" min={1} max={52} value={weeks} onChange={e=>setWeeks(e.target.value)}/></div>
+      </div>
+      <p style={{fontSize:13,color:'#64748b'}}>Vão ser criados {Math.max(1,Math.min(52,+weeks||1))} eventos semanais no calendário, a partir de {fmtDate(start)}.</p>
+      <div style={{display:'flex',gap:10,justifyContent:'flex-end',marginTop:16}}><button className="btn btn-secondary" onClick={onClose}>Cancelar</button><button className="btn btn-primary" onClick={save}>Agendar</button></div>
+    </Modal>
+  );
+}
+
+function GroupsPage({openPatient}){
+  const {groups,patients,sessions,events}=useStore();
+  const [modal,setModal]=useState(null);
+  const today=todayISO();
+  return(
+    <div className="page">
+      <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:16,gap:12,flexWrap:'wrap'}}>
+        <div><h2 style={{fontSize:22,fontWeight:800,color:'#0f172a'}}>Grupos</h2><p style={{color:'#64748b',fontSize:14}}>Sessões em grupo pequeno, com limite de participantes e sempre supervisionadas</p></div>
+        <button className="btn btn-primary" onClick={()=>setModal({type:'edit'})}>+ Novo grupo</button>
+      </div>
+      {groups.length===0&&<div className="card" style={{textAlign:'center',padding:'36px 16px',color:'#64748b'}}><div style={{fontSize:36}}>👥</div><div style={{fontWeight:700,color:'#0f172a',margin:'6px 0'}}>Ainda não há grupos</div><p style={{fontSize:14,marginBottom:14}}>Crie um grupo (até 6 pessoas, por omissão) para registar as presenças de todos de uma só vez.</p><button className="btn btn-primary" onClick={()=>setModal({type:'edit'})}>+ Novo grupo</button></div>}
+      <div className="grid-2">
+        {groups.map(g=>{
+          const members=g.patientIds.map(id=>patients.find(p=>p.id===id)).filter(Boolean);
+          const gs=Object.values(sessions.filter(s=>s.groupId===g.id).reduce((m,s)=>{(m[s.groupSessionId]=m[s.groupSessionId]||{date:s.date,theme:s.otherExercises,present:0,total:0}).total++;if(sessionStatus(s)==='done')m[s.groupSessionId].present++;return m;},{})).sort((a,b)=>b.date.localeCompare(a.date));
+          const nextEv=events.filter(e=>e.groupId===g.id&&e.date>=today&&!e.done).sort((a,b)=>a.date.localeCompare(b.date))[0];
+          const t=GROUP_TYPES[g.type]||GROUP_TYPES.misto;
+          return(
+            <div key={g.id} className="card" style={{display:'flex',flexDirection:'column',gap:10,marginBottom:0}}>
+              <div style={{display:'flex',gap:8,alignItems:'flex-start'}}>
+                <div style={{flex:1,minWidth:0}}><div style={{fontWeight:800,fontSize:17}}>{g.name}</div><div style={{fontSize:13,color:'#64748b'}}>{groupSchedule(g)}{nextEv?` · próxima ${fmtDate(nextEv.date)}`:''}</div></div>
+                <span className={`badge badge-${t.badge}`}>{t.label}</span>
+              </div>
+              <div>
+                <div style={{display:'flex',justifyContent:'space-between',fontSize:13,color:'#475569',marginBottom:4}}><span>Participantes</span><strong>{members.length}/{g.capacity}</strong></div>
+                <div className="progress-bar"><div className="progress-fill" style={{width:`${Math.min(100,members.length/g.capacity*100)}%`,background:members.length>=g.capacity?'#d97706':'#4361EE'}}/></div>
+              </div>
+              <div style={{display:'flex',gap:6,flexWrap:'wrap'}}>
+                {members.map(p=><button key={p.id} type="button" title={p.name} onClick={()=>openPatient(p.id)} className="badge badge-gray" style={{border:'none',cursor:'pointer',padding:'4px 10px',fontSize:12.5}}>{p.name.split(' ')[0]} {p.name.split(' ').slice(-1)[0]}</button>)}
+                {members.length===0&&<span style={{fontSize:13,color:'#94a3b8'}}>Sem participantes</span>}
+              </div>
+              {g.theme&&<div style={{fontSize:13,color:'#475569'}}>📊 Material: {pptTitle(g.theme)}</div>}
+              {g.notes&&<div style={{fontSize:13,color:'#475569'}}>{g.notes}</div>}
+              {gs.length>0&&<div style={{fontSize:13,color:'#475569',borderTop:'1px solid #f1f5f9',paddingTop:8}}><strong>Últimas sessões:</strong> {gs.slice(0,3).map(x=>`${fmtDate(x.date)} (${x.present}/${x.total})`).join(' · ')}</div>}
+              <div style={{display:'flex',gap:8,flexWrap:'wrap',marginTop:'auto'}}>
+                <button className="btn btn-sm btn-primary" disabled={!members.length} style={{opacity:members.length?1:.5}} onClick={()=>setModal({type:'session',g})}>Registar sessão</button>
+                <button className="btn btn-sm btn-secondary" onClick={()=>setModal({type:'schedule',g})}>Agendar</button>
+                <button className="btn btn-sm btn-secondary" onClick={()=>setModal({type:'edit',g})}>Editar</button>
+              </div>
+            </div>);
+        })}
+      </div>
+      {modal&&modal.type==='edit'&&<GroupModal group={modal.g} onClose={()=>setModal(null)}/>}
+      {modal&&modal.type==='session'&&<GroupSessionModal group={modal.g} onClose={()=>setModal(null)}/>}
+      {modal&&modal.type==='schedule'&&<GroupScheduleModal group={modal.g} onClose={()=>setModal(null)}/>}
     </div>
   );
 }
@@ -3958,8 +4427,8 @@ function SettingsPage(){
           <div className="card">
             <div className="card-title" style={{marginBottom:8}}>Dados guardados neste browser</div>
             <p style={{fontSize:13,color:'#64748b',marginBottom:14}}>Tudo o que regista fica guardado automaticamente neste browser, neste computador. Não é enviado para nenhum servidor.</p>
-            <div className="grid-4" style={{marginBottom:6}}>
-              {[['Pacientes',patients.length],['Sessões',sessions.length],['Avaliações',assessments.length],['Eventos',events.length]].map(([l,v])=>(
+            <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(110px,1fr))',gap:10,marginBottom:6}}>
+              {[['Pacientes',patients.length],['Sessões',sessions.length],['Avaliações',assessments.length],['Eventos',events.length],['Grupos',(store.groups||[]).length]].map(([l,v])=>(
                 <div key={l} style={{textAlign:'center',padding:12,background:'#f8fafc',borderRadius:8,border:'1px solid #e2e8f0'}}><div style={{fontSize:24,fontWeight:800}}>{v}</div><div style={{fontSize:12,color:'#64748b'}}>{l}</div></div>
               ))}
             </div>
@@ -4018,15 +4487,16 @@ function DashboardLayout({children,page,setPage,onLogout,title}){
 
 function AppInner(){
   const {patients}=useStore();
-  const [screen,setScreen]=useState('landing');
+  const [screen,setScreen]=useState(()=>(location.hash==='#teste'?'test':'landing'));
   const [page,setPage]=useState('dashboard');
   const [selectedModule,setSelectedModule]=useState(null);
   const [selectedPatientId,setSelectedPatientId]=useState(null);
   const selectedPatient=patients.find(p=>p.id===selectedPatientId)||null;
   const openPatient=id=>{setSelectedPatientId(id);setPage('patient-profile');};
   useEffect(()=>{window.scrollTo(0,0);},[page]);
-  const titles={dashboard:'Dashboard',modules:'Módulos','module-detail':selectedModule?.name||'Módulo',patients:'Pacientes','patient-profile':selectedPatient?.name||'Paciente','new-patient':'Novo Paciente',calendar:'Calendário',forum:'Fórum Clínico',settings:'Definições',library:'Biblioteca'};
-  if(screen==='landing') return <LandingPage onEnter={()=>setScreen('auth')}/>;
+  const titles={dashboard:'Dashboard',modules:'Módulos','module-detail':selectedModule?.name||'Módulo',patients:'Pacientes','patient-profile':selectedPatient?.name||'Paciente','new-patient':'Novo Paciente',calendar:'Calendário',forum:'Fórum Clínico',settings:'Definições',library:'Biblioteca',groups:'Grupos'};
+  if(screen==='landing') return <LandingPage onEnter={()=>setScreen('auth')} onTest={()=>{setScreen('test');window.scrollTo(0,0);}}/>;
+  if(screen==='test') return <MovementTest onExit={()=>{if(location.hash==='#teste')history.replaceState(null,'',location.pathname);setScreen('landing');}} onEnter={()=>setScreen('auth')}/>;
   if(screen==='auth') return <AuthPage onLogin={()=>setScreen('dashboard')}/>;
   return(
     <DashboardLayout page={page} setPage={setPage} onLogout={()=>setScreen('landing')} title={titles[page]||'Age in Move'}>
@@ -4039,6 +4509,7 @@ function AppInner(){
       {page==='calendar'&&<CalendarPage openPatient={openPatient}/>}
       {page==='forum'&&<ForumPage/>}
       {page==='library'&&<LibraryPage openPatient={openPatient}/>}
+      {page==='groups'&&<GroupsPage openPatient={openPatient}/>}
       {page==='settings'&&<SettingsPage/>}
     </DashboardLayout>
   );

@@ -1,5 +1,20 @@
 # Changelog — Age in Move Platform
 
+## [1.9.0] — 2026-11-19
+
+### Teste grátis "Idade em Movimento"
+- Teste público, sem login, a partir da landing page (botão "Fazer o teste grátis" e destaque no topo) ou diretamente pelo link `…/#teste`
+- Triagem de segurança antes dos testes físicos; com sinais de alerta, os testes físicos são saltados
+- 5 palavras para memorizar e evocar no fim; levantar e sentar em 30 s (cronómetro e contador +1); equilíbrio num pé (melhor de 2 tentativas, máximo 30 s); marcha de 4 m (opcional); quedas e medo de cair
+- Resultado: **idade em movimento** estimada pela comparação com valores de referência por idade e sexo (Rikli & Jones; Springer et al.; Bohannon & Andrews), avaliação de cada teste face à idade, sinais de alerta e PDF do resultado
+- Avisa sempre que é indicativo e não substitui avaliação profissional; os resultados ficam só no aparelho
+
+### Sessões de grupo
+- Nova secção **Grupos**: grupos físicos, cognitivos ou mistos, com **limite de participantes** (2–12, 6 por omissão), dia e hora, material (PowerPoint) e notas
+- **Registar sessão de grupo** com presenças, desempenho, ocorrências e observações por pessoa; cada participante fica com a sessão ou a falta no seu historial (assiduidade e alertas incluídos)
+- **Agendar** o grupo no calendário (séries semanais); no calendário, novo tipo "Sessão de grupo" com registo a partir do evento
+- O perfil do paciente mostra os grupos e assinala as sessões de grupo; os grupos entram no backup
+
 ## [1.8.0] — 2026-11-19
 
 ### Área da família
