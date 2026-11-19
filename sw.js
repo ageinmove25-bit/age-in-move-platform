@@ -1,6 +1,6 @@
 // Age in Move — service worker: permite abrir a app sem internet depois da primeira visita.
 // Os dados clínicos NÃO passam por aqui: ficam no armazenamento local do dispositivo.
-const VERSION = 'aim-v1.9.0';
+const VERSION = 'aim-v2.0.0';
 const SHELL = ['./', './index.html', './manifest.webmanifest', './icons/icon-180.png', './icons/icon-192.png', './icons/icon-512.png'];
 const CDN = ['https://unpkg.com/', 'https://cdnjs.cloudflare.com/'];
 

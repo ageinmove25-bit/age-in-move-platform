@@ -18,6 +18,9 @@ Plataforma clínica integrada de **exercício físico** e **estimulação cognit
 - 📖 **Biblioteca** — 7 ebooks "Fatores Psicomotores" (42 atividades, que podem entrar no plano do paciente) e 6 PowerPoints para sessões de grupo
 - 🫂 **Grupos** — sessões em grupo pequeno com limite de participantes, presenças por pessoa e agendamento no calendário
 - ⏱️ **Teste grátis "Idade em Movimento"** — público, sem login (link direto `…/#teste`): força, equilíbrio, marcha e memória comparados com a idade
+- 🧭 **Percursos por condição** — Pós-AVC, Parkinson, DCL/demência ligeira, quedas e depressão: escalas, objetivos e plano inicial sugeridos
+- ⚡ **Programa intensivo** — bloco de semanas com sessões frequentes, avaliação inicial e reavaliação final comparadas
+- 🌐 **Páginas por condição** em `condicoes/` para o site público (editar `condicoes/conteudos.js` e correr `node scripts/gerar-paginas-condicoes.js`)
 - 💾 **Dados guardados no browser** com exportação/importação de backup
 - 👥 **Gestão de pacientes** — historial, avaliações, sessões, cuidadores
 - 📅 **Calendário clínico** com agendamento de sessões

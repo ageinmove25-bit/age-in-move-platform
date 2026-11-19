@@ -1586,7 +1586,7 @@ function makePatientReportPDF(patient,{sessions,assessments,profile}){
   pdfTitle(g,'Relatório Clínico',[`Emitido em ${fmtDate(todayISO())}  |  ${profile.name}${profile.role?' — '+profile.role:''}${profile.license?' ('+profile.license+')':''}`,profile.institution]);
   pdfSection(g,'Identificação do paciente');
   pdfPatientId(g,patient);
-  pdfKV(g,[['Risco atual',`${riskText(risk.level)}${risk.reasons.length?' — '+risk.reasons.join(', '):''}`],['Quedas (12 m)',patient.falls12m!=null?String(patient.falls12m):'']]);
+  pdfKV(g,[['Risco atual',`${riskText(risk.level)}${risk.reasons.length?' — '+risk.reasons.join(', '):''}`],['Quedas (12 m)',patient.falls12m!=null?String(patient.falls12m):''],['Percurso',pathwayById(patient.pathway)?.name||''],['Programa intensivo',patient.program?`${fmtDate(patient.program.start)} a ${fmtDate(patient.program.end)}, ${patient.program.perWeek}x/semana`:'']]);
   if(patient.medication||patient.history){pdfLabeled(g,'Medicação',patient.medication);pdfLabeled(g,'Antecedentes',patient.history);}
   pdfSection(g,'Avaliações e evolução');
   const scales=Object.keys(SCALES).filter(k=>pA.some(a=>a.scale===k));
@@ -2120,6 +2120,21 @@ function LandingPage({onEnter,onTest}){
         ))}
       </div>
 
+      {/* ── CONDIÇÕES ── */}
+      <div className="pricing-section" style={{paddingBottom:20}}>
+        <h2>Condições que acompanhamos</h2>
+        <p className="sub">Percursos de exercício físico e estimulação cognitiva adaptados a cada condição</p>
+        <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(200px,1fr))',gap:14}}>
+          {PATHWAYS.map(pw=>{const slug={avc:'avc',parkinson:'parkinson',dcl:'demencia',quedas:'quedas',depressao:'depressao'}[pw.id];return(
+            <a key={pw.id} href={`condicoes/${slug}.html`} style={{display:'block',background:'rgba(255,255,255,.06)',border:'1px solid rgba(255,255,255,.12)',borderRadius:16,padding:'18px 18px',color:'#fff',textDecoration:'none'}}>
+              <div style={{fontSize:28,marginBottom:6}}>{pw.icon}</div>
+              <div style={{fontWeight:800,fontSize:17,marginBottom:4}}>{pw.name}</div>
+              <div style={{fontSize:13.5,color:'#b8c6f5',lineHeight:1.5}}>{pw.about}</div>
+              <div style={{fontSize:13,color:'#E9A6D6',marginTop:8,fontWeight:700}}>Saber mais →</div>
+            </a>);})}
+        </div>
+      </div>
+
       {/* ── PREÇÁRIO ── */}
       <div className="pricing-section">
         <h2>Planos e Preçário</h2>
@@ -2335,6 +2350,12 @@ function computeAlerts({patients,sessions,assessments,events,prefs}){
       .forEach(s=>add('r','ocorrência',`${(s.incidents||[]).includes('Queda')?'Queda':'Quase-queda'} na sessão de ${fmtDate(s.date)}`));
     // Sobrecarga do cuidador
     if(p.zarit!=null&&+p.zarit>56) add('w','cuidador',`Sobrecarga intensa do cuidador (Zarit ${p.zarit})`);
+    // Programa intensivo: avaliação inicial e final
+    if(p.program){
+      const g=p.program,base=pa.some(a=>a.date>=addDaysISO(g.start,-14)&&a.date<=addDaysISO(g.start,7)),fin=pa.some(a=>a.date>=addDaysISO(g.end,-7));
+      if(!base&&today>addDaysISO(g.start,7)) add('w','programa','Programa intensivo sem avaliação inicial');
+      if(today>g.end&&!fin) add('w','programa','Programa intensivo terminou: falta a reavaliação final');
+    }
     // Consentimento
     if(pr.consentAlerts&&!p.consent) add('w','consentimento','Sem consentimento informado registado');
   });
@@ -3466,6 +3487,246 @@ function FamilyView({payload}){
   </>);
 }
 
+// ─── PERCURSOS POR CONDIÇÃO ────────────────────────────────────────────────
+// Rascunho clínico para revisão pelo profissional: escalas recomendadas, objetivos-tipo, plano inicial
+// (exercícios dos módulos e atividades dos ebooks), cuidados e sinais de alerta.
+const PATHWAYS=[
+  {id:'avc',name:'Pós-AVC',icon:'🧠',match:/avc|vascular/i,
+   about:'Recuperação funcional depois de um acidente vascular cerebral: mobilidade, uso do lado afetado, autonomia nas atividades do dia a dia e cognição.',
+   scales:[['barthel','Autonomia nas AVD'],['tug','Mobilidade e risco de queda'],['berg','Equilíbrio'],['moca','Cognição (mais sensível que o MMSE no pós-AVC)'],['gds','Depressão pós-AVC é frequente']],
+   reassessWeeks:8,
+   goals:['Aumentar a independência nas atividades do dia a dia (Barthel +10 pontos em 8 semanas)','Marcha mais segura: reduzir o TUG em 3 segundos','Equilíbrio sem risco acrescido de queda (Berg ≥ 46)','Integrar o lado afetado nas tarefas bimanuais do dia a dia'],
+   plan:[[704,'simples','3week','2 séries de 5, com supervisão'],[702,'simples','3week','Junto à parede, 3 percursos'],[1001,'standard','5week','10–15 min, ao ritmo confortável'],[604,'standard','3week','10 min'],[608,'standard','3week','Uma AVD por sessão'],[9035,'standard','3week','Com pistas visuais do lado afetado']],
+   precautions:['Medir a tensão arterial antes e depois de cada sessão','Atenção à negligência do lado afetado e ao ombro doloroso; não puxar pelo braço afetado','Supervisão próxima na marcha e nas transferências'],
+   redFlags:['Sinais de novo AVC (boca ao lado, falta de força num braço, dificuldade em falar): ligar 112 de imediato','Tensão arterial muito elevada ou dor no peito: suspender a sessão']},
+  {id:'parkinson',name:'Doença de Parkinson',icon:'🚶',match:/parkinson/i,
+   about:'Manter a amplitude e a velocidade dos movimentos, a marcha e o equilíbrio, com treino de dupla tarefa e pistas rítmicas.',
+   scales:[['tug','Mobilidade e risco de queda'],['berg','Equilíbrio'],['sppb','Desempenho físico global'],['chair30','Força das pernas'],['moca','Cognição (funções executivas)'],['gds','Humor']],
+   reassessWeeks:12,
+   goals:['Reduzir o risco de queda (TUG < 13,5 s)','Manter ou aumentar a amplitude e a velocidade da marcha','Melhorar o desempenho em dupla tarefa (andar e falar)','Manter a postura e a mobilidade do tronco'],
+   plan:[[1004,'standard','3week','20 min, com música marcada'],[1102,'simples','3week','10 min, sentado no início'],[1103,'standard','3week','3 percursos'],[903,'standard','daily','5 min, de manhã'],[801,'standard','3week','2 séries de 8'],[9051,'standard','3week','Pistas rítmicas antes de andar'],[1106,'standard','2week','15 min']],
+   precautions:['Marcar as sessões na fase "on" da medicação','Hipotensão ortostática: medir a TA sentado e em pé','Bloqueios na marcha (freezing): usar pistas visuais (linhas no chão) e auditivas (contar, metrónomo)'],
+   redFlags:['Quedas repetidas ou agravamento rápido da marcha: informar o neurologista','Alucinações ou confusão súbita: contactar o médico']},
+  {id:'dcl',name:'DCL e demência ligeira',icon:'💭',match:/dcl|dcm|alzheimer|lewy|défice cognitivo/i,
+   about:'Estimulação cognitiva estruturada, exercício físico regular e apoio ao cuidador, para manter a cognição e a autonomia o mais tempo possível.',
+   scales:[['mmse','Cognição global (ajustado à escolaridade)'],['moca','Cognição (DCL)'],['gds','Humor'],['barthel','Autonomia nas AVD'],['tug','Mobilidade'],['zarit','Sobrecarga do cuidador']],
+   reassessWeeks:24,
+   goals:['Manter o desempenho cognitivo (MMSE estável, ±2 pontos em 6 meses)','Manter a autonomia nas atividades do dia a dia','Pelo menos 150 minutos de atividade física por semana','Reduzir a sobrecarga do cuidador (Zarit abaixo de 46)'],
+   plan:[[101,'standard','3week','3 tentativas'],[106,'standard','3week','10 min'],[405,'standard','daily','5 min, de manhã'],[305,'standard','2week','Uma tarefa real da semana'],[1001,'standard','5week','20–30 min'],[9052,'standard','weekly','Com fotografias da família'],[9075,'standard','weekly','1 desenho']],
+   precautions:['Sessões curtas, com rotina e ambiente calmo','Envolver o cuidador e dar-lhe tarefas concretas','Ajustar a dificuldade para evitar frustração (versão Simples quando necessário)'],
+   redFlags:['Agravamento súbito da confusão (pode ser infeção ou efeito de medicação): contactar o médico','Sinais de sobrecarga intensa ou maus-tratos no cuidado: encaminhar para apoio social']},
+  {id:'quedas',name:'Fragilidade e risco de queda',icon:'🦵',match:/fragilidade|sarcopenia|queda/i,
+   about:'Treino de força, equilíbrio e marcha (inspirado no Programa Otago) para reduzir o risco de queda e a fragilidade.',
+   scales:[['tug','Mobilidade e risco de queda'],['berg','Equilíbrio'],['sppb','Desempenho físico global'],['chair30','Força das pernas'],['barthel','Autonomia nas AVD']],
+   reassessWeeks:8,
+   goals:['TUG abaixo de 13,5 segundos','Berg igual ou superior a 46','Mais 2 levantamentos no teste de 30 s em 8 semanas','Nenhuma queda durante o programa'],
+   plan:[[708,'standard','3week','Sessão tipo, 30 min'],[801,'standard','3week','2 séries de 8–10'],[803,'standard','daily','2 séries de 10, junto à bancada'],[701,'simples','daily','Com apoio, 3 × 10 s cada perna'],[702,'simples','3week','Junto à parede'],[1001,'standard','5week','15–30 min'],[9021,'simples','3week','Com cadeira à frente']],
+   precautions:['Supervisão nos exercícios de equilíbrio; cadeira estável ou bancada por perto','Rever com a família os riscos em casa (tapetes, iluminação, casa de banho)','Calçado fechado; rever a medicação com o médico (sedativos, anti-hipertensores)'],
+   redFlags:['Queda com dor, incapacidade de se levantar ou pancada na cabeça: avaliação médica','Tonturas ao levantar: medir a TA e informar o médico']},
+  {id:'depressao',name:'Depressão geriátrica',icon:'🌤️',match:/depress/i,
+   about:'Atividade física regular, atividades com significado e contacto social, como complemento ao acompanhamento médico e psicológico.',
+   scales:[['gds','Humor'],['barthel','Autonomia nas AVD'],['moca','Cognição'],['tug','Mobilidade']],
+   reassessWeeks:8,
+   goals:['Reduzir o GDS em 3 pontos em 8 semanas','Caminhar pelo menos 3 vezes por semana','Participar numa atividade de grupo por semana','Retomar uma atividade de lazer de que gostava'],
+   plan:[[1001,'standard','3week','20 min, de preferência ao ar livre'],[1004,'standard','2week','Músicas da sua juventude'],[9015,'standard','daily','5 min'],[9052,'standard','weekly','Recordar momentos bons'],[9014,'standard','2week','Em grupo, se possível']],
+   precautions:['Reforço positivo e objetivos pequenos e alcançáveis','Favorecer as sessões de grupo','Articular com o médico de família e a psicologia'],
+   redFlags:['Ideias de morte ou de suicídio: não deixar a pessoa sozinha e contactar de imediato o médico, o SNS 24 (808 24 24 24) ou o 112','Deixar de comer ou de sair da cama: contactar o médico']},
+];
+const pathwayById=id=>PATHWAYS.find(p=>p.id===id)||null;
+// Sugestões a partir do diagnóstico e do risco de queda
+function suggestPathways(p){
+  const out=PATHWAYS.filter(pw=>pw.match.test(p.diagnosis||''));
+  const fallRisk=(+p.falls12m>=1)||(p.tug!=null&&+p.tug>=13.5)||(p.berg!=null&&+p.berg<=45);
+  if(fallRisk&&!out.some(x=>x.id==='quedas')) out.push(pathwayById('quedas'));
+  return out;
+}
+// Aplica um percurso: junta objetivos e exercícios que ainda não existem
+function applyPathwayData(patient,pw,{goals,planIds}){
+  const existing=new Set((patient.plan||[]).map(x=>+x.exId));
+  let uid=Date.now();
+  const add=pw.plan.filter(([id])=>planIds.includes(id)&&!existing.has(id)).map(([exId,version,frequency,dose])=>({uid:uid++,exId,version,frequency,dose,addedAt:todayISO(),pathway:pw.id}));
+  const g=(patient.goals||'').trim();
+  const newGoals=goals.filter(x=>!g.includes(x));
+  return {pathway:pw.id,plan:[...(patient.plan||[]),...add],goals:[g,...newGoals.map(x=>'• '+x)].filter(Boolean).join('\n')};
+}
+
+function PathwayModal({patient,onClose,onAssess}){
+  const {updatePatient,assessments}=useStore();
+  const sug=suggestPathways(patient);
+  const [pid,setPid]=useState(patient.pathway||(sug[0]&&sug[0].id)||PATHWAYS[0].id);
+  const pw=pathwayById(pid);
+  const inPlan=new Set((patient.plan||[]).map(x=>+x.exId));
+  const [goals,setGoals]=useState(pw.goals);
+  const [planIds,setPlanIds]=useState(pw.plan.map(x=>x[0]).filter(id=>!inPlan.has(id)));
+  useEffect(()=>{setGoals(pw.goals);setPlanIds(pw.plan.map(x=>x[0]).filter(id=>!inPlan.has(id)));},[pid]);
+  const lastOf=k=>assessments.filter(a=>a.patientId===patient.id&&a.scale===k).map(a=>a.date).sort().pop();
+  const tg=(list,set,v)=>set(list.includes(v)?list.filter(x=>x!==v):[...list,v]);
+  const save=()=>{updatePatient(patient.id,applyPathwayData(patient,pw,{goals,planIds}));onClose();};
+  return(
+    <Modal title={`Percurso por condição — ${patient.name}`} onClose={onClose} wide>
+      <div className="form-group"><label>Percurso</label>
+        <div style={{display:'flex',gap:6,flexWrap:'wrap'}}>{PATHWAYS.map(x=><button key={x.id} type="button" className={`btn btn-sm ${pid===x.id?'btn-primary':'btn-secondary'}`} onClick={()=>setPid(x.id)}>{x.icon} {x.name}{sug.some(s=>s.id===x.id)?' · sugerido':''}</button>)}</div>
+      </div>
+      <p style={{fontSize:14,color:'#475569',marginBottom:6}}>{pw.about}</p>
+      <Section title="Escalas recomendadas"/>
+      <div style={{display:'flex',flexDirection:'column',gap:4}}>
+        {pw.scales.map(([k,why])=>{const d=lastOf(k);return(
+          <div key={k} style={{display:'flex',gap:8,alignItems:'center',fontSize:14,padding:'4px 0',flexWrap:'wrap'}}>
+            <span className={`badge badge-${d?'green':'yellow'}`}>{d?'✓ '+fmtDate(d):'Por avaliar'}</span>
+            <strong>{SCALES[k].name}</strong><span style={{color:'#64748b'}}>— {why}</span>
+          </div>);})}
+      </div>
+      {pw.scales.some(([k])=>!lastOf(k))&&onAssess&&<button className="btn btn-sm btn-secondary" style={{marginTop:6}} onClick={onAssess}>+ Registar avaliação</button>}
+      <p style={{fontSize:12.5,color:'#64748b',marginTop:6}}>Reavaliação recomendada a cada {pw.reassessWeeks} semanas.</p>
+      <Section title="Objetivos a juntar"/>
+      {pw.goals.map(g=><label key={g} style={{display:'flex',gap:8,alignItems:'flex-start',fontWeight:400,fontSize:14,margin:'4px 0',cursor:'pointer'}}><input type="checkbox" checked={goals.includes(g)} onChange={()=>tg(goals,setGoals,g)} style={{marginTop:2}}/>{g}</label>)}
+      <Section title="Plano inicial"/>
+      {pw.plan.map(([id,version,freq,dose])=>{const f=findExercise(id);if(!f)return null;const has=inPlan.has(id);return(
+        <label key={id} style={{display:'flex',gap:8,alignItems:'flex-start',fontWeight:400,fontSize:14,margin:'4px 0',cursor:has?'default':'pointer',opacity:has?.6:1}}>
+          <input type="checkbox" disabled={has} checked={has||planIds.includes(id)} onChange={()=>tg(planIds,setPlanIds,id)} style={{marginTop:2}}/>
+          <span><strong>{f.ex.name}</strong> <span style={{color:'#64748b'}}>· {f.mod.icon} {f.mod.name} · {versionLabel({version},f.ex.ebook)} · {PLAN_FREQ[freq]} · {dose}{has?' · já no plano':''}</span></span>
+        </label>);})}
+      <Section title="Cuidados"/>
+      <ul style={{margin:'0 0 0 18px',fontSize:14,color:'#334155',lineHeight:1.6}}>{pw.precautions.map(x=><li key={x}>{x}</li>)}</ul>
+      <div className="alert alert-warning" style={{marginTop:10,fontSize:13.5}}><strong>Sinais de alerta:</strong><ul style={{margin:'4px 0 0 18px'}}>{pw.redFlags.map(x=><li key={x}>{x}</li>)}</ul></div>
+      <p style={{fontSize:12,color:'#94a3b8'}}>Conteúdo-modelo: adapte sempre à pessoa e ao seu juízo clínico.</p>
+      <div style={{display:'flex',gap:10,justifyContent:'flex-end',marginTop:12}}>
+        <button className="btn btn-secondary" onClick={onClose}>Cancelar</button>
+        <button className="btn btn-primary" onClick={save}>Aplicar percurso</button>
+      </div>
+    </Modal>
+  );
+}
+function PathwayCard({patient,onOpen}){
+  const {assessments}=useStore();
+  const pw=pathwayById(patient.pathway);
+  const sug=pw?[]:suggestPathways(patient);
+  if(!pw&&!sug.length) return null;
+  const last=k=>assessments.filter(a=>a.patientId===patient.id&&a.scale===k).map(a=>a.date).sort().pop();
+  const missing=pw?pw.scales.filter(([k])=>!last(k)).map(([k])=>SCALES[k].name):[];
+  const overdue=pw?pw.scales.filter(([k])=>{const d=last(k);return d&&daysBetween(d,todayISO())>pw.reassessWeeks*7;}).map(([k])=>SCALES[k].name):[];
+  return(
+    <div className="card" style={{borderLeft:'4px solid #6D4CE0'}}>
+      <div className="card-header" style={{marginBottom:6}}>
+        <div className="card-title">{pw?`${pw.icon} Percurso: ${pw.name}`:'Percurso sugerido'}</div>
+        <button className="btn btn-sm btn-secondary" onClick={onOpen}>{pw?'Ver / ajustar':'Ver percurso'}</button>
+      </div>
+      {pw?<>
+        <p style={{fontSize:13.5,color:'#475569'}}>{pw.about}</p>
+        {missing.length>0&&<p style={{fontSize:13,color:'#b45309',marginTop:6}}>Por avaliar: {missing.join(', ')}</p>}
+        {overdue.length>0&&<p style={{fontSize:13,color:'#b45309',marginTop:4}}>Reavaliação recomendada: {overdue.join(', ')} (a cada {pw.reassessWeeks} semanas)</p>}
+      </>:<p style={{fontSize:13.5,color:'#475569'}}>Pelo diagnóstico{sug.some(x=>x.id==='quedas')?' e pelo risco de queda':''}: {sug.map(x=>`${x.icon} ${x.name}`).join(' · ')}. O percurso sugere escalas, objetivos e um plano inicial.</p>}
+    </div>
+  );
+}
+
+// ─── PROGRAMA INTENSIVO ────────────────────────────────────────────────────
+// Bloco de N semanas com várias sessões por semana, avaliação no início e reavaliação no fim.
+const PROGRAM_WEEKDAYS=[[1,'Seg'],[2,'Ter'],[3,'Qua'],[4,'Qui'],[5,'Sex'],[6,'Sáb']];
+function programRange(pr){return {start:pr.start,end:pr.end};}
+function programStats(patient,{sessions,events,assessments}){
+  const pr=patient.program;if(!pr) return null;
+  const today=todayISO();
+  const planned=events.filter(e=>e.programId===pr.id&&e.kind!=='reassess').length;
+  const ps=sessions.filter(s=>s.patientId===patient.id&&s.date>=pr.start&&s.date<=pr.end);
+  const done=ps.filter(s=>sessionStatus(s)==='done').length,missed=ps.filter(s=>sessionStatus(s)==='missed').length;
+  const week=Math.min(pr.weeks,Math.max(1,Math.floor(daysBetween(pr.start,today)/7)+1));
+  const pa=assessments.filter(a=>a.patientId===patient.id);
+  const baseFrom=addDaysISO(pr.start,-14),baseTo=addDaysISO(pr.start,7),finalFrom=addDaysISO(pr.end,-7);
+  const keys=Object.keys(SCALES);
+  const cmp=keys.map(k=>{
+    const list=pa.filter(a=>a.scale===k).sort((a,b)=>a.date.localeCompare(b.date)||a.id-b.id);
+    const b=list.filter(a=>a.date>=baseFrom&&a.date<=baseTo).pop();
+    const f=list.filter(a=>a.date>=finalFrom).pop();
+    if(!b&&!f) return null;
+    let trend=null;
+    if(b&&f&&f.id!==b.id){const d=Math.round((f.value-b.value)*10)/10,thr=Math.abs(DECLINE_THRESHOLD[k]||1),better=SCALES[k].inverse?d<0:d>0;trend=d===0?'Sem alteração':Math.abs(d)<thr?'Variação ligeira':better?'Melhoria':'Agravamento';}
+    return {k,b,f:f&&b&&f.id===b.id?null:f,trend};
+  }).filter(Boolean);
+  const hasBaseline=cmp.some(c=>c.b), hasFinal=cmp.some(c=>c.f);
+  const phase=today<pr.start?'antes':today>pr.end?'terminado':'a decorrer';
+  return {pr,planned,done,missed,rate:done+missed?Math.round(done/(done+missed)*100):null,week,cmp,hasBaseline,hasFinal,phase};
+}
+function ProgramModal({patient,onClose}){
+  const {addEvents,updatePatient}=useStore();
+  const pw=pathwayById(patient.pathway);
+  const [f,setF]=useState({start:nextWeekdayISO(1),weeks:'4',days:[1,3,5],time:'',final:true,goal:''});
+  const [err,setErr]=useState('');
+  const set=(k,v)=>setF(x=>({...x,[k]:v}));
+  const weeks=Math.max(1,Math.min(12,+f.weeks||4));
+  const dates=[];for(let i=0;i<weeks*7;i++){const d=addDaysISO(f.start,i);if(f.days.includes(new Date(d+'T12:00:00').getDay()))dates.push(d);}
+  const end=addDaysISO(f.start,weeks*7-1);
+  const save=()=>{
+    if(!f.days.length){setErr('Escolha pelo menos um dia da semana.');return;}
+    if(f.days.length<2){setErr('Um programa intensivo tem pelo menos 2 sessões por semana.');return;}
+    const id='p'+Date.now();const short=`${patient.name.split(' ')[0]} ${patient.name.split(' ').slice(-1)[0]}`;
+    const evs=dates.map((d,i)=>({date:d,time:f.time||undefined,title:`Intensivo: ${short} (${i+1}/${dates.length})`,type:'session',patientId:patient.id,programId:id,color:'#1d4ed8'}));
+    if(f.final) evs.push({date:end,time:f.time||undefined,title:`Reavaliação final: ${short}`,type:'session',patientId:patient.id,programId:id,kind:'reassess',color:'#1d4ed8'});
+    addEvents(evs);
+    const past=patient.program?[...(patient.pastPrograms||[]),{...patient.program,endedAt:patient.program.endedAt||todayISO(),note:'Substituído por um novo programa'}]:(patient.pastPrograms||[]);
+    updatePatient(patient.id,{program:{id,start:f.start,end,weeks,perWeek:f.days.length,days:f.days,time:f.time,goal:f.goal.trim(),createdAt:todayISO()},pastPrograms:past});
+    onClose();
+  };
+  return(
+    <Modal title={`Programa intensivo — ${patient.name}`} onClose={onClose} wide>
+      {err&&<div className="alert alert-warning">{err}</div>}
+      <p style={{fontSize:14,color:'#475569',marginBottom:10}}>Um bloco de várias semanas com sessões frequentes, avaliação no início e reavaliação no fim, para medir o efeito do programa.</p>
+      <div className="grid-3">
+        <div className="form-group"><label>Início</label><input type="date" value={f.start} onChange={e=>set('start',e.target.value)}/></div>
+        <div className="form-group"><label>Semanas (1–12)</label><input type="number" min={1} max={12} value={f.weeks} onChange={e=>set('weeks',e.target.value)}/></div>
+        <div className="form-group"><label>Hora</label><input type="time" value={f.time} onChange={e=>set('time',e.target.value)}/></div>
+      </div>
+      <div className="form-group"><label>Dias da semana ({f.days.length} sessões por semana)</label>
+        <div style={{display:'flex',gap:6,flexWrap:'wrap'}}>{PROGRAM_WEEKDAYS.map(([d,l])=><button key={d} type="button" className={`btn btn-sm ${f.days.includes(d)?'btn-primary':'btn-secondary'}`} onClick={()=>set('days',f.days.includes(d)?f.days.filter(x=>x!==d):[...f.days,d].sort())}>{l}</button>)}</div>
+      </div>
+      <div className="form-group"><label>Objetivo do programa</label><input value={f.goal} onChange={e=>set('goal',e.target.value)} placeholder={pw?pw.goals[0]:'Ex.: TUG abaixo de 13,5 s no fim das 4 semanas'}/></div>
+      <label style={{display:'flex',gap:8,alignItems:'center',fontWeight:400,fontSize:14,cursor:'pointer'}}><input type="checkbox" checked={f.final} onChange={e=>set('final',e.target.checked)}/>Agendar a reavaliação final no último dia ({fmtDate(end)})</label>
+      <div className="alert alert-info" style={{marginTop:12,fontSize:13.5}}>Vão ser criadas <strong>{dates.length} sessões</strong> entre {fmtDate(f.start)} e {fmtDate(end)}{f.final?' e a reavaliação final':''}. Registe a avaliação inicial{pw?` (${pw.scales.map(([k])=>SCALES[k].name).join(', ')})`:''} até 7 dias depois do início.</div>
+      {patient.program&&<p style={{fontSize:12.5,color:'#b45309'}}>Este paciente já tem um programa: o atual passa para o histórico.</p>}
+      <div style={{display:'flex',gap:10,justifyContent:'flex-end',marginTop:12}}>
+        <button className="btn btn-secondary" onClick={onClose}>Cancelar</button>
+        <button className="btn btn-primary" onClick={save}>Criar programa</button>
+      </div>
+    </Modal>
+  );
+}
+function ProgramCard({patient,onAssess}){
+  const store=useStore();const {updatePatient,setEvents}=store;
+  const s=programStats(patient,store);
+  const [confirm,setConfirm]=useState(null);
+  if(!s) return null;
+  const {pr}=s;
+  const finish=cancel=>{
+    if(cancel) setEvents(es=>es.filter(e=>!(e.programId===pr.id&&!e.done&&e.date>=todayISO())));
+    updatePatient(patient.id,{program:null,pastPrograms:[...(patient.pastPrograms||[]),{...pr,endedAt:todayISO(),done:s.done,missed:s.missed,cancelled:!!cancel}]});
+    setConfirm(null);
+  };
+  return(
+    <div className="card" style={{borderLeft:'4px solid #4361EE'}}>
+      <div className="card-header" style={{marginBottom:6}}>
+        <div className="card-title">⚡ Programa intensivo</div>
+        <span className={`badge badge-${s.phase==='a decorrer'?'blue':s.phase==='terminado'?'gray':'yellow'}`}>{s.phase==='a decorrer'?`Semana ${s.week} de ${pr.weeks}`:s.phase==='terminado'?'Terminado':'Ainda não começou'}</span>
+      </div>
+      <p style={{fontSize:13.5,color:'#475569'}}>{fmtDate(pr.start)} a {fmtDate(pr.end)} · {pr.perWeek}x por semana{pr.goal?` · ${pr.goal}`:''}</p>
+      <div style={{margin:'10px 0'}}>
+        <div style={{display:'flex',justifyContent:'space-between',fontSize:13,color:'#475569',marginBottom:4}}><span>Sessões realizadas</span><strong>{s.done}/{s.planned}{s.rate!=null?` · assiduidade ${s.rate}%`:''}</strong></div>
+        <div className="progress-bar"><div className="progress-fill" style={{width:`${s.planned?Math.min(100,s.done/s.planned*100):0}%`,background:'#4361EE'}}/></div>
+      </div>
+      {!s.hasBaseline&&<p style={{fontSize:13,color:'#b45309'}}>Falta a avaliação inicial (até 7 dias depois do início). {onAssess&&<a href="#" onClick={e=>{e.preventDefault();onAssess();}}>Registar</a>}</p>}
+      {s.phase==='terminado'&&!s.hasFinal&&<p style={{fontSize:13,color:'#b45309'}}>O programa terminou: falta a reavaliação final. {onAssess&&<a href="#" onClick={e=>{e.preventDefault();onAssess();}}>Registar</a>}</p>}
+      {s.cmp.some(c=>c.b&&c.f)&&<div className="table-scroll" style={{marginTop:6}}><table className="table">
+        <thead><tr><th>Escala</th><th>Início</th><th>Fim</th><th>Evolução</th></tr></thead>
+        <tbody>{s.cmp.filter(c=>c.b&&c.f).map(c=><tr key={c.k}><td style={{fontWeight:600}}>{SCALES[c.k].name}</td><td>{fmtScale(c.k,c.b.value)}</td><td>{fmtScale(c.k,c.f.value)}</td><td><span className={`badge badge-${c.trend==='Melhoria'?'green':c.trend==='Agravamento'?'red':'gray'}`}>{c.trend}</span></td></tr>)}</tbody>
+      </table></div>}
+      {confirm&&<ConfirmBar text={confirm==='cancel'?'Cancelar o programa? As sessões futuras do programa são retiradas do calendário.':'Dar o programa por terminado? Fica no histórico do paciente.'} yes={confirm==='cancel'?'Cancelar programa':'Terminar'} onNo={()=>setConfirm(null)} onYes={()=>finish(confirm==='cancel')}/>}
+      <div style={{display:'flex',gap:8,flexWrap:'wrap',marginTop:8}}>
+        <button className="btn btn-sm btn-secondary" onClick={()=>setConfirm('finish')}>Terminar programa</button>
+        {s.phase!=='terminado'&&<button className="btn btn-sm btn-danger" onClick={()=>setConfirm('cancel')}>Cancelar</button>}
+      </div>
+    </div>
+  );
+}
+
 function PatientProfile({patient,setPage}){
   const {sessions,assessments,events,deletePatient,deleteSession,updatePatient,setPatientStatus,profile,groups}=useStore();
   const myGroups=(groups||[]).filter(g=>g.patientIds.includes(patient.id));
@@ -3529,6 +3790,8 @@ function PatientProfile({patient,setPage}){
       {tab==='overview'&&(
         <div className="grid-2">
           <div>
+            <PathwayCard patient={patient} onOpen={()=>setModal('pathway')}/>
+            {patient.program&&<ProgramCard patient={patient} onAssess={()=>setModal('assessment')}/>}
             <div className="card">
               <div className="card-header" style={{marginBottom:6}}><div className="card-title">Identificação e contactos</div><button className="btn btn-sm btn-secondary" onClick={()=>setModal('edit')}>Editar</button></div>
               <InfoRows rows={[['Data de nascimento',patient.dob?fmtDate(patient.dob):''],['Escolaridade',patient.education!=null?`${patient.education} anos`:''],['Nº utente SNS',patient.sns],['Telefone',patient.phone],['Email',patient.email],['Morada',patient.address],
@@ -3537,7 +3800,7 @@ function PatientProfile({patient,setPage}){
             </div>
             <div className="card">
               <div className="card-title" style={{marginBottom:6}}>Informação clínica</div>
-              <InfoRows rows={[['Diagnóstico',patient.diagnosis],['Módulo principal',mod?`${mod.icon} ${mod.name}`:''],['Frequência',FREQ_LABEL[patient.frequency]],['Referenciação',patient.referral],
+              <InfoRows rows={[['Diagnóstico',patient.diagnosis],['Percurso',pathwayById(patient.pathway)?.name],['Módulo principal',mod?`${mod.icon} ${mod.name}`:''],['Frequência',FREQ_LABEL[patient.frequency]],['Referenciação',patient.referral],
                 ['Quedas (12 meses)',patient.falls12m!=null?String(patient.falls12m):''],['Grupos',myGroups.map(g=>`${g.name} (${groupSchedule(g)})`).join('\n')],['Medicação',patient.medication],['Antecedentes',patient.history]]}/>
             </div>
             {patient.goals&&<div className="card"><div className="card-title" style={{marginBottom:10}}>Objetivos Terapêuticos</div><p style={{fontSize:14,color:'#334155',lineHeight:1.6,whiteSpace:'pre-wrap'}}>{patient.goals}</p></div>}
@@ -3581,6 +3844,8 @@ function PatientProfile({patient,setPage}){
           <div className="card-header" style={{marginBottom:12}}>
             <div><div className="card-title">Plano de Exercícios</div><div style={{fontSize:13,color:'#64748b'}}>Exercícios para casa e base do registo de sessão</div></div>
             <div style={{display:'flex',gap:8,flexWrap:'wrap'}}>
+              <button className="btn btn-sm btn-secondary" onClick={()=>setModal('pathway')}>🧭 Percurso</button>
+              {active&&<button className="btn btn-sm btn-secondary" onClick={()=>setModal('program')}>⚡ Programa intensivo</button>}
               <button className="btn btn-sm btn-secondary" disabled={!plan.length} style={{opacity:plan.length?1:.5}} onClick={homeSheet}>📄 Ficha para casa</button>
               <button className="btn btn-sm btn-primary" onClick={()=>setModal('plan')}>+ Exercício</button>
             </div>
@@ -3651,6 +3916,10 @@ function PatientProfile({patient,setPage}){
                 <span style={{fontSize:13,color:'#334155',flex:1}}>{h.note}</span>
               </div>
             ))}
+            {(patient.pastPrograms||[]).length>0&&<div style={{marginTop:14}}>
+              <div style={{fontWeight:700,fontSize:13,color:'#475569',marginBottom:6}}>Programas intensivos anteriores</div>
+              {patient.pastPrograms.slice().reverse().map((x,i)=><div key={i} style={{fontSize:13,color:'#334155',padding:'4px 0'}}>{fmtDate(x.start)} a {fmtDate(x.end)} · {x.perWeek}x/semana{x.done!=null?` · ${x.done} sessões`:''}{x.cancelled?' · cancelado':''}</div>)}
+            </div>}
             {(patient.familyShares||[]).length>0&&<div style={{marginTop:14}}>
               <div style={{fontWeight:700,fontSize:13,color:'#475569',marginBottom:6}}>Partilhas com a família</div>
               {patient.familyShares.slice().reverse().map((f,i)=><div key={i} style={{fontSize:13,color:'#334155',padding:'4px 0'}}>{fmtDate(f.date)} — {f.scales.length?f.scales.map(k=>SCALES[k]?.name||k).join(', '):'sem escalas'}{f.plan?' · plano':''}{f.events?' · sessões':''}</div>)}
@@ -3684,6 +3953,8 @@ function PatientProfile({patient,setPage}){
       {modal&&modal.type==='edit-assessment'&&<EditAssessmentModal assessment={modal.a} patient={patient} onClose={()=>setModal(null)}/>}
       {modal==='edit'&&<EditPatientModal patient={patient} onClose={()=>setModal(null)}/>}
       {modal==='family'&&<FamilyShareModal patient={patient} onClose={()=>setModal(null)}/>}
+      {modal==='pathway'&&<PathwayModal patient={patient} onClose={()=>setModal(null)} onAssess={()=>setModal('assessment')}/>}
+      {modal==='program'&&<ProgramModal patient={patient} onClose={()=>setModal(null)}/>}
       {modal==='discharge'&&<DischargeModal patient={patient} onClose={()=>setModal(null)} onDone={()=>setTab('process')}/>}
     </div>
   );
@@ -3696,6 +3967,9 @@ function NewPatientPage({setPage,openPatient}){
   const [form,setForm]=useState({...EMPTY_PATIENT});
   const [scores,setScores]=useState(()=>Object.fromEntries(Object.keys(SCALES).map(k=>[k,''])));
   const set=(k,v)=>setForm(f=>({...f,[k]:v}));
+  const suggested=suggestPathways({diagnosis:form.diagnosis,falls12m:form.falls12m,tug:numOrNull(scores.tug),berg:numOrNull(scores.berg)});
+  const [usePw,setUsePw]=useState('auto');
+  const pwChoice=usePw==='auto'?(suggested[0]?suggested[0].id:''):usePw;
   const steps=[{n:1,label:'Identificação'},{n:2,label:'Clínico'},{n:3,label:'Avaliações'},{n:4,label:'Plano'}];
   const validate=st=>{
     if(st===1){
@@ -3715,7 +3989,10 @@ function NewPatientPage({setPage,openPatient}){
     if(step<4){setStep(s=>s+1);return;}
     const {parsed}=validateScales(scores);
     const t=todayISO();
-    const p=addPatient({...patientFromForm(form),...parsed,lastAssessed:Object.fromEntries(Object.entries(parsed).filter(([,v])=>v!=null).map(([k])=>[k,t]))});
+    let data={...patientFromForm(form),...parsed,lastAssessed:Object.fromEntries(Object.entries(parsed).filter(([,v])=>v!=null).map(([k])=>[k,t]))};
+    const pw=pwChoice&&pathwayById(pwChoice);
+    if(pw) data={...data,...applyPathwayData(data,pw,{goals:pw.goals,planIds:pw.plan.map(x=>x[0])})};
+    const p=addPatient(data);
     addAssessments(p.id,t,parsed,'Avaliação inicial');
     openPatient(p.id);
   };
@@ -3757,6 +4034,11 @@ function NewPatientPage({setPage,openPatient}){
         {step===4&&(<>
           <div className="card-title" style={{marginBottom:12}}>Plano terapêutico</div>
           <PatientFields form={form} set={set} section="plan"/>
+          <div style={{border:'1px solid #ddd6fe',background:'#f5f3ff',borderRadius:10,padding:12,margin:'4px 0 12px'}}>
+            <label style={{fontWeight:700,marginBottom:6}}>🧭 Percurso por condição</label>
+            <select value={pwChoice} onChange={e=>setUsePw(e.target.value)}><option value="">Não aplicar</option>{PATHWAYS.map(x=><option key={x.id} value={x.id}>{x.icon} {x.name}{suggested.some(s=>s.id===x.id)?' (sugerido)':''}</option>)}</select>
+            {pwChoice&&<p style={{fontSize:12.5,color:'#5b21b6',marginTop:6}}>Junta os objetivos-tipo e o plano inicial de "{pathwayById(pwChoice).name}" ({pathwayById(pwChoice).plan.length} exercícios). Pode ajustar tudo depois.</p>}
+          </div>
           <PatientFields form={form} set={set} section="consent"/>
           <div className="alert alert-info" style={{marginTop:12}}><strong>Resumo:</strong> {form.name||'(sem nome)'} · {form.diagnosis||'(sem diagnóstico)'} · {MODULES.find(m=>m.id==form.module)?.name}{Object.entries(scores).filter(([,v])=>v!=='').map(([k,v])=>` · ${SCALES[k].name} ${v}`).join('')}</div>
         </>)}
@@ -4010,7 +4292,7 @@ function LibraryPage({openPatient}){
         {tab==='ebooks'&&<input placeholder="🔍 Pesquisar atividades (ex.: memória, equilíbrio, bola)..." style={{width:320}} value={q} onChange={e=>{setQ(e.target.value);}} aria-label="Pesquisar atividades"/>}
       </div>
       <div className="tab-bar">
-        {[['ebooks',`Ebooks (${EBOOKS.length})`],['ppt',`PowerPoints (${PPTS.length})`]].map(([id,l])=><div key={id} className={`tab${tab===id?' active':''}`} onClick={()=>setTab(id)}>{l}</div>)}
+        {[['ebooks',`Ebooks (${EBOOKS.length})`],['ppt',`PowerPoints (${PPTS.length})`],['paths',`Percursos (${PATHWAYS.length})`]].map(([id,l])=><div key={id} className={`tab${tab===id?' active':''}`} onClick={()=>setTab(id)}>{l}</div>)}
       </div>
       {added&&<div className="alert alert-success" style={{display:'flex',gap:10,alignItems:'center',flexWrap:'wrap'}}><span style={{flex:1}}>✓ Juntado ao plano de {checkP.name} ({pl((checkP.plan||[]).length,'exercício','exercícios')}).</span><button className="btn btn-sm btn-secondary" onClick={()=>openPatient(checkP.id)}>Ver paciente</button></div>}
       {tab==='ebooks'&&results&&(
@@ -4053,6 +4335,24 @@ function LibraryPage({openPatient}){
             {e.atividades.map((a,i)=><EbookActivity key={i} a={a} mod={sel} ex={sel.exercises_list[i]} onAdd={onAdd}/>)}
           </div>
         </div>);})()}
+      {tab==='paths'&&(
+        <div style={{display:'flex',flexDirection:'column',gap:12}}>
+          <div className="alert alert-info" style={{fontSize:13.5}}>Modelos por condição: escalas recomendadas, objetivos-tipo, plano inicial, cuidados e sinais de alerta. Aplicam-se no perfil do paciente (🧭 Percurso) ou ao criá-lo. São um ponto de partida: adapte sempre à pessoa.</div>
+          {PATHWAYS.map(pw=>(
+            <details key={pw.id} className="card" style={{marginBottom:0}}>
+              <summary style={{cursor:'pointer',fontWeight:800,fontSize:16}}>{pw.icon} {pw.name} <span style={{fontWeight:400,fontSize:13,color:'#64748b'}}>· reavaliar a cada {pw.reassessWeeks} semanas</span></summary>
+              <div style={{marginTop:10,fontSize:14,color:'#334155',lineHeight:1.6,display:'grid',gap:8}}>
+                <p>{pw.about}</p>
+                <div><strong>Escalas:</strong> {pw.scales.map(([k,w])=>`${SCALES[k].name} (${w})`).join('; ')}</div>
+                <div><strong>Objetivos-tipo:</strong><ul style={{margin:'4px 0 0 18px'}}>{pw.goals.map(g=><li key={g}>{g}</li>)}</ul></div>
+                <div><strong>Plano inicial:</strong><ul style={{margin:'4px 0 0 18px'}}>{pw.plan.map(([id,v,fq,d])=>{const f=findExercise(id);return f?<li key={id}>{f.ex.name} — {versionLabel({version:v},f.ex.ebook)}, {PLAN_FREQ[fq]}, {d}</li>:null;})}</ul></div>
+                <div><strong>Cuidados:</strong><ul style={{margin:'4px 0 0 18px'}}>{pw.precautions.map(x=><li key={x}>{x}</li>)}</ul></div>
+                <div className="alert alert-warning" style={{margin:0}}><strong>Sinais de alerta:</strong><ul style={{margin:'4px 0 0 18px'}}>{pw.redFlags.map(x=><li key={x}>{x}</li>)}</ul></div>
+              </div>
+            </details>
+          ))}
+        </div>
+      )}
       {tab==='ppt'&&(
         <div>
           <div className="alert alert-info" style={{fontSize:13.5}}>Apresentações 16:9 para sessões de grupo de 45–60 minutos. As respostas e as orientações para quem dinamiza estão nas <strong>notas do orador</strong> e no último diapositivo. Estrutura: {PPT_STEPS.join(' → ')}.</div>

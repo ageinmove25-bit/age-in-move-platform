@@ -1,5 +1,24 @@
 # Changelog — Age in Move Platform
 
+## [2.0.0] — 2026-11-19
+
+### Percursos por condição
+- 5 percursos-modelo: **Pós-AVC, Doença de Parkinson, DCL e demência ligeira, Fragilidade e risco de queda, Depressão geriátrica**
+- Cada percurso tem escalas recomendadas (com o porquê), intervalo de reavaliação, objetivos-tipo, plano inicial com exercícios dos módulos e atividades dos ebooks, cuidados e sinais de alerta
+- Sugerido pelo diagnóstico (e pelo risco de queda) ao criar o paciente, onde pode ser aplicado logo; no perfil, cartão do percurso com escalas por avaliar ou a reavaliar e botão 🧭 Percurso
+- Novo separador **Percursos** na Biblioteca
+- Conteúdo-modelo para revisão clínica
+
+### Programa intensivo
+- Botão ⚡ **Programa intensivo** no plano do paciente: semanas (1–12), dias da semana (2–6 sessões por semana), hora e objetivo; cria as sessões no calendário e a reavaliação final
+- Cartão de progresso no perfil: semana atual, sessões realizadas, assiduidade e comparação entre a avaliação inicial e a final
+- Alertas no dashboard quando falta a avaliação inicial ou a reavaliação final; histórico de programas no separador Processo; percurso e programa no relatório clínico
+
+### Páginas públicas por condição
+- 5 páginas em `condicoes/` (Parkinson, pós-AVC, défice cognitivo e demência ligeira, quedas, depressão) e um índice, com meta-descrição, Open Graph, perguntas frequentes em dados estruturados e ligação ao teste grátis
+- Secção **"Condições que acompanhamos"** na landing page
+- `sitemap.xml` e `robots.txt`; conteúdos editáveis em `condicoes/conteudos.js` e páginas geradas com `node scripts/gerar-paginas-condicoes.js`
+
 ## [1.9.0] — 2026-11-19
 
 ### Teste grátis "Idade em Movimento"
