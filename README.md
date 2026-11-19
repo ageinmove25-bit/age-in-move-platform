@@ -38,9 +38,13 @@ Abrir `index.html` diretamente no browser (Chrome/Edge recomendado).
 
 Não requer instalação, servidor ou base de dados.
 
+### Endereço
+
+A app está em **https://ageinmove.pt** (o ageinmove.com redireciona para lá). Configuração do domínio e mudança de endereço: ver [DOMINIO.md](DOMINIO.md).
+
 ### Instalar no iPhone
 
-1. No iPhone, abrir no **Safari**: https://ageinmove25-bit.github.io/age-in-move-platform/
+1. No iPhone, abrir no **Safari**: https://ageinmove.pt
 2. Tocar no botão **Partilhar** (quadrado com seta para cima)
 3. Escolher **Adicionar ao ecrã principal** → **Adicionar**
 

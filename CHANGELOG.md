@@ -1,5 +1,12 @@
 # Changelog — Age in Move Platform
 
+## [2.0.1] — 2026-11-19
+
+### Domínio próprio
+- Endereço público passa a **https://ageinmove.pt** (ficheiro `CNAME`); ageinmove.com redireciona para lá
+- Links da família, páginas por condição, `sitemap.xml` e `robots.txt` com o novo endereço
+- Guia passo a passo em `DOMINIO.md` (DNS, redirecionamento do .com, GitHub Pages, Google Search Console e mudança dos dados)
+
 ## [2.0.0] — 2026-11-19
 
 ### Percursos por condição

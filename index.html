@@ -3264,7 +3264,7 @@ function InfoRows({rows}){
 // O terapeuta gera um link com um resumo do acompanhamento. O resumo vai CIFRADO dentro do próprio link
 // (depois do #, parte que o browser nunca envia a nenhum servidor) e só abre com o PIN.
 // Cifra: AES-GCM 256 com chave derivada do PIN por PBKDF2 (SHA-256, 150 000 iterações), sal e IV aleatórios.
-const APP_PUBLIC_URL='https://ageinmove25-bit.github.io/age-in-move-platform/';
+const APP_PUBLIC_URL='https://ageinmove.pt/';
 const FAMILY_SCALE={mmse:'Memória e orientação',moca:'Memória e raciocínio',gds:'Humor',barthel:'Autonomia no dia a dia',tug:'Levantar e caminhar',berg:'Equilíbrio',tinetti:'Equilíbrio e marcha',sppb:'Força e mobilidade',chair30:'Força das pernas',zarit:'Cansaço do cuidador'};
 const FAMILY_DEFAULT_OFF=['gds','zarit'];
 const b64uEnc=bytes=>{let s='';const a=new Uint8Array(bytes);for(let i=0;i<a.length;i++)s+=String.fromCharCode(a[i]);return btoa(s).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');};

@@ -3,7 +3,7 @@
 // Rascunho para revisão clínica: linguagem simples, sem promessas de resultados.
 
 module.exports = {
-  baseUrl: 'https://ageinmove25-bit.github.io/age-in-move-platform/',
+  baseUrl: 'https://ageinmove.pt/',
   condicoes: [
     {
       slug: 'parkinson',
