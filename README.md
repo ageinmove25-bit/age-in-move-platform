@@ -14,6 +14,8 @@ Plataforma clínica integrada de **exercício físico** e **estimulação cognit
 - 📝 **Registo de sessão** — exercícios do plano, sinais vitais, Borg, adesão, nota SOAP, ocorrências, faltas
 - 🏁 **Alta** — estados do processo, nota de alta em PDF com comparação inicial/final, reabertura
 - 📄 **Relatórios em PDF** — relatório clínico, relatório de sessão, nota de alta e ficha para casa
+- 👪 **Área da família** — link cifrado com PIN para a família ver a evolução, os exercícios de casa e as próximas sessões
+- 📖 **Biblioteca** — 7 ebooks "Fatores Psicomotores" (42 atividades, que podem entrar no plano do paciente) e 6 PowerPoints para sessões de grupo
 - 💾 **Dados guardados no browser** com exportação/importação de backup
 - 👥 **Gestão de pacientes** — historial, avaliações, sessões, cuidadores
 - 📅 **Calendário clínico** com agendamento de sessões

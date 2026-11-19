@@ -1,5 +1,20 @@
 # Changelog — Age in Move Platform
 
+## [1.8.0] — 2026-11-19
+
+### Área da família
+- Botão **👪 Família** no perfil do paciente: cria um link para a família ver o acompanhamento no telemóvel
+- A família vê, em linguagem simples: a mensagem do terapeuta, a evolução das escalas escolhidas (com gráfico e "melhorou / estável / baixou"), os exercícios para casa com dias para marcar, as próximas sessões e o contacto do terapeuta
+- **Privacidade:** o resumo vai cifrado dentro do link (AES-GCM, chave derivada do PIN com PBKDF2) e só abre com o PIN; não fica em nenhum servidor. Mostra só o primeiro nome, sem contactos, diagnóstico nem notas clínicas; humor (GDS) e Zarit ficam de fora por omissão
+- As partilhas ficam registadas no separador Processo
+
+### Biblioteca de materiais
+- Nova secção **Biblioteca** no menu: os 7 ebooks da coleção "Fatores Psicomotores" com as 42 atividades (objetivo, funções cognitivas, materiais, passos, como facilitar e dificultar, dica) e o PDF de cada volume
+- **Pesquisa** de atividades por nome, função cognitiva ou material
+- Os 6 PowerPoints temáticos para descarregar
+- **Atividades dos ebooks no plano do paciente**, com versões Standard, Mais fácil e Mais exigente; entram no registo de sessão, na ficha para casa e na página da família
+- Novo script `materiais/ebooks/exportar-para-app.js` copia o conteúdo de `dados.js` para a app depois de o editar
+
 ## [1.7.0] — 2026-11-19
 
 ### Alta e estados do processo

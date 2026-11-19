@@ -46,4 +46,7 @@ cd materiais
 npm install
 node ebooks/gerar-ebooks.js          # todos os ebooks (ou: node ebooks/gerar-ebooks.js tonicidade)
 node powerpoints/gerar-powerpoints.js  # todos os PowerPoints (ou: ... natal-em-familia)
+node ebooks/exportar-para-app.js       # copia os textos dos ebooks para a app (Biblioteca e plano)
 ```
+
+Depois de editar `ebooks/dados.js`, corra também `exportar-para-app.js` para a Biblioteca da app ficar igual aos PDFs.
