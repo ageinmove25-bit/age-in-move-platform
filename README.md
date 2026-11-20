@@ -8,8 +8,19 @@ Plataforma clínica integrada de **exercício físico** e **estimulação cognit
 
 - 🧠 **6 módulos cognitivos** — Memória, Linguagem, Executivas, Espacial, Visuo-Espacial, Praxias
 - 🏃 **5 módulos físicos** — Equilíbrio, Força, Mobilidade, Aeróbico, Coordenação
-- 📊 **Dashboard clínico** com alertas de risco e escalas validadas (MMSE, MoCA, GDS, Barthel)
+- 📊 **Dashboard clínico** com painel "Precisa de atenção" (declínio, reavaliação em atraso, faltas, quedas)
+- 🩺 **Escalas validadas** — MMSE (ajustado à escolaridade), MoCA, GDS-15, Barthel, TUG, Berg, Tinetti, SPPB, levantar-sentar 30 s, Zarit
 - 📈 **Gráficos de evolução** das escalas por paciente
+- 📝 **Registo de sessão** — exercícios do plano, sinais vitais, Borg, adesão, nota SOAP, ocorrências, faltas
+- 🏁 **Alta** — estados do processo, nota de alta em PDF com comparação inicial/final, reabertura
+- 📄 **Relatórios em PDF** — relatório clínico, relatório de sessão, nota de alta e ficha para casa
+- 👪 **Área da família** — link cifrado com PIN para a família ver a evolução, os exercícios de casa e as próximas sessões
+- 📖 **Biblioteca** — 7 ebooks "Fatores Psicomotores" (42 atividades, que podem entrar no plano do paciente) e 6 PowerPoints para sessões de grupo
+- 🫂 **Grupos** — sessões em grupo pequeno com limite de participantes, presenças por pessoa e agendamento no calendário
+- ⏱️ **Teste grátis "Idade em Movimento"** — público, sem login (link direto `…/#teste`): força, equilíbrio, marcha e memória comparados com a idade
+- 🧭 **Percursos por condição** — Pós-AVC, Parkinson, DCL/demência ligeira, quedas e depressão: escalas, objetivos e plano inicial sugeridos
+- ⚡ **Programa intensivo** — bloco de semanas com sessões frequentes, avaliação inicial e reavaliação final comparadas
+- 🌐 **Páginas por condição** em `condicoes/` para o site público (editar `condicoes/conteudos.js` e correr `node scripts/gerar-paginas-condicoes.js`)
 - 💾 **Dados guardados no browser** com exportação/importação de backup
 - 👥 **Gestão de pacientes** — historial, avaliações, sessões, cuidadores
 - 📅 **Calendário clínico** com agendamento de sessões
@@ -27,9 +38,13 @@ Abrir `index.html` diretamente no browser (Chrome/Edge recomendado).
 
 Não requer instalação, servidor ou base de dados.
 
+### Endereço
+
+A app está em **https://ageinmove.pt** (o ageinmove.com redireciona para lá). Configuração do domínio e mudança de endereço: ver [DOMINIO.md](DOMINIO.md).
+
 ### Instalar no iPhone
 
-1. No iPhone, abrir no **Safari**: https://ageinmove25-bit.github.io/age-in-move-platform/
+1. No iPhone, abrir no **Safari**: https://ageinmove.pt
 2. Tocar no botão **Partilhar** (quadrado com seta para cima)
 3. Escolher **Adicionar ao ecrã principal** → **Adicionar**
 

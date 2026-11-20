@@ -1,5 +1,112 @@
 # Changelog — Age in Move Platform
 
+## [2.0.1] — 2026-11-19
+
+### Domínio próprio
+- Preparação para o endereço **https://ageinmove.pt** (ageinmove.com redireciona para lá); o domínio liga-se em Settings → Pages depois de configurar o DNS
+- Links da família, páginas por condição, `sitemap.xml` e `robots.txt` com o novo endereço
+- Guia passo a passo em `DOMINIO.md` (DNS, redirecionamento do .com, GitHub Pages, Google Search Console e mudança dos dados)
+
+## [2.0.0] — 2026-11-19
+
+### Percursos por condição
+- 5 percursos-modelo: **Pós-AVC, Doença de Parkinson, DCL e demência ligeira, Fragilidade e risco de queda, Depressão geriátrica**
+- Cada percurso tem escalas recomendadas (com o porquê), intervalo de reavaliação, objetivos-tipo, plano inicial com exercícios dos módulos e atividades dos ebooks, cuidados e sinais de alerta
+- Sugerido pelo diagnóstico (e pelo risco de queda) ao criar o paciente, onde pode ser aplicado logo; no perfil, cartão do percurso com escalas por avaliar ou a reavaliar e botão 🧭 Percurso
+- Novo separador **Percursos** na Biblioteca
+- Conteúdo-modelo para revisão clínica
+
+### Programa intensivo
+- Botão ⚡ **Programa intensivo** no plano do paciente: semanas (1–12), dias da semana (2–6 sessões por semana), hora e objetivo; cria as sessões no calendário e a reavaliação final
+- Cartão de progresso no perfil: semana atual, sessões realizadas, assiduidade e comparação entre a avaliação inicial e a final
+- Alertas no dashboard quando falta a avaliação inicial ou a reavaliação final; histórico de programas no separador Processo; percurso e programa no relatório clínico
+
+### Páginas públicas por condição
+- 5 páginas em `condicoes/` (Parkinson, pós-AVC, défice cognitivo e demência ligeira, quedas, depressão) e um índice, com meta-descrição, Open Graph, perguntas frequentes em dados estruturados e ligação ao teste grátis
+- Secção **"Condições que acompanhamos"** na landing page
+- `sitemap.xml` e `robots.txt`; conteúdos editáveis em `condicoes/conteudos.js` e páginas geradas com `node scripts/gerar-paginas-condicoes.js`
+
+## [1.9.0] — 2026-11-19
+
+### Teste grátis "Idade em Movimento"
+- Teste público, sem login, a partir da landing page (botão "Fazer o teste grátis" e destaque no topo) ou diretamente pelo link `…/#teste`
+- Triagem de segurança antes dos testes físicos; com sinais de alerta, os testes físicos são saltados
+- 5 palavras para memorizar e evocar no fim; levantar e sentar em 30 s (cronómetro e contador +1); equilíbrio num pé (melhor de 2 tentativas, máximo 30 s); marcha de 4 m (opcional); quedas e medo de cair
+- Resultado: **idade em movimento** estimada pela comparação com valores de referência por idade e sexo (Rikli & Jones; Springer et al.; Bohannon & Andrews), avaliação de cada teste face à idade, sinais de alerta e PDF do resultado
+- Avisa sempre que é indicativo e não substitui avaliação profissional; os resultados ficam só no aparelho
+
+### Sessões de grupo
+- Nova secção **Grupos**: grupos físicos, cognitivos ou mistos, com **limite de participantes** (2–12, 6 por omissão), dia e hora, material (PowerPoint) e notas
+- **Registar sessão de grupo** com presenças, desempenho, ocorrências e observações por pessoa; cada participante fica com a sessão ou a falta no seu historial (assiduidade e alertas incluídos)
+- **Agendar** o grupo no calendário (séries semanais); no calendário, novo tipo "Sessão de grupo" com registo a partir do evento
+- O perfil do paciente mostra os grupos e assinala as sessões de grupo; os grupos entram no backup
+
+## [1.8.0] — 2026-11-19
+
+### Área da família
+- Botão **👪 Família** no perfil do paciente: cria um link para a família ver o acompanhamento no telemóvel
+- A família vê, em linguagem simples: a mensagem do terapeuta, a evolução das escalas escolhidas (com gráfico e "melhorou / estável / baixou"), os exercícios para casa com dias para marcar, as próximas sessões e o contacto do terapeuta
+- **Privacidade:** o resumo vai cifrado dentro do link (AES-GCM, chave derivada do PIN com PBKDF2) e só abre com o PIN; não fica em nenhum servidor. Mostra só o primeiro nome, sem contactos, diagnóstico nem notas clínicas; humor (GDS) e Zarit ficam de fora por omissão
+- As partilhas ficam registadas no separador Processo
+
+### Biblioteca de materiais
+- Nova secção **Biblioteca** no menu: os 7 ebooks da coleção "Fatores Psicomotores" com as 42 atividades (objetivo, funções cognitivas, materiais, passos, como facilitar e dificultar, dica) e o PDF de cada volume
+- **Pesquisa** de atividades por nome, função cognitiva ou material
+- Os 6 PowerPoints temáticos para descarregar
+- **Atividades dos ebooks no plano do paciente**, com versões Standard, Mais fácil e Mais exigente; entram no registo de sessão, na ficha para casa e na página da família
+- Novo script `materiais/ebooks/exportar-para-app.js` copia o conteúdo de `dados.js` para a app depois de o editar
+
+## [1.7.0] — 2026-11-19
+
+### Alta e estados do processo
+- Estados do paciente: **Ativo, Suspenso, Alta, Transferido, Falecido**, com data e histórico do processo
+- **Dar alta**: motivo, objetivos atingidos, resumo da evolução, recomendações, encaminhamento e plano de manutenção em casa; compara automaticamente a avaliação inicial com a final e junta a assiduidade
+- **Nota de alta em PDF** e **reabrir processo**; pacientes com alta ficam no separador "Alta / arquivo" em vez de serem apagados
+- Novo separador **Processo** no perfil do paciente
+
+### Sessão completa
+- Estado da sessão: **realizada, falta ou cancelada** (com motivo); assiduidade calculada
+- Marcar os **exercícios do plano** feitos, com séries, repetições/tempo e carga
+- **Sinais vitais** antes e depois (TA, FC, SpO₂), com aviso de valores a vigiar, e **esforço percebido (Borg CR10)**
+- **Adesão ao plano de casa**, **nota clínica SOAP** e **ocorrências** (queda, quase-queda, dor, tonturas…)
+- Editar sessões; **relatório de sessão em PDF**
+- O número de sessões passa a ser calculado a partir dos registos realizados
+
+### Avaliação
+- Novas escalas: **TUG, Berg, Tinetti (POMA), SPPB, levantar-sentar 30 s** e **Zarit** (versão portuguesa 22–110)
+- **MMSE ajustado à escolaridade** (cortes de Guerreiro et al., 1994)
+- Editar e eliminar avaliações, com recálculo dos valores atuais e do risco
+- Risco clínico passa a incluir risco de queda (TUG, Berg, Tinetti, SPPB, quedas no último ano) e mostra os motivos
+
+### Dados do paciente
+- **Editar todos os dados** do paciente
+- Novos campos: escolaridade, nº de utente do SNS, medicação, antecedentes, quedas nos últimos 12 meses, contacto de emergência e **consentimento informado (RGPD)**, obrigatório ao criar o processo
+
+### Calendário
+- Sessões **recorrentes** (semanal, quinzenal, 2x por semana) durante N semanas
+- No evento: **Registar sessão**, **Marcar falta** ou **Cancelada**; o evento fica marcado ✓/✗
+- Eliminar só um evento ou o resto da série
+
+### Acompanhamento
+- Painel **"Precisa de atenção"** no dashboard, agrupado por paciente: declínio entre avaliações, reavaliação em atraso, sem sessões nem agendamento, faltas seguidas, quedas nas sessões, sobrecarga do cuidador e consentimento em falta
+- Definições → **Clínico e alertas** controla estes alertas; retiradas as opções que não tinham efeito
+
+### PDFs
+- Todos os PDFs passam a ter **acentos portugueses**; corrigida a gralha "Esfoco" (agora "Esforço")
+- Relatório clínico atualizado com as novas escalas, assiduidade, ocorrências e alta
+
+## [1.6.0] — 2026-11-18
+
+### Plano de exercícios por paciente
+- Novo separador **Plano** no perfil do paciente: atribuir exercícios de qualquer módulo, com versão (Standard / Simples / Criativa), frequência e dose
+- Pré-visualização do texto que vai aparecer na ficha
+- **Ficha para casa (PDF)**: letra grande para o paciente e o cuidador, instruções da versão escolhida, material, grelha semanal Seg–Dom para marcar, conselhos de segurança e contacto do terapeuta
+
+### Relatório clínico do paciente (PDF)
+- Botão **📄 Relatório** no perfil: identificação, gráficos de evolução das escalas com pontos de corte, histórico de avaliações, resumo e lista de sessões, plano em curso, objetivos, notas clínicas, assinatura e aviso de confidencialidade
+- No telemóvel, os PDFs abrem a folha **Partilhar** (Guardar em Ficheiros, WhatsApp, Mail…); no computador são descarregados
+- Cabeçalho e rodapé de todos os PDFs passam a vir de funções comuns
+
 ## [1.5.0] — 2026-11-18
 
 ### Instalar no iPhone / Android (app web)

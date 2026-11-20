@@ -1,0 +1,117 @@
+// Conteúdo das páginas públicas por condição (condicoes/*.html).
+// Depois de editar, gere as páginas outra vez:   node scripts/gerar-paginas-condicoes.js
+// Rascunho para revisão clínica: linguagem simples, sem promessas de resultados.
+
+module.exports = {
+  baseUrl: 'https://ageinmove.pt/',
+  condicoes: [
+    {
+      slug: 'parkinson',
+      titulo: 'Doença de Parkinson',
+      tituloSeo: 'Exercício e estimulação cognitiva na doença de Parkinson',
+      descricao: 'Treino de marcha, equilíbrio, força e dupla tarefa para pessoas com doença de Parkinson, com avaliação regular e plano para casa.',
+      intro: 'Na doença de Parkinson, o movimento tende a ficar mais lento e mais pequeno, o equilíbrio fica mais frágil e fazer duas coisas ao mesmo tempo (andar e falar, por exemplo) torna-se difícil. O exercício regular e orientado é uma das formas de manter a mobilidade e a autonomia.',
+      ajuda: [
+        'Treino de marcha com passos amplos e pistas rítmicas (música, contagem, linhas no chão)',
+        'Equilíbrio e prevenção de quedas',
+        'Força das pernas para levantar da cadeira e subir degraus',
+        'Treino de dupla tarefa: andar enquanto se fala, conta ou recorda',
+        'Postura e mobilidade do tronco',
+        'Plano de exercícios para casa, explicado à família',
+      ],
+      avaliamos: ['Tempo para levantar, andar e voltar a sentar (TUG)', 'Equilíbrio (escala de Berg)', 'Desempenho físico global (SPPB)', 'Força das pernas', 'Atenção e funções executivas (MoCA)', 'Humor'],
+      alerta: ['Quedas repetidas ou agravamento rápido da marcha', 'Alucinações ou confusão súbita', 'Tonturas fortes ao levantar'],
+      perguntas: [
+        ['Quando é a melhor altura para fazer exercício?', 'Na fase em que a medicação está a fazer efeito ("fase on"), em que o movimento é mais fácil e seguro.'],
+        ['O exercício substitui a medicação?', 'Não. Complementa o acompanhamento do neurologista e a medicação.'],
+        ['Posso treinar em casa?', 'Sim. Recebe um plano com exercícios e frequência, e a família pode acompanhar a evolução.'],
+      ],
+    },
+    {
+      slug: 'avc',
+      titulo: 'Pós-AVC',
+      tituloSeo: 'Reabilitação depois de um AVC: mobilidade, autonomia e cognição',
+      descricao: 'Recuperar a mobilidade, o uso do lado afetado e a autonomia no dia a dia depois de um AVC, com exercício físico e estimulação cognitiva.',
+      intro: 'Depois de um acidente vascular cerebral (AVC) é comum haver dificuldade em mexer um lado do corpo, desequilíbrio, cansaço e alterações da memória ou da atenção. Um programa regular ajuda a recuperar capacidades e a ganhar confiança nas tarefas do dia a dia.',
+      ajuda: [
+        'Treino de transferências (sentar, levantar, passar para a cama) e de marcha',
+        'Uso do lado afetado em tarefas com as duas mãos',
+        'Equilíbrio e prevenção de quedas',
+        'Treino das atividades do dia a dia (vestir, preparar uma refeição)',
+        'Estimulação da atenção, memória e orientação',
+        'Plano para casa e orientação da família',
+      ],
+      avaliamos: ['Autonomia nas atividades do dia a dia (Índice de Barthel)', 'Mobilidade e risco de queda (TUG)', 'Equilíbrio (Berg)', 'Cognição (MoCA)', 'Humor (a depressão depois do AVC é frequente)'],
+      alerta: ['Boca ao lado, falta de força num braço ou dificuldade em falar: ligar 112 de imediato', 'Dor de cabeça súbita e muito forte', 'Tensão arterial muito elevada'],
+      perguntas: [
+        ['Quanto tempo depois do AVC posso começar?', 'Logo que a equipa médica o autorize. Quanto mais cedo e regular for o treino, melhor tende a ser a recuperação.'],
+        ['E se a pessoa tiver dificuldades de memória?', 'O plano junta exercício físico e estimulação cognitiva, adaptados ao que a pessoa consegue fazer.'],
+        ['A família pode ajudar?', 'Sim. Recebe a ficha de exercícios para casa e pode acompanhar a evolução por um link protegido.'],
+      ],
+    },
+    {
+      slug: 'demencia',
+      titulo: 'Défice cognitivo e demência ligeira',
+      tituloSeo: 'Estimulação cognitiva e exercício no défice cognitivo e na demência ligeira',
+      descricao: 'Estimulação cognitiva estruturada, exercício físico regular e apoio ao cuidador para manter a memória e a autonomia o mais tempo possível.',
+      intro: 'No défice cognitivo ligeiro e nas fases iniciais da demência, manter a mente e o corpo ativos ajuda a preservar a autonomia. A estimulação cognitiva, o exercício físico e a participação social são recomendados como parte do acompanhamento.',
+      ajuda: [
+        'Estimulação da memória, atenção, linguagem e orientação',
+        'Atividades de reminiscência (memórias da vida, fotografias, música)',
+        'Exercício físico regular adaptado',
+        'Treino de tarefas reais do dia a dia',
+        'Sessões em grupo pequeno, com temas portugueses',
+        'Apoio e orientação para o cuidador',
+      ],
+      avaliamos: ['Cognição global (MMSE, com pontos de corte ajustados à escolaridade)', 'Cognição (MoCA)', 'Humor', 'Autonomia no dia a dia', 'Mobilidade', 'Sobrecarga do cuidador (escala de Zarit)'],
+      alerta: ['Agravamento súbito da confusão (pode ser uma infeção ou efeito de medicação)', 'Quedas', 'Sinais de exaustão do cuidador'],
+      perguntas: [
+        ['A estimulação cognitiva cura a demência?', 'Não. O objetivo é manter as capacidades e a qualidade de vida o mais tempo possível.'],
+        ['Quanto tempo dura cada sessão?', 'Normalmente 30 a 45 minutos, com pausas e adaptadas ao cansaço da pessoa.'],
+        ['O cuidador também é acompanhado?', 'Sim. Avaliamos a sobrecarga do cuidador e damos orientações práticas.'],
+      ],
+    },
+    {
+      slug: 'quedas',
+      titulo: 'Fragilidade e risco de queda',
+      tituloSeo: 'Prevenção de quedas em idosos: força, equilíbrio e marcha',
+      descricao: 'Programa de força, equilíbrio e marcha para reduzir o risco de queda e a fragilidade, com avaliação no início e no fim.',
+      intro: 'Cerca de um terço das pessoas com mais de 65 anos cai pelo menos uma vez por ano, e o medo de cair leva muitas vezes a sair menos de casa. Treinar a força e o equilíbrio é uma das medidas com mais evidência na prevenção de quedas.',
+      ajuda: [
+        'Treino de força das pernas e de equilíbrio, inspirado no Programa Otago',
+        'Treino de marcha e de levantar e sentar com segurança',
+        'Programa intensivo de 4 a 8 semanas, com avaliação no início e no fim',
+        'Orientação sobre riscos em casa (tapetes, iluminação, casa de banho)',
+        'Exercícios para casa com dias para marcar',
+      ],
+      avaliamos: ['Tempo para levantar, andar e voltar a sentar (TUG)', 'Equilíbrio (Berg)', 'Desempenho físico global (SPPB)', 'Força das pernas (levantar e sentar em 30 s)', 'Autonomia no dia a dia'],
+      alerta: ['Queda com dor, pancada na cabeça ou incapacidade de se levantar', 'Tonturas frequentes ao levantar', 'Várias quedas em pouco tempo'],
+      perguntas: [
+        ['Já caí uma vez. Faz sentido começar?', 'Sim. Uma queda no último ano é um sinal para avaliar o risco e começar a treinar.'],
+        ['Preciso de equipamento?', 'Não. A maioria dos exercícios faz-se com uma cadeira estável e, mais tarde, pesos leves.'],
+        ['Como sei se estou a melhorar?', 'Repetimos os testes no fim do programa e comparamos com o início.'],
+      ],
+    },
+    {
+      slug: 'depressao',
+      titulo: 'Depressão no idoso',
+      tituloSeo: 'Atividade física e participação social na depressão do idoso',
+      descricao: 'Atividade física regular, atividades com significado e contacto social como complemento ao acompanhamento médico na depressão do idoso.',
+      intro: 'A depressão no idoso é frequente e muitas vezes passa despercebida: pode surgir como cansaço, perda de interesse ou isolamento. A atividade física regular e as atividades em grupo são um bom complemento ao acompanhamento médico e psicológico.',
+      ajuda: [
+        'Caminhadas e exercício regular, de preferência ao ar livre',
+        'Dança e movimento com músicas da juventude',
+        'Atividades de relaxamento e respiração',
+        'Reminiscência: recordar momentos bons da vida',
+        'Sessões em grupo pequeno para combater o isolamento',
+      ],
+      avaliamos: ['Humor (Escala de Depressão Geriátrica)', 'Autonomia no dia a dia', 'Cognição', 'Mobilidade'],
+      alerta: ['Ideias de morte ou de suicídio: não deixar a pessoa sozinha e contactar o SNS 24 (808 24 24 24) ou o 112', 'Deixar de comer ou de sair da cama'],
+      perguntas: [
+        ['O exercício substitui o tratamento?', 'Não. É um complemento ao acompanhamento do médico e da psicologia.'],
+        ['E se a pessoa não tiver vontade de sair?', 'Começamos com objetivos muito pequenos e, se possível, em casa ou em grupo com pessoas conhecidas.'],
+        ['As sessões são individuais ou em grupo?', 'Podem ser ambas. Os grupos pequenos ajudam a criar rotina e companhia.'],
+      ],
+    },
+  ],
+};
