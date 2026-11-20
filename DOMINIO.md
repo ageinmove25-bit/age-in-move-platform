@@ -38,8 +38,8 @@ No painel do registo do **.com**, crie um **redirecionamento (URL forwarding) pe
 
 ## 3. GitHub
 
-1. Junte as alterações ao ramo `main` (o ficheiro `CNAME` com `ageinmove.pt` já está no repositório).
-2. No repositório: **Settings → Pages → Custom domain**: confirme `ageinmove.pt` e carregue em **Save**.
+1. Só depois de o DNS do passo 1 estar feito e de ter exportado os dados (aviso no topo).
+2. No repositório: **Settings → Pages → Custom domain**: escreva `ageinmove.pt` e carregue em **Save**. O GitHub cria sozinho o ficheiro `CNAME` no ramo `main`.
 3. Espere a verificação de DNS (de minutos a algumas horas) e ative **Enforce HTTPS**.
 4. Recomendado: em **github.com → Settings (da conta) → Pages → Add a domain**, verifique `ageinmove.pt` com o registo TXT indicado. Impede que outra pessoa use o domínio noutro repositório.
 
