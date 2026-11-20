@@ -9,20 +9,20 @@ Plataforma clínica integrada de **exercício físico** e **estimulação cognit
 - 🧠 **6 módulos cognitivos** — Memória, Linguagem, Executivas, Espacial, Visuo-Espacial, Praxias
 - 🏃 **5 módulos físicos** — Equilíbrio, Força, Mobilidade, Aeróbico, Coordenação
 - 📊 **Dashboard clínico** com painel "Precisa de atenção" (declínio, reavaliação em atraso, faltas, quedas)
-- 🩺 **Escalas validadas** — MMSE (ajustado à escolaridade), MoCA, GDS-15, Barthel, TUG, Berg, Tinetti, SPPB, levantar-sentar 30 s, Zarit
-- 📈 **Gráficos de evolução** das escalas por paciente
+- 🩺 **Escalas validadas** — MMSE (ajustado à escolaridade), MoCA, GDS-15, Barthel, TUG, Berg, Tinetti, SPPB, levantar-sentar 30 s, Zarit — preenchidas item a item com total, interpretação e PDF da escala
+- 📈 **Gráficos de evolução** das escalas por cliente
 - 📝 **Registo de sessão** — exercícios do plano, sinais vitais, Borg, adesão, nota SOAP, ocorrências, faltas
 - 🏁 **Alta** — estados do processo, nota de alta em PDF com comparação inicial/final, reabertura
 - 📄 **Relatórios em PDF** — relatório clínico, relatório de sessão, nota de alta e ficha para casa
 - 👪 **Área da família** — link cifrado com PIN para a família ver a evolução, os exercícios de casa e as próximas sessões
-- 📖 **Biblioteca** — 7 ebooks "Fatores Psicomotores" (42 atividades, que podem entrar no plano do paciente) e 6 PowerPoints para sessões de grupo
+- 📖 **Biblioteca** — 7 ebooks "Fatores Psicomotores" (42 atividades, que podem entrar no plano do cliente) e 6 PowerPoints para sessões de grupo
 - 🫂 **Grupos** — sessões em grupo pequeno com limite de participantes, presenças por pessoa e agendamento no calendário
 - ⏱️ **Teste grátis "Idade em Movimento"** — público, sem login (link direto `…/#teste`): força, equilíbrio, marcha e memória comparados com a idade
 - 🧭 **Percursos por condição** — Pós-AVC, Parkinson, DCL/demência ligeira, quedas e depressão: escalas, objetivos e plano inicial sugeridos
 - ⚡ **Programa intensivo** — bloco de semanas com sessões frequentes, avaliação inicial e reavaliação final comparadas
 - 🌐 **Páginas por condição** em `condicoes/` para o site público (editar `condicoes/conteudos.js` e correr `node scripts/gerar-paginas-condicoes.js`)
 - 💾 **Dados guardados no browser** com exportação/importação de backup
-- 👥 **Gestão de pacientes** — historial, avaliações, sessões, cuidadores
+- 👥 **Gestão de clientes** — historial, avaliações, sessões, cuidadores
 - 📅 **Calendário clínico** com agendamento de sessões
 - 💬 **Fórum profissional** para partilha clínica
 - 📥 **PDFs profissionais** com branding Age in Move — 3 variantes por exercício (Simples / Standard / Criativa)
@@ -53,7 +53,7 @@ Os dados da app instalada ficam separados dos do Safari: use **Definições → 
 
 ### Onde ficam os dados
 
-Tudo o que é registado (pacientes, sessões, avaliações, calendário, fórum, perfil) fica guardado **automaticamente no browser**, neste computador (localStorage). Nada é enviado para servidores.
+Tudo o que é registado (clientes, sessões, avaliações, calendário, fórum, perfil) fica guardado **automaticamente no browser**, neste computador (localStorage). Nada é enviado para servidores.
 
 - Limpar o histórico/dados do browser **apaga** os registos — exporte um backup regularmente em **Definições → Dados & Backup**.
 - O ficheiro de backup (`.json`) também serve para passar os dados para outro computador ou browser.

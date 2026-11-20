@@ -1,5 +1,18 @@
 # Changelog — Age in Move Platform
 
+## [2.1.0] — 2026-11-20
+
+### Clientes
+- "Pacientes" passa a **"Clientes"** em toda a app e nos PDFs
+- Na lista de clientes, clicar no nome (ou em qualquer ponto da linha) abre o perfil, como o botão "Ver"
+
+### Escalas completas, item a item
+- Carregar no nome da escala abre a escala completa: cada item com as opções e a pontuação, total calculado e interpretação imediata
+- 10 escalas: MMSE e MoCA (por domínio, com o ponto extra de escolaridade), GDS-15 (15 perguntas), Barthel (10 AVD), Berg (14 tarefas), Tinetti (equilíbrio + marcha), SPPB (com cálculo pelos tempos), TUG e levantar 30 s (com cronómetro), Zarit (22 perguntas)
+- No perfil → Avaliações: "Avaliar com escala completa" guarda o registo diretamente no perfil
+- Em "+ Avaliação" e na ficha de novo cliente, o total preenchido por itens passa para a avaliação
+- Os itens ficam guardados: no histórico, 📋 reabre e edita a escala e 📄 gera o PDF da escala com cada item, subtotais, total e interpretação
+
 ## [2.0.1] — 2026-11-19
 
 ### Domínio próprio

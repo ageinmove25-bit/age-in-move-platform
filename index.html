@@ -83,6 +83,12 @@ label{display:block;font-size:13px;font-weight:600;color:#374151;margin-bottom:5
 .avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;color:#fff;flex-shrink:0}
 .progress-bar{height:8px;background:#e2e8f0;border-radius:4px;overflow:hidden}
 .progress-fill{height:100%;border-radius:4px;transition:width .4s}
+.row-link{cursor:pointer}.row-link:hover td{background:#f5f7ff}
+.name-link{background:none;border:0;padding:0;font:inherit;font-weight:600;color:#16224f;cursor:pointer;text-align:left}.name-link:hover{color:#4361EE;text-decoration:underline}
+.sf-link{background:none;border:0;padding:0;font:inherit;font-weight:700;color:#4361EE;cursor:pointer;text-align:left}.sf-link:hover{text-decoration:underline}
+.sf-footer{position:sticky;bottom:0;background:#fff;border-top:1px solid #e2e8f0;box-shadow:0 -6px 12px -8px rgba(15,23,42,.15);margin-top:12px;padding:12px 0;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.sf-sum{flex:1;min-width:170px}.sf-btns{display:flex;gap:10px}
+@media(max-width:860px){.sf-footer{gap:8px;padding:10px 0}.sf-sum{flex-basis:100%}.sf-btns{width:100%}.sf-btns .btn{flex:1}}
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px}
 .modal{background:#fff;border-radius:16px;width:100%;max-width:540px;max-height:90vh;overflow-y:auto;padding:28px}
 .modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
@@ -225,12 +231,12 @@ const MODULES=[
    description:'Exercícios para estimulação da memória episódica, memória de trabalho e capacidade de atenção sustentada. Baseados no modelo multicomponente de Baddeley & Hitch e no treino de memória contextual.',
    exercises_list:[
     {id:101,name:'Sequências de Palavras',objective:'Treinar a memória verbal de curto prazo através da codificação e evocação imediata de listas de palavras com complexidade crescente (3 a 7 itens).',cognitive:'Memória verbal a curto prazo, loop fonológico, atenção seletiva',duration:'10 min',difficulty:'Fácil',materials:'Cartões com palavras (conjuntos A/B/C por dificuldade), folha de registo',instructions:'Apresentar lista oralmente a 1 palavra/segundo. Aguardar 10s e pedir evocação livre. Registar número correto, intrusões e ordem. Repetir 3 tentativas.'},
-    {id:102,name:'Histórias e Detalhes',objective:'Estimular a memória episódica e a capacidade de recordação narrativa com histórias de contexto quotidiano familiar ao paciente geriátrico.',cognitive:'Memória episódica, compreensão verbal, memória semântica',duration:'15 min',difficulty:'Moderado',materials:'Textos curtos (8-12 frases), folha de perguntas com 10 itens de controlo',instructions:'Ler história em voz alta (2 vezes). Após 5 minutos de distração, aplicar questionário. Pontuar: 1 ponto por detalhe correto. Registar evocação imediata e diferida (30 min).'},
+    {id:102,name:'Histórias e Detalhes',objective:'Estimular a memória episódica e a capacidade de recordação narrativa com histórias de contexto quotidiano familiar ao cliente geriátrico.',cognitive:'Memória episódica, compreensão verbal, memória semântica',duration:'15 min',difficulty:'Moderado',materials:'Textos curtos (8-12 frases), folha de perguntas com 10 itens de controlo',instructions:'Ler história em voz alta (2 vezes). Após 5 minutos de distração, aplicar questionário. Pontuar: 1 ponto por detalhe correto. Registar evocação imediata e diferida (30 min).'},
     {id:103,name:'Atenção Dividida',objective:'Desenvolver a capacidade de distribuir e manter atenção em dois fluxos de informação simultâneos, simulando exigências da vida diária.',cognitive:'Atenção dividida, velocidade de processamento, memória de trabalho',duration:'12 min',difficulty:'Difícil',materials:'Cronómetro digital, fichas de dupla tarefa (contagem + identificação visual)',instructions:'Tarefa A: contar em voz alta de 3 em 3. Tarefa B: identificar imagens de animais em sequência visual. Aplicar combinadas. Registar erros em cada tarefa. Aumentar ritmo progressivamente.'},
     {id:104,name:'Span de Dígitos',objective:'Avaliar e treinar a capacidade de memória imediata através de sequências numéricas em ordem direta e inversa — adaptação do subteste WAIS.',cognitive:'Memória de trabalho, atenção sustentada, executivo central',duration:'8 min',difficulty:'Moderado',materials:'Protocolo de dígitos (sequências 3 a 9 dígitos), folha de registo',instructions:'Ordem direta: ditar sequência e pedir repetição imediata. Ordem inversa: ditar e pedir em sentido contrário. Iniciar com 3 dígitos. Avançar após 2 acertos. Registar span máximo.'},
-    {id:105,name:'Memória de Localização',objective:'Trabalhar a memória espacial implícita e explícita através da identificação e recordação de posições de objetos num quadro de referência.',cognitive:'Memória visuo-espacial, memória episódica, atenção visual',duration:'10 min',difficulty:'Fácil',materials:'Tabuleiro 4x4 com 8 objetos do quotidiano, coberta opaca, cronómetro',instructions:'Mostrar tabuleiro 30 segundos. Cobrir e remover/mover 3 objetos. Pedir ao paciente que identifique o que mudou e reponha posição original. 4 tentativas com grau crescente.'},
+    {id:105,name:'Memória de Localização',objective:'Trabalhar a memória espacial implícita e explícita através da identificação e recordação de posições de objetos num quadro de referência.',cognitive:'Memória visuo-espacial, memória episódica, atenção visual',duration:'10 min',difficulty:'Fácil',materials:'Tabuleiro 4x4 com 8 objetos do quotidiano, coberta opaca, cronómetro',instructions:'Mostrar tabuleiro 30 segundos. Cobrir e remover/mover 3 objetos. Pedir ao cliente que identifique o que mudou e reponha posição original. 4 tentativas com grau crescente.'},
     {id:106,name:'Recordação com Pistas',objective:'Estimular estratégias de codificação semântica e recuperação assistida por pistas categoriais e fonéticas para contornar falhas de evocação.',cognitive:'Memória semântica, memória episódica, estratégias mnemónicas',duration:'12 min',difficulty:'Moderado',materials:'Lista de 12 palavras (4 categorias), fichas de pistas categoriais e fonéticas',instructions:'Fase de codificação: apresentar 12 palavras com pistas semânticas. Evocação livre (5 min intervalo). Se falha: pista categorial. Se continua: pista fonética. Registar tipo de ajuda necessária por item.'},
-    {id:107,name:'Atenção Sustentada — CPT Simplificado',objective:'Medir e treinar a capacidade de manter atenção ao longo do tempo através de tarefa de vigilância com estímulos-alvo dispersos em sequência.',cognitive:'Atenção sustentada, vigilância, inibição de resposta',duration:'15 min',difficulty:'Difícil',materials:'Baralhado de 60 cartas (20 alvo, 40 distratores), folha de registo, cronómetro',instructions:'Apresentar cartas a 1/segundo. Paciente bate na mesa apenas ao ver carta-alvo (ex: animais). Registar acertos, omissões e falsas alarmes. Calcular índice de sensibilidade. 3 blocos de 20 cartas.'},
+    {id:107,name:'Atenção Sustentada — CPT Simplificado',objective:'Medir e treinar a capacidade de manter atenção ao longo do tempo através de tarefa de vigilância com estímulos-alvo dispersos em sequência.',cognitive:'Atenção sustentada, vigilância, inibição de resposta',duration:'15 min',difficulty:'Difícil',materials:'Baralhado de 60 cartas (20 alvo, 40 distratores), folha de registo, cronómetro',instructions:'Apresentar cartas a 1/segundo. Cliente bate na mesa apenas ao ver carta-alvo (ex: animais). Registar acertos, omissões e falsas alarmes. Calcular índice de sensibilidade. 3 blocos de 20 cartas.'},
     {id:108,name:'Reconhecimento Visual Diferido',objective:'Avaliar a retenção de informação visual ao longo de um intervalo de retenção, distinguindo entre memória de reconhecimento e de evocação.',cognitive:'Memória de reconhecimento, memória visual a longo prazo, discriminação percetual',duration:'10 min',difficulty:'Moderado',materials:'20 imagens coloridas (10 alvo + 10 distratores), timer, folha de resposta Sim/Não',instructions:'Fase de estudo: mostrar 10 imagens (3s cada). Intervalo 15 min (tarefas distratoras). Fase de teste: mostrar 20 imagens misturadas, resposta Sim/Não. Calcular % acertos e falsos alarmes.'},
   ]},
   {id:2,name:'Linguagem e Comunicação',icon:'💬',color:'#0891b2',bg:'#e0f2fe',exercises:6,duration:'40 min',difficulty:'Fácil',type:'cognitivo',
@@ -258,18 +264,18 @@ const MODULES=[
    description:'Estimulação da orientação espaço-temporal, reconhecimento de ambientes familiares e navegação espacial. Trabalha a memória topográfica e a orientação alocêntrica e egocêntrica.',
    exercises_list:[
     {id:401,name:'Rotação Mental de Figuras',objective:'Treinar a capacidade de imaginar e manipular mentalmente objetos tridimensionais, estimulando o raciocínio espacial e a visualização cognitiva.',cognitive:'Perceção espacial, raciocínio visual, imagem mental',duration:'12 min',difficulty:'Difícil',materials:'Fichas com pares de figuras geométricas 2D/3D em diferentes orientações, cronómetro',instructions:'Mostrar figura-alvo e 4 alternativas. Pedir qual é a mesma figura em orientação diferente. Cronometrar decisão. Nível 1: figuras 2D rotações 90°. Nível 2: figuras 3D. Nível 3: rotações múltiplos eixos. Registar acertos e latência.'},
-    {id:402,name:'Orientação no Mapa do Bairro',objective:'Trabalhar a orientação topográfica através do reconhecimento e navegação em mapas simplificados de ambientes familiares (bairro, cidade).',cognitive:'Memória topográfica, orientação espacial, raciocínio espacial',duration:'10 min',difficulty:'Moderado',materials:'Mapa simplificado do bairro/cidade do paciente (escala 1:5000), fichas de perguntas',instructions:'Mostrar mapa. Pedir ao paciente que identifique pontos de referência conhecidos. Tarefa: "Como vai da sua casa ao mercado?" Registar estratégia de navegação (marcos vs. coordenadas). Adaptar ao nível de familiaridade geográfica.'},
-    {id:403,name:'Reconhecimento de Trajetos',objective:'Estimular a memória de rota e o reconhecimento de percursos através de sequências fotográficas de ambientes reais.',cognitive:'Memória episódica espacial, reconhecimento visual, memória de rota',duration:'8 min',difficulty:'Fácil',materials:'Sequência de 8 fotografias de um percurso real, versão embaralhada para reconhecimento',instructions:'Mostrar sequência correta do trajeto. 5 min de distração. Apresentar versão embaralhada e pedir reordenação. Variante: identificar "onde foi tirada esta foto" num mapa. Usar trajetos familiares ao paciente (entre casa e ponto de referência habitual).'},
+    {id:402,name:'Orientação no Mapa do Bairro',objective:'Trabalhar a orientação topográfica através do reconhecimento e navegação em mapas simplificados de ambientes familiares (bairro, cidade).',cognitive:'Memória topográfica, orientação espacial, raciocínio espacial',duration:'10 min',difficulty:'Moderado',materials:'Mapa simplificado do bairro/cidade do cliente (escala 1:5000), fichas de perguntas',instructions:'Mostrar mapa. Pedir ao cliente que identifique pontos de referência conhecidos. Tarefa: "Como vai da sua casa ao mercado?" Registar estratégia de navegação (marcos vs. coordenadas). Adaptar ao nível de familiaridade geográfica.'},
+    {id:403,name:'Reconhecimento de Trajetos',objective:'Estimular a memória de rota e o reconhecimento de percursos através de sequências fotográficas de ambientes reais.',cognitive:'Memória episódica espacial, reconhecimento visual, memória de rota',duration:'8 min',difficulty:'Fácil',materials:'Sequência de 8 fotografias de um percurso real, versão embaralhada para reconhecimento',instructions:'Mostrar sequência correta do trajeto. 5 min de distração. Apresentar versão embaralhada e pedir reordenação. Variante: identificar "onde foi tirada esta foto" num mapa. Usar trajetos familiares ao cliente (entre casa e ponto de referência habitual).'},
     {id:404,name:'Perspetiva Visual — O Que Vê o Outro?',objective:'Desenvolver a capacidade de adotar perspetivas espaciais alternativas, crucial para a navegação e para a compreensão de descrições espaciais.',cognitive:'Tomada de perspetiva, raciocínio espacial egocêntrico vs. alocêntrico',duration:'8 min',difficulty:'Difícil',materials:'Mesa com 4 objetos, fotografia da disposição de diferentes ângulos, fichas de resposta',instructions:'Colocar 4 objetos na mesa. Mostrar fotografia tirada de outro ângulo. Perguntar: "Se eu estivesse sentado do outro lado, o que estaria à minha direita?" Aumentar complexidade com mais objetos e rotações de 45°.'},
-    {id:405,name:'Orientação Temporal e Calendário',objective:'Reforçar a orientação no tempo real (data, estação, eventos recentes) através de atividades estruturadas com calendário e jornal.',cognitive:'Orientação temporal, memória episódica recente, atenção',duration:'8 min',difficulty:'Fácil',materials:'Calendário de parede, jornal do dia, relógio analógico, folha de orientação temporal',instructions:'10 questões de orientação: data, dia da semana, mês, estação, ano, hora, último evento noticiado. Pontuação: 1 ponto cada. Score < 7 indica desorientação significativa. Complementar com discussão de eventos recentes relevantes para o paciente.'},
+    {id:405,name:'Orientação Temporal e Calendário',objective:'Reforçar a orientação no tempo real (data, estação, eventos recentes) através de atividades estruturadas com calendário e jornal.',cognitive:'Orientação temporal, memória episódica recente, atenção',duration:'8 min',difficulty:'Fácil',materials:'Calendário de parede, jornal do dia, relógio analógico, folha de orientação temporal',instructions:'10 questões de orientação: data, dia da semana, mês, estação, ano, hora, último evento noticiado. Pontuação: 1 ponto cada. Score < 7 indica desorientação significativa. Complementar com discussão de eventos recentes relevantes para o cliente.'},
   ]},
   {id:5,name:'Habilidades Visuo-Espaciais',icon:'👁️',color:'#7c3aed',bg:'#f3e8ff',exercises:6,duration:'40 min',difficulty:'Moderado',type:'cognitivo',
    description:'Estimulação das capacidades percetivo-visuais, práxis construtiva e integração visuo-motora. Exercícios baseados em provas neuropsicológicas clássicas adaptadas à população geriátrica.',
    exercises_list:[
     {id:501,name:'Cópia de Figuras Geométricas',objective:'Avaliar e estimular a práxis construtiva bidimensional através da reprodução de figuras geométricas com complexidade crescente.',cognitive:'Práxis construtiva, perceção visual, coordenação visuo-motora',duration:'15 min',difficulty:'Moderado',materials:'Fichas com figuras (cubo, casa, pentágonos, figura de Rey simplificada), lápis de carvão',instructions:'Apresentar figura modelo, pedir cópia lado a lado. Critérios: proporção, orientação, elementos presentes. Pontuar 0-2 por figura. Progredir: quadrado → losango → cubo → figura complexa. Não apagar — os erros são informativos.'},
-    {id:502,name:'Puzzles e Montagem de Objetos',objective:'Estimular a perceção da parte-todo, o raciocínio espacial e a práxis construtiva tridimensional através de montagem de peças.',cognitive:'Análise perceptual, síntese visuo-espacial, práxis construtiva',duration:'12 min',difficulty:'Moderado',materials:'Puzzles de 12-24 peças com imagens familiares (paisagens, objetos do quotidiano)',instructions:'Começar com 12 peças para DCL/DA. Usar 24 peças para pacientes com bom funcionamento. Cronometrar. Observar estratégia: bordas primeiro? Cores? Registar necessidade de dicas espaciais. Excelente para sessões em grupo.'},
-    {id:503,name:'Continuação de Padrões Visuais',objective:'Trabalhar a identificação de regularidades visuais e a capacidade de projetar sequências de padrões, estimulando o raciocínio indutivo não-verbal.',cognitive:'Raciocínio visual indutivo, atenção visual, perceção de padrões',duration:'8 min',difficulty:'Moderado',materials:'Fichas com 12 sequências visuais incompletas (3 níveis: cor, forma, padrão combinado)',instructions:'Mostrar sequência com quadrado vazio no final: ex. ○ △ □ ○ △ __. Pedir completamento. Nível 1: cores alternadas. Nível 2: formas em progressão. Nível 3: matriz 3x3 (tipo Raven). Registar estratégia verbal do paciente.'},
-    {id:504,name:'Matrizes Visuais de Reconhecimento',objective:'Estimular a discriminação visual fina e a memória de reconhecimento de padrões complexos através de matrizes estímulo-resposta.',cognitive:'Perceção visual fina, discriminação de forma, memória de reconhecimento visual',duration:'10 min',difficulty:'Difícil',materials:'20 fichas matriz (1 estímulo + 4 opções), lupa opcional para baixa visão',instructions:'Mostrar figura estímulo 5s. Cobrir. Apresentar 4 opções (1 idêntica + 3 distractores com pequenas diferenças). Pedir identificação. Progredir de diferenças grandes para subtis. Adaptar tamanho para condições visuais do paciente.'},
+    {id:502,name:'Puzzles e Montagem de Objetos',objective:'Estimular a perceção da parte-todo, o raciocínio espacial e a práxis construtiva tridimensional através de montagem de peças.',cognitive:'Análise perceptual, síntese visuo-espacial, práxis construtiva',duration:'12 min',difficulty:'Moderado',materials:'Puzzles de 12-24 peças com imagens familiares (paisagens, objetos do quotidiano)',instructions:'Começar com 12 peças para DCL/DA. Usar 24 peças para clientes com bom funcionamento. Cronometrar. Observar estratégia: bordas primeiro? Cores? Registar necessidade de dicas espaciais. Excelente para sessões em grupo.'},
+    {id:503,name:'Continuação de Padrões Visuais',objective:'Trabalhar a identificação de regularidades visuais e a capacidade de projetar sequências de padrões, estimulando o raciocínio indutivo não-verbal.',cognitive:'Raciocínio visual indutivo, atenção visual, perceção de padrões',duration:'8 min',difficulty:'Moderado',materials:'Fichas com 12 sequências visuais incompletas (3 níveis: cor, forma, padrão combinado)',instructions:'Mostrar sequência com quadrado vazio no final: ex. ○ △ □ ○ △ __. Pedir completamento. Nível 1: cores alternadas. Nível 2: formas em progressão. Nível 3: matriz 3x3 (tipo Raven). Registar estratégia verbal do cliente.'},
+    {id:504,name:'Matrizes Visuais de Reconhecimento',objective:'Estimular a discriminação visual fina e a memória de reconhecimento de padrões complexos através de matrizes estímulo-resposta.',cognitive:'Perceção visual fina, discriminação de forma, memória de reconhecimento visual',duration:'10 min',difficulty:'Difícil',materials:'20 fichas matriz (1 estímulo + 4 opções), lupa opcional para baixa visão',instructions:'Mostrar figura estímulo 5s. Cobrir. Apresentar 4 opções (1 idêntica + 3 distractores com pequenas diferenças). Pedir identificação. Progredir de diferenças grandes para subtis. Adaptar tamanho para condições visuais do cliente.'},
     {id:505,name:'Blocos de Kohs Adaptado',objective:'Estimular a análise e síntese visuo-espacial tridimensional através da reprodução de padrões com blocos coloridos.',cognitive:'Análise visuo-espacial, planeamento, práxis construtiva 3D',duration:'10 min',difficulty:'Difícil',materials:'Set de 9 cubos com faces bicolores (vermelho/branco), 6 cartões de padrões-alvo',instructions:'Mostrar cartão-modelo. Pedir reprodução com blocos. Iniciar com padrão 2x2. Progredir para 3x3. Cronometrar (limite 120s/padrão). Não corrigir durante execução — observar estratégia. Registar rotações erradas vs. inversões de cor.'},
     {id:506,name:'Reconhecimento de Faces e Expressões',objective:'Trabalhar a perceção de identidade facial e o reconhecimento de emoções básicas através de expressões faciais, área frequentemente afetada nas demências.',cognitive:'Perceção facial, reconhecimento emocional, memória de identidade',duration:'10 min',difficulty:'Fácil',materials:'20 fotografias de faces (10 pares identidade + 10 expressões emocionais), folha de resposta',instructions:'Parte A: mostrar 5 faces de pessoas famosas (contexto cultural português). Parte B: 6 expressões básicas (alegria, tristeza, raiva, medo, surpresa, nojo). Registar acertos e confusões. Iniciar conversa sobre emoções — potencial terapêutico adicional.'},
   ]},
@@ -283,7 +289,7 @@ const MODULES=[
     {id:605,name:'Origami Terapêutico — Dobrar Papel',objective:'Estimular a motricidade fina, o planeamento espacial e a memória procedimental através de dobragens de papel com grau crescente de complexidade.',cognitive:'Motricidade fina, planeamento, memória procedimental, perceção espacial',duration:'12 min',difficulty:'Moderado',materials:'Papel A4 colorido (mínimo 10 folhas), fichas com instruções visuais passo-a-passo',instructions:'Progressão: 1. dobrar ao meio (envelope simples); 2. barco de papel (4 passos); 3. avião (6 passos); 4. flor simples (8 passos). Demonstrar cada passo. Verificar execução paralela. Excelente para motivação: o produto final é tangível e pode ser dado ao cuidador.'},
     {id:606,name:'Destreza com Objetos — Peg Board',objective:'Avaliar e estimular a velocidade e precisão da motricidade fina unilateral e bilateral através de tarefa de inserção e transferência de pinos.',cognitive:'Motricidade fina, velocidade psicomotora, atenção',duration:'8 min',difficulty:'Fácil',materials:'Purdue Peg Board adaptado (ou alternativa: caixas de ovos com berlindes/botões)',instructions:'Tarefa 1 (mão dominante): inserir o máximo de pinos em 30s. Tarefa 2 (mão não-dominante): idem. Tarefa 3 (bimanual): 1 pino com cada mão alternado. Registar contagem por condição. Comparar mão D vs. E. Normas geriátricas disponíveis no protocolo.'},
     {id:607,name:'Escrita e Grafomotricidade',objective:'Manter a automatização do grafismo e estimular a expressão escrita através de tarefas de cópia, ditado e escrita espontânea.',cognitive:'Praxia grafomotora, ortografia, linguagem escrita, atenção',duration:'10 min',difficulty:'Fácil',materials:'Folhas com linhas, caneta de ponta grossa (adaptar para tremor), modelo de texto',instructions:'Sequência: 1. cópia de frase curta; 2. escrita do próprio nome e morada; 3. ditado de 5 palavras; 4. escrever 1 frase sobre o que fez ontem. Observar: tremor, micrografia (Parkinson), omissões de letras, hemineglect. Valioso para monitorização longitudinal.'},
-    {id:608,name:'Praxia Ideacional — Sequências de AVDs',objective:'Avaliar e treinar a capacidade de executar sequências de ações funcionais complexas na ordem correta, fundamental para a independência nas AVDs.',cognitive:'Praxia ideacional, planeamento de ação, memória procedimental, sequenciação',duration:'10 min',difficulty:'Moderado',materials:'Objetos reais de AVDs: copo, saqueta de chá, chaleira (fria), colher, açúcar',instructions:'Pedir ao paciente que prepare um chá (sem demonstração prévia). Observar: ordem de ações, uso correto dos utensílios, segurança, necessidade de pistas. Pontuação por passo completado corretamente. Elevada validade ecológica — correlaciona com índice de Barthel.'},
+    {id:608,name:'Praxia Ideacional — Sequências de AVDs',objective:'Avaliar e treinar a capacidade de executar sequências de ações funcionais complexas na ordem correta, fundamental para a independência nas AVDs.',cognitive:'Praxia ideacional, planeamento de ação, memória procedimental, sequenciação',duration:'10 min',difficulty:'Moderado',materials:'Objetos reais de AVDs: copo, saqueta de chá, chaleira (fria), colher, açúcar',instructions:'Pedir ao cliente que prepare um chá (sem demonstração prévia). Observar: ordem de ações, uso correto dos utensílios, segurança, necessidade de pistas. Pontuação por passo completado corretamente. Elevada validade ecológica — correlaciona com índice de Barthel.'},
   ]},
 
   // ═══════════════════════════════════════════
@@ -331,11 +337,11 @@ const MODULES=[
    description:'Programa de condicionamento cardiovascular adaptado à capacidade funcional do idoso. Melhora o VO₂max, reduz fatores de risco cardiovascular e tem efeito neuroprotetor direto comprovado (aumento BDNF, neurogénese hipocampal).',
    exercises_list:[
     {id:1001,name:'Programa de Marcha Progressiva',objective:'Desenvolver a capacidade aeróbica e resistência através de programa de caminhada estruturado com progressão de intensidade e duração — intervenção com melhor custo-efetividade em geriatria.',cognitive:'Atenção, orientação espacial, memória topográfica',duration:'30-45 min',difficulty:'Fácil',materials:'Calçado adequado, podómetro ou smartphone, ficha de registo semanal',instructions:'Semana 1-2: 10 min/dia a ritmo confortável. Progressão: +5 min/semana até 30 min contínuos. Intensidade: RPE 4-5/10 (consegue falar em frases curtas). Meta 12 semanas: 150 min/semana intensidade moderada (OMS). Usar escala de Borg. Monitorizar FC se doença cardiovascular — alvo 50-70% FCmáx.'},
-    {id:1002,name:'Aeróbica em Cadeira — Chair Aerobics',objective:'Melhorar a capacidade cardiovascular e resistência muscular em pacientes com limitações de mobilidade, dor ou risco de queda elevado — sem risco de queda.',cognitive:'Coordenação, atenção, memória de sequências',duration:'20 min',difficulty:'Fácil',materials:'Cadeira firme, música rítmica (60-120 bpm), garrafas de água (0,5L) como halteres',instructions:'Sequência 20 min: aquecimento 3min (movimentos suaves) → 12 min aeróbico (elevações de joelhos, pontapés frontais, movimentos de braços coordenados, "marcha sentada") → arrefecimento 5 min. Intensidade: RPE 4-5. Música como motivador. Excelente em grupo. Progressão: aumentar ritmo musical e amplitude de movimento.'},
-    {id:1003,name:'Cicloergómetro Sentado — Cycling',objective:'Proporcionar exercício aeróbico de baixo impacto articular com carga cardiovascular controlável, ideal para pacientes com gonartrose, coxartrose ou instabilidade na marcha.',cognitive:'Atenção, controlo motor rítmico',duration:'20 min',difficulty:'Fácil',materials:'Cicloergómetro reclinado ou pedais de mesa (desk bike), monitor FC',instructions:'Protocolo: 5 min aquecimento (resistência 1) → 10-15 min intensidade moderada (resistência 2-3, RPE 4-5) → 5 min arrefecimento. Meta: 20 min contínuos até 45 min. Cadência alvo: 50-70 rpm. Progressão resistência: +1 nível/2 semanas quando esforço < 4/10. FC monitor se disponível.'},
+    {id:1002,name:'Aeróbica em Cadeira — Chair Aerobics',objective:'Melhorar a capacidade cardiovascular e resistência muscular em clientes com limitações de mobilidade, dor ou risco de queda elevado — sem risco de queda.',cognitive:'Coordenação, atenção, memória de sequências',duration:'20 min',difficulty:'Fácil',materials:'Cadeira firme, música rítmica (60-120 bpm), garrafas de água (0,5L) como halteres',instructions:'Sequência 20 min: aquecimento 3min (movimentos suaves) → 12 min aeróbico (elevações de joelhos, pontapés frontais, movimentos de braços coordenados, "marcha sentada") → arrefecimento 5 min. Intensidade: RPE 4-5. Música como motivador. Excelente em grupo. Progressão: aumentar ritmo musical e amplitude de movimento.'},
+    {id:1003,name:'Cicloergómetro Sentado — Cycling',objective:'Proporcionar exercício aeróbico de baixo impacto articular com carga cardiovascular controlável, ideal para clientes com gonartrose, coxartrose ou instabilidade na marcha.',cognitive:'Atenção, controlo motor rítmico',duration:'20 min',difficulty:'Fácil',materials:'Cicloergómetro reclinado ou pedais de mesa (desk bike), monitor FC',instructions:'Protocolo: 5 min aquecimento (resistência 1) → 10-15 min intensidade moderada (resistência 2-3, RPE 4-5) → 5 min arrefecimento. Meta: 20 min contínuos até 45 min. Cadência alvo: 50-70 rpm. Progressão resistência: +1 nível/2 semanas quando esforço < 4/10. FC monitor se disponível.'},
     {id:1004,name:'Dança Terapêutica — Movimento com Sentido',objective:'Utilizar a dança como exercício aeróbico e de coordenação com elevada componente motivacional e social, ativando simultaneamente áreas cognitivas e motoras.',cognitive:'Memória de sequências, atenção, coordenação, processamento rítmico',duration:'30 min',difficulty:'Fácil',materials:'Sistema de som, músicas portuguesas familiares (povo, valsas, marchas), espaço amplo',instructions:'Sequência: 1. Reconhecimento rítmico (palmas com música, 5 min); 2. Passos básicos sentado (5 min); 3. Em pé com apoio — marcha rítmica + braços (10 min); 4. Sequências simples de 4 passos (8 min); 5. Arrefecimento (2 min). A familiaridade musical ativa memória episódica. Adaptável a qualquer nível funcional.'},
     {id:1005,name:'Treino Intervalado de Baixa Intensidade — LIIT',objective:'Alternar períodos de atividade e repouso para maximizar o estímulo cardiovascular mantendo segurança e adesão — superiora à intensidade contínua em populações descondicionadas.',cognitive:'Atenção, controlo da fadiga, memória de trabalho',duration:'25 min',difficulty:'Moderado',materials:'Cronómetro, cadeira de apoio, banda elástica opcional',instructions:'Protocolo 10 ciclos: 60s ativo (marcha no local + movimentos braços) + 60s repouso ativo (respiração + mobilização suave). Total: 20 min + 5 min aquecimento. RPE durante fase ativa: 5-6/10. Progressão: aumentar fase ativa para 90s, diminuir repouso para 45s. Adaptar à frequência cardíaca e percepção de esforço.'},
-    {id:1006,name:'Hidroginástica Adaptada — Protocolo Terra',objective:'Simular os benefícios do exercício aquático (descarga articular, resistência proporcional) através de exercícios inspirados na hidroginástica executáveis em terra, com bastão.',cognitive:'Coordenação bilateral, atenção, ritmo',duration:'30 min',difficulty:'Fácil',materials:'Bastão de natação (ou cabide), música, espaço amplo',instructions:'Simular resistência da água com bastão: 1. Pedalagem sentada com resistência imaginária (5 min); 2. "Remada" com bastão (5 min); 3. "Treading water" — movimentos circulares MMSS em pé (5 min); 4. Agachamentos com resistência do bastão (10 min); 5. Arrefecimento (5 min). Indicado para pacientes que participavam em hidroginástica mas perderam mobilidade.'},
+    {id:1006,name:'Hidroginástica Adaptada — Protocolo Terra',objective:'Simular os benefícios do exercício aquático (descarga articular, resistência proporcional) através de exercícios inspirados na hidroginástica executáveis em terra, com bastão.',cognitive:'Coordenação bilateral, atenção, ritmo',duration:'30 min',difficulty:'Fácil',materials:'Bastão de natação (ou cabide), música, espaço amplo',instructions:'Simular resistência da água com bastão: 1. Pedalagem sentada com resistência imaginária (5 min); 2. "Remada" com bastão (5 min); 3. "Treading water" — movimentos circulares MMSS em pé (5 min); 4. Agachamentos com resistência do bastão (10 min); 5. Arrefecimento (5 min). Indicado para clientes que participavam em hidroginástica mas perderam mobilidade.'},
   ]},
 
   {id:11,name:'Coordenação e Dupla Tarefa',icon:'🎯',color:'#7c3aed',bg:'#faf5ff',exercises:6,duration:'45 min',difficulty:'Difícil',type:'fisico',
@@ -371,8 +377,8 @@ const SAMPLE_EVENTS=[
 
 const INITIAL_POSTS=[
   {id:1,author:'Dra. Ana Santos',role:'Neuropsicóloga',avatar:'#4f46e5',initials:'AS',
-   title:'Adaptação do MMSE para pacientes com baixa escolaridade',
-   body:'Tenho encontrado dificuldades na aplicação do MMSE em pacientes com menos de 4 anos de escolaridade. Os pontos de corte standard (≥27 normal) não se aplicam. Alguém usa os valores normativos portugueses do estudo de Guerreiro et al. (1994)? Como gerem a questão da leitura/escrita no item 7?',
+   title:'Adaptação do MMSE para clientes com baixa escolaridade',
+   body:'Tenho encontrado dificuldades na aplicação do MMSE em clientes com menos de 4 anos de escolaridade. Os pontos de corte standard (≥27 normal) não se aplicam. Alguém usa os valores normativos portugueses do estudo de Guerreiro et al. (1994)? Como gerem a questão da leitura/escrita no item 7?',
    time:'há 2 horas',likes:8,
    replies:[
     {author:'Dr. Pedro Alves',initials:'PA',avatar:'#059669',text:'Uso os valores do Guerreiro et al. para Portugal: iletrados ≥15, 1-11 anos ≥22, >11 anos ≥27. Para o item de leitura/escrita, substituo por ordem verbal equivalente. O MoCA-Basic (versão 7.3) também é excelente alternativa para baixa escolaridade.',time:'há 1 hora'},
@@ -380,7 +386,7 @@ const INITIAL_POSTS=[
   ]},
   {id:2,author:'Terapeuta João Lopes',role:'Terapeuta Ocupacional',avatar:'#0891b2',initials:'JL',
    title:'Protocolo de dupla tarefa em ambiente domiciliar — partilha',
-   body:'Desenvolvi um protocolo de dupla tarefa adaptado para sessões domiciliárias que tenho usado com ótimos resultados em DCL leve-moderado. A ideia é usar tarefas motoras de AVDs (dobrar roupa, arrumar talheres) como tarefa secundária enquanto o paciente faz tarefa cognitiva (contagem, fluência verbal). Quem quiser o protocolo completo em PDF, enviem mensagem.',
+   body:'Desenvolvi um protocolo de dupla tarefa adaptado para sessões domiciliárias que tenho usado com ótimos resultados em DCL leve-moderado. A ideia é usar tarefas motoras de AVDs (dobrar roupa, arrumar talheres) como tarefa secundária enquanto o cliente faz tarefa cognitiva (contagem, fluência verbal). Quem quiser o protocolo completo em PDF, enviem mensagem.',
    time:'há 5 horas',likes:17,
    replies:[
     {author:'Dra. Marta Gomes',initials:'MG',avatar:'#e11d48',text:'Excelente iniciativa! Na minha experiência, a tarefa motora de AVD como primária e cognitiva como secundária (e não ao contrário) tem melhor adesão nos mais idosos. Menos frustração.',time:'há 3 horas'},
@@ -388,7 +394,7 @@ const INITIAL_POSTS=[
   ]},
   {id:3,author:'Dra. Marta Gomes',role:'Gerontóloga',avatar:'#e11d48',initials:'MG',
    title:'Sundowning — estratégias não farmacológicas eficazes',
-   body:'Agitação vespertina continua a ser um dos maiores desafios no acompanhamento domiciliar de doentes com DA moderada. As famílias ficam muito angustiadas. Para além da fototerapia matinal e da estruturação de rotinas, alguém tem evidência sobre musicoterapia personalizada ao período de vida do paciente? Tenho visto bons resultados informais mas quero referências.',
+   body:'Agitação vespertina continua a ser um dos maiores desafios no acompanhamento domiciliar de doentes com DA moderada. As famílias ficam muito angustiadas. Para além da fototerapia matinal e da estruturação de rotinas, alguém tem evidência sobre musicoterapia personalizada ao período de vida do cliente? Tenho visto bons resultados informais mas quero referências.',
    time:'há 1 dia',likes:24,
    replies:[
     {author:'Enf. Sofia Costa',initials:'SC',avatar:'#d97706',text:'Terapia de luz (10.000 lux, 30 min às 9h) combinada com supressão de sesta prolongada e atividade física leve às 15h tem mostrado redução de 40% nos episódios de agitação nos meus casos. A chave é a consistência da rotina.',time:'há 20 horas'},
@@ -528,7 +534,7 @@ function riskDetail(p){
   return {level:hi.length?'high':md.length?'medium':'low',reasons:hi.length?hi:md};
 }
 function computeRisk(p){return riskDetail(p).level;}
-// Valores atuais do paciente = avaliação mais recente de cada escala
+// Valores atuais do cliente = avaliação mais recente de cada escala
 function currentScores(assessments,patientId){
   const val={},when={},wid={};
   assessments.filter(a=>a.patientId===patientId).forEach(a=>{
@@ -544,7 +550,7 @@ const isActive=p=>statusOf(p)==='active';
 const SESSION_STATUS={done:{label:'Realizada',badge:'green'},missed:{label:'Falta',badge:'red'},cancelled:{label:'Cancelada',badge:'gray'}};
 const sessionStatus=s=>s.status||'done';
 const doneSessions=(sessions,patientId)=>sessions.filter(s=>s.patientId===patientId&&sessionStatus(s)==='done');
-const DISCHARGE_REASONS=['Objetivos atingidos','Melhoria clínica — manutenção em casa','Desistência do paciente/família','Agravamento clínico','Institucionalização','Mudança de residência','Encaminhamento para outro serviço','Falecimento','Outro'];
+const DISCHARGE_REASONS=['Objetivos atingidos','Melhoria clínica — manutenção em casa','Desistência do cliente/família','Agravamento clínico','Institucionalização','Mudança de residência','Encaminhamento para outro serviço','Falecimento','Outro'];
 
 const mmseColor=v=>v==null?'#94a3b8':v<20?'#dc2626':v<25?'#d97706':'#16a34a';
 function useNarrow(bp=640){
@@ -607,7 +613,7 @@ function StoreProvider({children}){
   const setters={patients:setPatients,sessions:setSessions,assessments:setAssessments,events:setEvents,posts:setPosts,profile:setProfile,prefs:setPrefs,groups:setGroups};
 
   const withRisk=p=>{const n={...p};n.risk=computeRisk(n);return n;};
-  // Recalcula os valores atuais e o risco de um paciente a partir da lista de avaliações
+  // Recalcula os valores atuais e o risco de um cliente a partir da lista de avaliações
   const syncScores=(patientId,list)=>setPatients(ps=>ps.map(p=>p.id===patientId?withRisk({...p,...currentScores(list,patientId)}):p));
 
   const addPatient=data=>{
@@ -656,12 +662,14 @@ function StoreProvider({children}){
     setSessions(ss=>ss.filter(x=>x.id!==s.id));
     setEvents(es=>es.map(e=>e.sessionId===s.id?{...e,done:undefined,sessionId:undefined}:e));
   };
-  const addAssessments=(patientId,date,values,notes)=>{
+  const addAssessments=(patientId,date,values,notes,details)=>{
     const entries=Object.entries(values).filter(([,v])=>v!=null);
-    if(!entries.length) return;
+    if(!entries.length) return [];
     let id=nextId(assessments);
-    const next=[...assessments,...entries.map(([scale,value])=>({id:id++,patientId,date,scale,value,notes}))];
+    const created=entries.map(([scale,value])=>({id:id++,patientId,date,scale,value,notes,...(details&&details[scale]?details[scale]:{})}));
+    const next=[...assessments,...created];
     setAssessments(next);syncScores(patientId,next);
+    return created;
   };
   const updateAssessment=(id,patch)=>{
     const a=assessments.find(x=>x.id===id);if(!a)return;
@@ -724,37 +732,37 @@ function getVariants(ex, mod){
   const V={
     // COGNITIVOS
     'sequências de palavras':{s:'Reduzir para 3 palavras. Apontar fisicamente para objetos da sala enquanto os nomeia. Permitir resposta gestual.',c:'Construir uma mini-história encadeando todas as palavras em sequência. Ilustrar com um desenho simples. Oferecer ao familiar — a narrativa pessoal aumenta a retenção em 40%.'},
-    'histórias e detalhes':{s:'História de 3 frases sobre tema da infância do paciente. Resposta oral, sem escrita.',c:'Paciente reconta a história como locutor de rádio. Gravar em smartphone. Enviar áudio à família. Elevado impacto emocional e de identidade.'},
-    'atenção dividida':{s:'Apenas identificar animais numa sequência de imagens, sem tarefa secundária.',c:'Música favorita do paciente como distrator de fundo. Identificar instrumentos musicais enquanto completa tarefa visual. Ativa córtex auditivo + visual simultâneos.'},
-    'span de dígitos':{s:'Apenas sequências de 3 dígitos. Usar dígitos do número de telefone do paciente.',c:'Substituir números por anos importantes (casamento, nascimento de filhos). A carga emocional melhora a codificação — experimento de Cahill & McGaugh (1995).'},
-    'memória de localização':{s:'4 objetos em grelha 2x2. Mover apenas 1 objeto.',c:'Fotografar a disposição antes de cobrir. O paciente tira a foto — ativa ação voluntária e memória prospetiva.'},
-    'recordação com pistas':{s:'6 palavras de 2 categorias. Pistas imediatas após cada falha.',c:'Criar cartões ilustrados pelo paciente: desenhar o conceito em vez de lê-lo. A produção artística aprofunda o processamento semântico (efeito de geração).'},
-    'atenção sustentada':{s:'10 cartas. Alvo: apenas 3 animais fáceis de reconhecer.',c:'Versão "Bingo Cognitivo": paciente marca numa grelha em vez de bater palma. Adicionar dimensão competitiva em grupo — ativa componente motivacional dopaminérgica.'},
-    'reconhecimento visual diferido':{s:'5 imagens, intervalo de 5 min, 3 distratores fáceis.',c:'Usar fotografias da cidade natal do paciente. O contexto autobiográfico aumenta a taxa de reconhecimento em 35% e abre diálogo clínico rico.'},
+    'histórias e detalhes':{s:'História de 3 frases sobre tema da infância do cliente. Resposta oral, sem escrita.',c:'Cliente reconta a história como locutor de rádio. Gravar em smartphone. Enviar áudio à família. Elevado impacto emocional e de identidade.'},
+    'atenção dividida':{s:'Apenas identificar animais numa sequência de imagens, sem tarefa secundária.',c:'Música favorita do cliente como distrator de fundo. Identificar instrumentos musicais enquanto completa tarefa visual. Ativa córtex auditivo + visual simultâneos.'},
+    'span de dígitos':{s:'Apenas sequências de 3 dígitos. Usar dígitos do número de telefone do cliente.',c:'Substituir números por anos importantes (casamento, nascimento de filhos). A carga emocional melhora a codificação — experimento de Cahill & McGaugh (1995).'},
+    'memória de localização':{s:'4 objetos em grelha 2x2. Mover apenas 1 objeto.',c:'Fotografar a disposição antes de cobrir. O cliente tira a foto — ativa ação voluntária e memória prospetiva.'},
+    'recordação com pistas':{s:'6 palavras de 2 categorias. Pistas imediatas após cada falha.',c:'Criar cartões ilustrados pelo cliente: desenhar o conceito em vez de lê-lo. A produção artística aprofunda o processamento semântico (efeito de geração).'},
+    'atenção sustentada':{s:'10 cartas. Alvo: apenas 3 animais fáceis de reconhecer.',c:'Versão "Bingo Cognitivo": cliente marca numa grelha em vez de bater palma. Adicionar dimensão competitiva em grupo — ativa componente motivacional dopaminérgica.'},
+    'reconhecimento visual diferido':{s:'5 imagens, intervalo de 5 min, 3 distratores fáceis.',c:'Usar fotografias da cidade natal do cliente. O contexto autobiográfico aumenta a taxa de reconhecimento em 35% e abre diálogo clínico rico.'},
     'fluência verbal semântica':{s:'Categoria: apenas animais domésticos. 30 segundos.',c:'Versão "Leilão Verbal": pontuação por raridade da palavra. "Cão" = 1 ponto; "chimpanzé" = 3 pontos. A gamificação dobra a produção lexical espontânea.'},
-    'nomeação por confrontação':{s:'10 imagens de alta frequência (objetos do quotidiano doméstico).',c:'Usar objetos reais (não imagens). Paciente toca, cheira, pesa antes de nomear — estimulação multissensorial ativa mais vias de acesso lexical.'},
+    'nomeação por confrontação':{s:'10 imagens de alta frequência (objetos do quotidiano doméstico).',c:'Usar objetos reais (não imagens). Cliente toca, cheira, pesa antes de nomear — estimulação multissensorial ativa mais vias de acesso lexical.'},
     'completamento de frases':{s:'Frases de 4 palavras com lacuna no final. Ex: "O sol é ___".',c:'Transformar em provérbios incompletos da infância. A familiaridade cultural funciona como âncora mnemónica poderosa para geração born before 1960.'},
     'compreensão de ordens':{s:'Ordens simples com 1 objeto. "Toque no copo."',c:'Contexto culinário: "Prepare a mesa para o almoço seguindo estas instruções." Máxima validade ecológica. Equivalente funcional ao Barthel.'},
-    'descrição de cenas':{s:'Imagem com 3 personagens e 2 ações simples.',c:'Paciente é o "jornalista" que noticia a cena para um jornal imaginário. Atribuir nome ao jornal. Estrutura narrativa (quem, o quê, quando, onde) organiza o pensamento.'},
+    'descrição de cenas':{s:'Imagem com 3 personagens e 2 ações simples.',c:'Cliente é o "jornalista" que noticia a cena para um jornal imaginário. Atribuir nome ao jornal. Estrutura narrativa (quem, o quê, quando, onde) organiza o pensamento.'},
     'compreensão de provérbios':{s:'Apresentar 2 opções de interpretação (uma correta e uma absurda).',c:'"Teatro dos Provérbios": encenar fisicamente o provérbio literal antes de discutir o sentido figurado. O absurdo do movimento literal gera humor e facilita a abstração.'},
     'torre de hanói':{s:'Apenas 2 discos. Demonstração visual passo-a-passo disponível.',c:'"Missão Espacial": discos são módulos de nave espacial. Narrar em voz alta cada movimento como manobra espacial. A narrativa ativa o planeamento verbal e reduz erros de impulsividade.'},
-    'sequências e padrões numéricos':{s:'Progressões aritméticas simples +2. Apenas 4 números na sequência.',c:'Criar "cifra secreta" pessoal: usar datas de aniversário para criar padrão. Paciente ensina a cifra ao terapeuta — o papel de professor aumenta a consolidação.'},
-    'classificação de objetos':{s:'Classificar apenas por cor. 8 objetos.',c:'Criar "museu pessoal": organizar objetos da bolsa/bolso do paciente por categorias que ele decide. Autonomia de critério ativa o lobo frontal de forma diferente da tarefa imposta.'},
+    'sequências e padrões numéricos':{s:'Progressões aritméticas simples +2. Apenas 4 números na sequência.',c:'Criar "cifra secreta" pessoal: usar datas de aniversário para criar padrão. Cliente ensina a cifra ao terapeuta — o papel de professor aumenta a consolidação.'},
+    'classificação de objetos':{s:'Classificar apenas por cor. 8 objetos.',c:'Criar "museu pessoal": organizar objetos da bolsa/bolso do cliente por categorias que ele decide. Autonomia de critério ativa o lobo frontal de forma diferente da tarefa imposta.'},
     'semelhanças e diferenças':{s:'Pares concretos com resposta múltipla escolha: A=animais B=plantas C=objetos.',c:'"Filósofo por um dia": "Em que se parecem a vida e uma viagem?" Questões existenciais familiares ativam sabedoria acumulada e têm impacto emocional positivo demonstrado.'},
     'planeamento de tarefas':{s:'Cenário com 2 tarefas e 1 restrição de tempo.',c:'Planear a festa de aniversário do neto: lista de compras, local, hora, convidados. O investimento emocional maximiza o esforço de planeamento e gera produto concreto.'},
     'go/no-go':{s:'Apenas 1 categoria alvo. Ritmo mais lento (1 carta/3s).',c:'Versão musical: bater palma ao som de guitarra (Go), ficar quieto ao piano (No-Go). O processamento auditivo-motor é mais resiliente na DA que o visual.'},
     'trail making':{s:'Apenas Parte A (números). Fonte maior. Máximo 15 elementos.',c:'Trail Making com fotografias: ligar fotos de locais conhecidos em ordem (casa → café → farmácia → igreja). O contexto topográfico familiar reduz a carga de processamento.'},
     'rotação mental':{s:'Figuras 2D simples. Rotações de 90° apenas.',c:'"Arquiteto da Casa": rodar planta simplificada da própria casa para planear rearranjos de mobiliário. O contexto pessoal aumenta motivação e relevância funcional.'},
     'orientação no mapa':{s:'Mapa simplificado com apenas 4 pontos de referência.',c:'Criar "mapa da memória" da rua da infância. Desenhar de memória com locais emocionalmente relevantes. Reminiscência topográfica com elevado potencial narrativo.'},
-    'reconhecimento de trajetos':{s:'Sequência de 4 fotos de percurso muito familiar.',c:'Criar "guia turístico" do próprio bairro em 8 fotografias. Paciente narra para familiar como se fosse turista. Inversão de papéis: o paciente é o especialista.'},
+    'reconhecimento de trajetos':{s:'Sequência de 4 fotos de percurso muito familiar.',c:'Criar "guia turístico" do próprio bairro em 8 fotografias. Cliente narra para familiar como se fosse turista. Inversão de papéis: o cliente é o especialista.'},
     'perspetiva visual':{s:'2 objetos apenas. Diferença de perspetiva de 180°.',c:'"Detetive de Objetos Perdidos": "O seu gato escondeu o novelo. Estando do outro lado da mesa, onde estaria o novelo?" Contexto narrativo facilita tomada de perspetiva.'},
     'cópia de figuras':{s:'Quadrado e triângulo apenas. Papel quadriculado disponível.',c:'Usar azulejos portugueses como modelo: copiar padrões geométricos tradicionais. A identidade cultural aumenta a motivação e o produto final tem valor estético.'},
-    'puzzles e montagem':{s:'8 peças. Imagem familiar (casa, animal).',c:'Construir cenário de Natal/Páscoa com peças de puzzle representando elementos da tradição do paciente. O puzzle final vai para a divisão do quarto.'},
-    'continuação de padrões':{s:'Apenas alternância de 2 cores.',c:'"Criador de Tecidos": criar padrão de bordado ou tecido alentejano com as sequências. Ligar à identidade cultural regional do paciente.'},
+    'puzzles e montagem':{s:'8 peças. Imagem familiar (casa, animal).',c:'Construir cenário de Natal/Páscoa com peças de puzzle representando elementos da tradição do cliente. O puzzle final vai para a divisão do quarto.'},
+    'continuação de padrões':{s:'Apenas alternância de 2 cores.',c:'"Criador de Tecidos": criar padrão de bordado ou tecido alentejano com as sequências. Ligar à identidade cultural regional do cliente.'},
     'matrizes visuais':{s:'3 opções apenas. Diferenças grosseiras.',c:'"Detetive de Arte": encontrar diferença entre 2 quadros famosos reproduzidos. Contexto artístico humanístico gera discussão sobre preferências e memórias culturais.'},
-    'blocos de kohs':{s:'Padrão 2x2 com 2 blocos apenas.',c:'"Construtor de Calçada Portuguesa": reproduzir padrões de calçada com cubos brancos e pretos. Identidade cultural fortíssima — quase todos os pacientes reconhecem os padrões.'},
+    'blocos de kohs':{s:'Padrão 2x2 com 2 blocos apenas.',c:'"Construtor de Calçada Portuguesa": reproduzir padrões de calçada com cubos brancos e pretos. Identidade cultural fortíssima — quase todos os clientes reconhecem os padrões.'},
     'reconhecimento de faces':{s:'4 expressões básicas apenas: alegria, tristeza, raiva, surpresa.',c:'"Novela da Tarde": mostrar fotograma de cena dramática conhecida. Identificar emoções de todos os personagens e prever o que vai acontecer. Ativa teoria da mente.'},
-    'sequências de movimentos':{s:'Apenas 2 movimentos alternados. Com espelho de apoio.',c:'"Orquestra do Corpo": cada sequência de movimentos representa um instrumento. Criar composição em grupo de 3 pacientes. A sincronia social tem efeito neurológico adicional.'},
+    'sequências de movimentos':{s:'Apenas 2 movimentos alternados. Com espelho de apoio.',c:'"Orquestra do Corpo": cada sequência de movimentos representa um instrumento. Criar composição em grupo de 3 clientes. A sincronia social tem efeito neurológico adicional.'},
     'gestos simbólicos':{s:'5 gestos intransitivos muito frequentes. Com demonstração antes.',c:'"Cinema Mudo": encenar cenas do quotidiano (ir às compras, cumprimentar vizinho) usando apenas gestos. Outro participante ou terapeuta adivinha. Alta motivação e riso terapêutico.'},
     'traçado em labirintos':{s:'Labirinto simples com 1 caminho correto e 1 impasse.',c:'"Explorador de Aldeias": labirinto temático com ruas de aldeia portuguesa, pontos de interesse (fonte, igreja, padaria). Contexto familiar reduz ansiedade de performance.'},
     'coordenação bimanual':{s:'Apenas bater ambas as mãos ao mesmo tempo. Ritmo lento.',c:'"Percussão Alentejana/Minhota": aprender padrão rítmico de música folclórica regional. A identidade musical cria engajamento sustentado. Pode ensinar ao neto.'},
@@ -764,9 +772,9 @@ function getVariants(ex, mod){
     'praxia ideacional':{s:'Preparar um copo de água. Apenas 3 passos.',c:'"Chef por um Dia": preparar receita simples real (torrada, iogurte com fruta). Culinária como terapia — máxima validade ecológica e identidade de papel social preservado.'},
     // FÍSICOS
     'apoio unipodal':{s:'Sentado, elevar apenas os calcanhares do chão alternadamente.',c:'"Flamingo Musical": manter apoio unipodal durante intervalo musical. Quando música para, trocar de pé. Versão em grupo cria competição amistosa e aumenta adesão.'},
-    'marcha tandem':{s:'Marcha com pés alinhados mas não encostados (base 10cm). Com apoio de parede.',c:'"Passarela da Fama": colocar tapete vermelho (fita adesiva). Paciente desfila com música de fundo ao ritmo. Componente teatral reduz medo de queda.'},
+    'marcha tandem':{s:'Marcha com pés alinhados mas não encostados (base 10cm). Com apoio de parede.',c:'"Passarela da Fama": colocar tapete vermelho (fita adesiva). Cliente desfila com música de fundo ao ritmo. Componente teatral reduz medo de queda.'},
     'teste de alcance funcional':{s:'Alcance com ambas as mãos. Sem registo de distância — apenas exploração do limite.',c:'"Jardineiro": alcançar para apanhar "frutos" (bolas coloridas penduradas a alturas diferentes). Cada cor = pontuação diferente. Gamificação aumenta esforço de alcance.'},
-    'transferências sentado-pé':{s:'Com apoio de mãos no apoio de braços. Altura da cadeira aumentada com almofada.',c:'"Elevador de Prémios": colocar objeto apetecível no assento da cadeira que o paciente só pode apanhar ao levantar completamente. Motivação intrínseca máxima.'},
+    'transferências sentado-pé':{s:'Com apoio de mãos no apoio de braços. Altura da cadeira aumentada com almofada.',c:'"Elevador de Prémios": colocar objeto apetecível no assento da cadeira que o cliente só pode apanhar ao levantar completamente. Motivação intrínseca máxima.'},
     'rotações de cabeça':{s:'Apenas inclinação lateral suave. Olhos abertos. Sentado.',c:'"Pássaro Observador": durante passeio ou junto à janela, observar e nomear tudo o que aparece no campo visual ao girar lentamente a cabeça. Integra estimulação sensorial real.'},
     'treino em superfície instável':{s:'Apenas transferência de peso lateral em pé, sem almofada, com apoio de parede.',c:'"Surfista": com música de praia, simular ondas com o peso corporal sobre almofada. Narrativa lúdica reduz o medo de instabilidade e aumenta o tempo de prática.'},
     'step lateral':{s:'Apenas passo lateral no chão (sem step). 5 repetições.',c:'"Dança do Forró Simplificada": passo lateral ao ritmo de música animada. A coreografia mínima (2 passos) torna o exercício em dança. Excelente para grupos.'},
@@ -779,7 +787,7 @@ function getVariants(ex, mod){
     'agachamento assistido':{s:'Apenas descida de 30° (mini-agachamento). Com apoio frontal.',c:'"Apanha das Azeitonas": agachar para apanhar "azeitonas" (bolas) do chão para cesto. Contexto cultural (colheita) é profundamente familiar à geração e motiva repetições.'},
     'preensão e força da mão':{s:'Apertar bola mole 5 vezes cada mão. Sem cronómetro.',c:'"Oleiro/Ceramista": amassar e modelar bola de barro ou massa de sal. Criar pequena forma — tartaruga, pão, coração. Produto levado para casa. Arte + força + identidade.'},
     'programa fitt completo':{s:'Apenas MMII: 3 exercícios x 8 repetições. 20 minutos total.',c:'"Treino da Equipa": com música de fundo motivadora (hinos desportivos). Cada série = "jogo" ganho. Contador visual de pontos. Terminar com "hino da vitória".'},
-    'mobilização cervical':{s:'Apenas rotação E-D suave. Amplitude mínima (30°). 5 repetições.',c:'"Seguir o Pássaro": terapeuta move uma marioneta de pássaro no ar a diferentes alturas e direções. Paciente segue com olhos e cabeça. O estímulo visual torna o exercício fascinante.'},
+    'mobilização cervical':{s:'Apenas rotação E-D suave. Amplitude mínima (30°). 5 repetições.',c:'"Seguir o Pássaro": terapeuta move uma marioneta de pássaro no ar a diferentes alturas e direções. Cliente segue com olhos e cabeça. O estímulo visual torna o exercício fascinante.'},
     'mobilização do ombro':{s:'Apenas pêndulo de Codman (braço pendente com gravidade). 30 segundos.',c:'"Maestro de Orquestra": dirigir orquestra imaginária com ambos os braços ao ritmo de música clássica familiar. Elevação e rotação surgem naturalmente.'},
     'extensão torácica':{s:'Apenas sentar ereto e abrir o peito com uma respiração profunda. 5 vezes.',c:'"Aula de Yoga Real": usar nomes em sânscrito simplificados ("cobra suave", "montanha"). O contexto do yoga tem conotação de saúde e bem-estar que aumenta a adesão.'},
     'flexibilidade dos isquiotibiais':{s:'Deitado, elevar perna com apoio de faixa a apenas 30° de amplitude.',c:'"Dança do Ventre Sentada": inclinações do tronco para a frente com acompanhamento musical árabe lento. A estranheza cultural cria curiosidade e reduz foco na sensação de alongamento.'},
@@ -788,8 +796,8 @@ function getVariants(ex, mod){
     'sequência wake-up body':{s:'Apenas 5 movimentos: pescoço, ombros, pulsos, ancas, tornozelos. 5 rep cada.',c:'"Rádio Matinal do Corpo": criar rotina com música de manhã favorita. Cada canção = uma zona do corpo. A associação musical cria hábito autónomo. Prescrever para casa.'},
     'programa de marcha':{s:'5 minutos de marcha lenta em corredor. Com apoio disponível.',c:'"Rota das Memórias": criar percurso que passa por locais com significado (bancos onde costumava sentar, árvores especiais). Cada ponto = história. A narrativa transforma a marcha em expedição.'},
     'aeróbica em cadeira':{s:'Apenas elevação de joelhos alternada durante 5 minutos com música lenta.',c:'"Studio de Dança Vintage": coreografia sentada inspirada nos "Bailes do Recreio" dos anos 60-70. Reconhecimento musical + movimento = dupla ativação corticosubcortical.'},
-    'cicloergómetro':{s:'Pedalagem livre sem resistência. 10 minutos. Foco na respiração.',c:'"Volta a Portugal Imaginária": mapa de Portugal no ecrã/parede. Cada 5 minutos = nova etapa (Porto → Coimbra → Lisboa). Paciente "visita" cidades que conhece.'},
-    'dança terapêutica':{s:'Apenas movimento dos braços sentado ao ritmo de música. 10 minutos.',c:'"Rancho Folclórico": aprender 4 passos básicos de dança regional do local de origem do paciente. Identidade cultural máxima. Ensinar ao terapeuta — inversão de papel especialista.'},
+    'cicloergómetro':{s:'Pedalagem livre sem resistência. 10 minutos. Foco na respiração.',c:'"Volta a Portugal Imaginária": mapa de Portugal no ecrã/parede. Cada 5 minutos = nova etapa (Porto → Coimbra → Lisboa). Cliente "visita" cidades que conhece.'},
+    'dança terapêutica':{s:'Apenas movimento dos braços sentado ao ritmo de música. 10 minutos.',c:'"Rancho Folclórico": aprender 4 passos básicos de dança regional do local de origem do cliente. Identidade cultural máxima. Ensinar ao terapeuta — inversão de papel especialista.'},
     'treino intervalado':{s:'30s ativo (marcha no local) + 90s repouso. 5 ciclos apenas.',c:'"HIIT dos Anos 50": alternância de movimentos de danças da época (twist, valsa, marcha) com repouso. A nostalgia musical reduz a percepção de esforço em 20%.'},
     'lançamento e receção':{s:'Bola grande, 80cm de distância, lançamento bi-manual.',c:'"Bowling da Cognição": nomear categoria de palavra antes de cada lançamento. Acerto físico + resposta correta = ponto duplo. Dual task cognitivo-motora integrada.'},
     'dupla tarefa':{s:'Marcha lenta + contar em voz alta de 2 em 2.',c:'"Jornalista em Campo": marchar e descrever ao vivo tudo o que se passa em redor como locutor desportivo. O discurso espontâneo é mais ecológico que a contagem e tem maior transferência.'},
@@ -802,13 +810,13 @@ function getVariants(ex, mod){
   if(key) return V[key];
   // Fallback por tipo e dificuldade
   if(isFis){
-    if(ex.difficulty==='Fácil') return {s:'Reduzir amplitude a 50%. Sentado com apoio bilateral. Tempo alargado.',c:'"Com Música Favorita": executar todo o exercício com playlist pessoal do paciente. Ritmo aumenta performance motora em 15-20% (evidência RCT).'};
+    if(ex.difficulty==='Fácil') return {s:'Reduzir amplitude a 50%. Sentado com apoio bilateral. Tempo alargado.',c:'"Com Música Favorita": executar todo o exercício com playlist pessoal do cliente. Ritmo aumenta performance motora em 15-20% (evidência RCT).'};
     if(ex.difficulty==='Moderado') return {s:'Remover carga/resistência. Apoio unilateral disponível.',c:'"Circuito Social": em grupo de 3. Competição amistosa com pontos visíveis. A componente social aumenta adesão e tem efeito neuroprotetor adicional.'};
     return {s:'Versão adaptada: metade das repetições, amplitude reduzida, pausa dupla.',c:'"Desafio Funcional Real": integrar movimento numa tarefa de vida diária real (arrumar, cozinhar, jardinar). Máxima transferência ecológica.'};
   } else {
     if(ex.difficulty==='Fácil') return {s:'Reduzir estímulos a metade. Tempo alargado. Resposta oral em vez de escrita.',c:'"Com Arte": combinar tarefa cognitiva com desenho, plasticina ou colagem. Atividade artística reduz ansiedade e ativa memória procedimental em paralelo.'};
     if(ex.difficulty==='Moderado') return {s:'Versão com pistas visuais permanentes. Resposta escolha múltipla (3 opções).',c:'"Reminiscência Cultural": adaptar conteúdo à época de vida (anos 50-80). Música, imagens e vocabulário da era. Familiaridade aumenta desempenho 25-30%.'};
-    return {s:'Versão simplificada: 1 critério apenas. Resposta binária (sim/não).',c:'"Role-Play Clínico": terapeuta assume papel de paciente. O paciente explica e ensina. Inversão de papel ativa lobo frontal e autoestima de forma diferente.'};
+    return {s:'Versão simplificada: 1 critério apenas. Resposta binária (sim/não).',c:'"Role-Play Clínico": terapeuta assume papel de cliente. O cliente explica e ensina. Inversão de papel ativa lobo frontal e autoestima de forma diferente.'};
   }
 }
 
@@ -841,7 +849,7 @@ function buildExBlock(ex, mod, num, c, cbg){
   </div>
   ${ex.instructions?`<div class="instr-box"><div class="instr-label">📋 Instruções de Aplicação</div><div class="instr-text">${ex.instructions}</div></div>`:''}
   <div class="simple-box">
-    <div class="simple-label">🟢 VERSÃO SIMPLES (pacientes com menor capacidade funcional)</div>
+    <div class="simple-label">🟢 VERSÃO SIMPLES (clientes com menor capacidade funcional)</div>
     <div class="simple-text">${v.s}</div>
   </div>
   <div class="creative-box">
@@ -978,7 +986,7 @@ body{font-family:Arial,sans-serif;color:#1a202c;font-size:10pt;line-height:1.5;b
     <div class="cover-stat"><div class="cover-stat-val">3</div><div class="cover-stat-lbl">Variantes</div></div>
   </div>
   <div style="margin-top:16px;font-size:9pt;color:#64748b;border:1px solid #e2e8f0;border-radius:8px;padding:12px 20px;display:inline-block;text-align:left">
-    <strong>Como usar este protocolo:</strong> Cada exercício tem 3 versões — <span style="color:#15803d;font-weight:700">Simples</span> (menor capacidade funcional), <span style="color:#1a202c;font-weight:700">Standard</span> (protocolo clínico base) e <span style="color:${c};font-weight:700">Criativa</span> (maximizar engagement). Selecionar conforme o paciente. Registar versão usada.
+    <strong>Como usar este protocolo:</strong> Cada exercício tem 3 versões — <span style="color:#15803d;font-weight:700">Simples</span> (menor capacidade funcional), <span style="color:#1a202c;font-weight:700">Standard</span> (protocolo clínico base) e <span style="color:${c};font-weight:700">Criativa</span> (maximizar engagement). Selecionar conforme o cliente. Registar versão usada.
   </div>
   <div class="cover-foot">Age in Move © 2026 · idade em movimento · @age_in_move · Documento de uso clínico confidencial · ${new Date().toLocaleDateString('pt-PT')}</div>
 </div>
@@ -1227,7 +1235,7 @@ function makePDF(mod, singleEx){
 
     // Instrução de uso
     const noteLines=doc.splitTextToSize(
-      pt('Cada exercicio tem 3 versoes: SIMPLES (menor capacidade funcional), STANDARD (protocolo clinico base) e CRIATIVA (maximizar engagement e transferencia ecologica). Selecionar conforme o perfil do paciente. Registar versao utilizada.'),
+      pt('Cada exercicio tem 3 versoes: SIMPLES (menor capacidade funcional), STANDARD (protocolo clinico base) e CRIATIVA (maximizar engagement e transferencia ecologica). Selecionar conforme o perfil do cliente. Registar versao utilizada.'),
       cw-8);
     const noteH=noteLines.length*4.5+10;
     drawBox(ML,y,cw,noteH,[255,250,235],[253,200,60],[150,90,10],'COMO USAR ESTE PROTOCOLO',[100,60,10],noteLines);
@@ -1328,7 +1336,7 @@ function makePDF(mod, singleEx){
     const sH=sL.length*4.5+11;
     checkY(sH+4);
     drawBox(ML,y,cw,sH,[240,253,244],[134,239,172],[21,128,61],
-      'VERSAO SIMPLES - para pacientes com menor capacidade funcional',[20,83,45],sL);
+      'VERSAO SIMPLES - para clientes com menor capacidade funcional',[20,83,45],sL);
     y+=sH+4;
 
     // Variante criativa
@@ -1423,7 +1431,7 @@ function exportExercisePDF(ex,mod){
 }
 
 // Manter compatibilidade (HTML preview ainda disponível via botão separado se necessário)
-// ─── PDFs DO PACIENTE: relatório clínico, sessão, alta e ficha para casa ────
+// ─── PDFs DO CLIENTE: relatório clínico, sessão, alta e ficha para casa ────
 const PLAN_FREQ={daily:'Todos os dias','5week':'5x por semana','3week':'3x por semana','2week':'2x por semana',weekly:'1x por semana'};
 const PLAN_VERSION={standard:'Standard',simples:'Simples',criativa:'Criativa'};
 function findExercise(exId){
@@ -1539,7 +1547,7 @@ function pdfSignature(g,profile,note){
   doc.text(pt([profile.role,profile.license].filter(Boolean).join('  |  ')),g.ML,g.y+9.5);
   g.y+=16;
   doc.setFontSize(7);doc.setTextColor(148,163,184);
-  doc.text(doc.splitTextToSize(pt(note||'Documento clínico confidencial. Contém dados de saúde (RGPD, art. 9.º). Destina-se apenas ao paciente, cuidador ou profissionais envolvidos no seu acompanhamento.'),g.cw),g.ML,g.y);
+  doc.text(doc.splitTextToSize(pt(note||'Documento clínico confidencial. Contém dados de saúde (RGPD, art. 9.º). Destina-se apenas ao cliente, cuidador ou profissionais envolvidos no seu acompanhamento.'),g.cw),g.ML,g.y);
 }
 // Gráfico de linha simples desenhado diretamente no PDF
 function pdfScaleChart(g,scale,points,patient){
@@ -1584,7 +1592,7 @@ function makePatientReportPDF(patient,{sessions,assessments,profile}){
   const pA=assessments.filter(a=>a.patientId===patient.id).sort((a,b)=>a.date.localeCompare(b.date)||a.id-b.id);
   const risk=riskDetail(patient);
   pdfTitle(g,'Relatório Clínico',[`Emitido em ${fmtDate(todayISO())}  |  ${profile.name}${profile.role?' — '+profile.role:''}${profile.license?' ('+profile.license+')':''}`,profile.institution]);
-  pdfSection(g,'Identificação do paciente');
+  pdfSection(g,'Identificação do cliente');
   pdfPatientId(g,patient);
   pdfKV(g,[['Risco atual',`${riskText(risk.level)}${risk.reasons.length?' — '+risk.reasons.join(', '):''}`],['Quedas (12 m)',patient.falls12m!=null?String(patient.falls12m):''],['Percurso',pathwayById(patient.pathway)?.name||''],['Programa intensivo',patient.program?`${fmtDate(patient.program.start)} a ${fmtDate(patient.program.end)}, ${patient.program.perWeek}x/semana`:'']]);
   if(patient.medication||patient.history){pdfLabeled(g,'Medicação',patient.medication);pdfLabeled(g,'Antecedentes',patient.history);}
@@ -2110,7 +2118,7 @@ function LandingPage({onEnter,onTest}){
         {[
           {icon:'🏃',title:'Movimento é Vida',desc:'11 módulos de exercício físico e estimulação cognitiva — equilíbrio, força, aeróbico, memória, linguagem e funções executivas. Tudo num só lugar.'},
           {icon:'📊',title:'Clínica com Números',desc:'Avaliações MMSE, MoCA, GDS e Barthel integradas. Dashboards de evolução, alertas de declínio e relatórios automáticos em PDF.'},
-          {icon:'👥',title:'O Paciente no Centro',desc:'Historial clínico completo, cuidadores registados, plano terapêutico personalizado e fichas de exercício para cada sessão.'},
+          {icon:'👥',title:'O Cliente no Centro',desc:'Historial clínico completo, cuidadores registados, plano terapêutico personalizado e fichas de exercício para cada sessão.'},
         ].map(f=>(
           <div className="feature-card" key={f.title}>
             <div className="fi">{f.icon}</div>
@@ -2149,7 +2157,7 @@ function LandingPage({onEnter,onTest}){
             </div>
             <p className="pricing-desc">Ideal para explorar a plataforma ou para uso ocasional em contexto académico.</p>
             <ul className="pricing-features">
-              <li><span className="check">✓</span> Até 3 pacientes ativos</li>
+              <li><span className="check">✓</span> Até 3 clientes ativos</li>
               <li><span className="check">✓</span> 2 módulos de estimulação</li>
               <li><span className="check">✓</span> Avaliações MMSE e GDS</li>
               <li><span className="check">✓</span> Fichas de exercício (PDF)</li>
@@ -2172,7 +2180,7 @@ function LandingPage({onEnter,onTest}){
             </div>
             <p className="pricing-desc">Para terapeutas em prática clínica individual. Tudo o que precisa para acompanhamento rigoroso.</p>
             <ul className="pricing-features">
-              <li><span className="check">✓</span> Pacientes ilimitados</li>
+              <li><span className="check">✓</span> Clientes ilimitados</li>
               <li><span className="check">✓</span> 6 módulos completos (40 exercícios)</li>
               <li><span className="check">✓</span> Todas as escalas (MMSE, MoCA, GDS, Barthel)</li>
               <li><span className="check">✓</span> Relatórios clínicos automáticos em PDF</li>
@@ -2195,7 +2203,7 @@ function LandingPage({onEnter,onTest}){
             <p className="pricing-desc">Para clínicas, centros de dia, IPSS e equipas multidisciplinares com múltiplos terapeutas.</p>
             <ul className="pricing-features">
               <li><span className="check">✓</span> Até 10 terapeutas na equipa</li>
-              <li><span className="check">✓</span> Pacientes partilhados entre equipa</li>
+              <li><span className="check">✓</span> Clientes partilhados entre equipa</li>
               <li><span className="check">✓</span> Dashboard de gestão institucional</li>
               <li><span className="check">✓</span> Módulos personalizáveis</li>
               <li><span className="check">✓</span> Relatórios agregados por equipa</li>
@@ -2261,7 +2269,7 @@ function Sidebar({page,setPage,onLogout,open,onClose}){
     {id:'dashboard',label:'Dashboard',icon:'📊'},
     {id:'modules',label:'Módulos',icon:'📚'},
     {id:'library',label:'Biblioteca',icon:'📖'},
-    {id:'patients',label:'Pacientes',icon:'👥',badge:patients.length?String(patients.length):null},
+    {id:'patients',label:'Clientes',icon:'👥',badge:patients.length?String(patients.length):null},
     {section:'Gestão'},
     {id:'calendar',label:'Calendário',icon:'📅'},
     {id:'groups',label:'Grupos',icon:'🫂'},
@@ -2381,15 +2389,15 @@ function DashboardHome({setPage,openPatient}){
   const todayCount=events.filter(e=>e.date===today&&e.type==='session'&&!e.done).length;
   const exCount=MODULES.reduce((n,m)=>n+(m.exercises_list?m.exercises_list.length:(+m.exercises||0)),0);
   const stats=[
-    {label:'Pacientes Ativos',value:String(active.length),sub:newThisMonth?`+${newThisMonth} este mês`:'Sem novos este mês',icon:'👥',bg:'#eff6ff',ic:'#1d4ed8'},
+    {label:'Clientes Ativos',value:String(active.length),sub:newThisMonth?`+${newThisMonth} este mês`:'Sem novos este mês',icon:'👥',bg:'#eff6ff',ic:'#1d4ed8'},
     {label:'Sessões este Mês',value:String(sessMonth),sub:`${sessPrev} no mês anterior`,icon:'📋',bg:'#f0fdf4',ic:'#15803d'},
     {label:'Módulos',value:String(MODULES.length),sub:`${exCount} exercícios`,icon:'📚',bg:'#faf5ff',ic:'#6d28d9'},
-    {label:'Alertas',value:String(alerts.length),sub:alerts.length?`${new Set(alerts.map(a=>a.patientId)).size} pacientes · ${alerts.filter(a=>a.level==='r').length} prioritários`:'Sem alertas',icon:'⚠️',bg:'#fffbeb',ic:'#b45309'},
+    {label:'Alertas',value:String(alerts.length),sub:alerts.length?`${new Set(alerts.map(a=>a.patientId)).size} clientes · ${alerts.filter(a=>a.level==='r').length} prioritários`:'Sem alertas',icon:'⚠️',bg:'#fffbeb',ic:'#b45309'},
   ];
   const hour=now.getHours();
   const greet=hour<12?'Bom dia':hour<20?'Boa tarde':'Boa noite';
   const dateStr=now.toLocaleDateString('pt-PT',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
-  // Um paciente por linha, com todos os seus alertas; os que têm alertas prioritários primeiro
+  // Um cliente por linha, com todos os seus alertas; os que têm alertas prioritários primeiro
   const groups=Object.values(alerts.reduce((m,a)=>{(m[a.patientId]=m[a.patientId]||{patientId:a.patientId,name:a.name,items:[]}).items.push(a);return m;},{}))
     .map(g=>({...g,red:g.items.some(a=>a.level==='r')})).sort((a,b)=>(b.red-a.red)||(b.items.length-a.items.length));
   const shown=showAll?groups:groups.slice(0,5);
@@ -2419,7 +2427,7 @@ function DashboardHome({setPage,openPatient}){
             </div>
           </div>
         ))}
-        {groups.length>5&&<button className="btn btn-sm btn-secondary" style={{marginTop:10}} onClick={()=>setShowAll(v=>!v)}>{showAll?'Mostrar menos':`Ver todos (${groups.length} pacientes)`}</button>}
+        {groups.length>5&&<button className="btn btn-sm btn-secondary" style={{marginTop:10}} onClick={()=>setShowAll(v=>!v)}>{showAll?'Mostrar menos':`Ver todos (${groups.length} clientes)`}</button>}
       </div>
       <div className="grid-2">
         <div className="card">
@@ -2437,8 +2445,8 @@ function DashboardHome({setPage,openPatient}){
           })}
         </div>
         <div className="card">
-          <div className="card-header"><div className="card-title">Pacientes em Risco</div><button className="btn btn-sm btn-secondary" onClick={()=>setPage('patients')}>Ver todos</button></div>
-          {atRisk.length===0&&<p style={{fontSize:14,color:'#64748b',padding:'10px 0'}}>Nenhum paciente ativo em risco médio ou alto.</p>}
+          <div className="card-header"><div className="card-title">Clientes em Risco</div><button className="btn btn-sm btn-secondary" onClick={()=>setPage('patients')}>Ver todos</button></div>
+          {atRisk.length===0&&<p style={{fontSize:14,color:'#64748b',padding:'10px 0'}}>Nenhum cliente ativo em risco médio ou alto.</p>}
           {atRisk.map(p=>{const r=riskDetail(p);return(
             <div key={p.id} style={{display:'flex',alignItems:'center',gap:12,padding:'10px 0',borderBottom:'1px solid #f1f5f9',cursor:'pointer'}} onClick={()=>openPatient(p.id)}>
               <div className="avatar" style={{background:p.avatar}}>{p.initials}</div>
@@ -2655,13 +2663,13 @@ function PatientsPage({setPage,openPatient}){
   return(
     <div className="page">
       <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:16,gap:12,flexWrap:'wrap'}}>
-        <div><h2 style={{fontSize:22,fontWeight:800,color:'#0f172a'}}>Gestão de Pacientes</h2><p style={{color:'#64748b',fontSize:14}}>{counts.active} {counts.active===1?'ativo':'ativos'} · {counts.closed} com alta ou arquivados</p></div>
+        <div><h2 style={{fontSize:22,fontWeight:800,color:'#0f172a'}}>Gestão de Clientes</h2><p style={{color:'#64748b',fontSize:14}}>{counts.active} {counts.active===1?'ativo':'ativos'} · {counts.closed} com alta ou arquivados</p></div>
         <div style={{display:'flex',gap:10,flexWrap:'wrap'}}>
           <select style={{width:160}} value={filter} onChange={e=>setFilter(e.target.value)} aria-label="Filtrar por risco">
             <option value="all">Todos os riscos</option><option value="high">Risco alto</option><option value="medium">Risco médio</option><option value="low">Risco baixo</option>
           </select>
-          <input placeholder="🔍 Pesquisar..." style={{width:220}} value={search} onChange={e=>setSearch(e.target.value)} aria-label="Pesquisar paciente"/>
-          <button className="btn btn-primary" onClick={()=>setPage('new-patient')}>+ Novo Paciente</button>
+          <input placeholder="🔍 Pesquisar..." style={{width:220}} value={search} onChange={e=>setSearch(e.target.value)} aria-label="Pesquisar cliente"/>
+          <button className="btn btn-primary" onClick={()=>setPage('new-patient')}>+ Novo Cliente</button>
         </div>
       </div>
       <div className="tab-bar" style={{marginBottom:14}}>
@@ -2673,28 +2681,28 @@ function PatientsPage({setPage,openPatient}){
         {patients.length===0?(
           <div style={{textAlign:'center',padding:'40px 20px',color:'#64748b'}}>
             <div style={{fontSize:40,marginBottom:8}}>👥</div>
-            <div style={{fontWeight:700,color:'#0f172a',marginBottom:4}}>Ainda não há pacientes</div>
-            <p style={{fontSize:14,marginBottom:16}}>Crie o primeiro paciente para começar a registar sessões e avaliações.</p>
-            <button className="btn btn-primary" onClick={()=>setPage('new-patient')}>+ Novo Paciente</button>
+            <div style={{fontWeight:700,color:'#0f172a',marginBottom:4}}>Ainda não há clientes</div>
+            <p style={{fontSize:14,marginBottom:16}}>Crie o primeiro cliente para começar a registar sessões e avaliações.</p>
+            <button className="btn btn-primary" onClick={()=>setPage('new-patient')}>+ Novo Cliente</button>
           </div>
         ):(
         <div className="table-scroll"><table className="table">
-          <thead><tr><th>Paciente</th><th>Idade</th><th>Diagnóstico</th><th>{SCALES[cog].name}</th><th>Risco</th><th>Sessões</th><th>{state==='active'?'Próxima':'Estado'}</th><th></th></tr></thead>
+          <thead><tr><th>Cliente</th><th>Idade</th><th>Diagnóstico</th><th>{SCALES[cog].name}</th><th>Risco</th><th>Sessões</th><th>{state==='active'?'Próxima':'Estado'}</th><th></th></tr></thead>
           <tbody>
-            {filtered.length===0&&<tr><td colSpan={8} style={{textAlign:'center',color:'#64748b',padding:20}}>Nenhum paciente corresponde a este filtro.</td></tr>}
+            {filtered.length===0&&<tr><td colSpan={8} style={{textAlign:'center',color:'#64748b',padding:20}}>Nenhum cliente corresponde a este filtro.</td></tr>}
             {filtered.map(p=>{
               const nx=nextEventFor(events,p.id);
               const it=interpretScale(cog,p[cog],p);
               return(
-                <tr key={p.id} style={{opacity:isActive(p)?1:.75}}>
-                  <td><div style={{display:'flex',alignItems:'center',gap:10}}><div className="avatar" style={{background:p.avatar}}>{p.initials}</div><div><div style={{fontWeight:600}}>{p.name}</div><div style={{fontSize:12,color:'#64748b'}}>{genderLabel(p.gender)}</div></div></div></td>
+                <tr key={p.id} className="row-link" style={{opacity:isActive(p)?1:.75}} onClick={()=>openPatient(p.id)} title={`Abrir o perfil de ${p.name}`}>
+                  <td><div style={{display:'flex',alignItems:'center',gap:10}}><div className="avatar" style={{background:p.avatar}}>{p.initials}</div><div><button type="button" className="name-link" onClick={e=>{e.stopPropagation();openPatient(p.id);}}>{p.name}</button><div style={{fontSize:12,color:'#64748b'}}>{genderLabel(p.gender)}</div></div></div></td>
                   <td>{p.age!=null?`${p.age} anos`:'—'}</td>
                   <td style={{maxWidth:180,fontSize:13}}>{p.diagnosis||'—'}</td>
                   <td><span style={{fontWeight:700,fontSize:15,color:it.level?LEVEL_COLOR[it.level]:'#94a3b8'}}>{p[cog]??'—'}</span></td>
                   <td>{riskBadge(p.risk)}</td>
                   <td style={{color:'#64748b',fontSize:13}}>{doneSessions(sessions,p.id).length}</td>
                   <td style={{fontSize:13,color:'#64748b'}}>{state==='active'?(nx?fmtDate(nx.date):'—'):statusBadge(p)}</td>
-                  <td><button className="btn btn-sm btn-secondary" onClick={()=>openPatient(p.id)}>Ver</button></td>
+                  <td><button className="btn btn-sm btn-secondary" onClick={e=>{e.stopPropagation();openPatient(p.id);}}>Ver</button></td>
                 </tr>
               );
             })}
@@ -2826,7 +2834,7 @@ function SessionModal({patient,session,eventId,defaultDate,defaultStatus,onClose
         </div>
         <div className="form-group"><label>Plano de casa desde a última sessão</label><select value={f.adherence} onChange={e=>set('adherence',e.target.value)}>{Object.entries(ADHERENCE).map(([k,l])=><option key={k} value={k}>{l}</option>)}</select></div>
         <Section title="Nota clínica (SOAP)"/>
-        <div className="form-group"><label>S — Subjetivo (o que o paciente/cuidador refere)</label><textarea rows={2} value={f.soapS} onChange={e=>set('soapS',e.target.value)} placeholder="Ex.: Refere dormir mal. Filha diz que fez os exercícios 4 dias."/></div>
+        <div className="form-group"><label>S — Subjetivo (o que o cliente/cuidador refere)</label><textarea rows={2} value={f.soapS} onChange={e=>set('soapS',e.target.value)} placeholder="Ex.: Refere dormir mal. Filha diz que fez os exercícios 4 dias."/></div>
         <div className="form-group"><label>O — Objetivo (o que observou)</label><textarea rows={2} value={f.soapO} onChange={e=>set('soapO',e.target.value)} placeholder="Ex.: Marcha mais segura; necessitou de apoio no unipodal."/></div>
         <div className="form-group"><label>A — Avaliação (a sua leitura)</label><textarea rows={2} value={f.soapA} onChange={e=>set('soapA',e.target.value)} placeholder="Ex.: Evolução positiva no equilíbrio estático."/></div>
         <div className="form-group"><label>P — Plano (próximos passos)</label><textarea rows={2} value={f.soapP} onChange={e=>set('soapP',e.target.value)} placeholder="Ex.: Progredir para versão Standard na próxima sessão."/></div>
@@ -2886,7 +2894,7 @@ function SessionCard({s,patient,onEdit,onDelete,onPDF}){
 }
 
 // ─── AVALIAÇÃO ────────────────────────────────────────────────────────────
-function ScaleInputs({values,set,patient,compact}){
+function ScaleInputs({values,set,patient,compact,onOpenForm,details}){
   return SCALE_GROUPS.map(g=>{
     const keys=Object.keys(SCALES).filter(k=>SCALES[k].group===g);
     return(
@@ -2895,9 +2903,9 @@ function ScaleInputs({values,set,patient,compact}){
         <div className={compact?'grid-2':''} style={compact?undefined:{display:'flex',flexDirection:'column',gap:8}}>
           {keys.map(k=>{const sc=SCALES[k];const it=interpretScale(k,numOrNull(values[k]),patient);return(
             <div key={k} className="form-group" style={{marginBottom:compact?8:0}}>
-              <label title={sc.full}>{sc.name} <span style={{fontWeight:400,color:'#94a3b8'}}>({sc.min}–{sc.max}{sc.unit?' '+sc.unit:''})</span></label>
+              <label title={sc.full} style={{display:'flex',gap:6,alignItems:'center',flexWrap:'wrap'}}>{onOpenForm?<button type="button" className="sf-link" onClick={()=>onOpenForm(k)} title={`Preencher a escala ${sc.name} item a item`}>📋 {sc.name}</button>:sc.name} <span style={{fontWeight:400,color:'#94a3b8'}}>({sc.min}–{sc.max}{sc.unit?' '+sc.unit:''})</span>{details&&details[k]&&<span className="badge badge-blue" style={{fontSize:10.5}}>por itens</span>}</label>
               <div style={{display:'flex',gap:8,alignItems:'center'}}>
-                <input type="number" inputMode="decimal" step={sc.step} min={sc.min} max={sc.max} value={values[k]} onChange={e=>set(k,e.target.value)} placeholder={patient&&patient[k]!=null?`Atual: ${patient[k]}`:'—'} style={{maxWidth:compact?'none':120}}/>
+                <input type="number" inputMode="decimal" step={sc.step} min={sc.min} max={sc.max} value={values[k]} onChange={e=>set(k,e.target.value,true)} placeholder={patient&&patient[k]!=null?`Atual: ${patient[k]}`:'—'} style={{maxWidth:compact?'none':120}}/>
                 {it.label&&<span className={`badge badge-${LEVEL_BADGE[it.level]}`} style={{whiteSpace:'nowrap'}}>{it.label}</span>}
               </div>
             </div>);})}
@@ -2905,6 +2913,321 @@ function ScaleInputs({values,set,patient,compact}){
       </div>
     );
   });
+}
+// ─── ESCALAS COMPLETAS: preenchimento item a item ─────────────────────────
+// Cada item tem opções com a pontuação já atribuída (v) ou é um campo de tempo/contagem.
+// O total é calculado automaticamente e interpretado com interpretScale.
+const sfOpts=(...pairs)=>pairs.map(([v,l])=>({v,l}));
+const sfRange=(a,b)=>Array.from({length:b-a+1},(_,i)=>({v:a+i,l:String(a+i)}));
+const SIM1=sfOpts([1,'Sim'],[0,'Não']), NAO1=sfOpts([0,'Sim'],[1,'Não']);
+const BERG_OPTS=sfRange(0,4).reverse();
+const sfItem=(id,label,options,hint)=>({id,label,options,hint});
+const sumItems=(form,ans)=>form.sections.reduce((t,s)=>t+s.items.filter(i=>i.options&&!i.info).reduce((a,i)=>a+(ans[i.id]!=null?+ans[i.id]:0),0),0);
+const sectionSubs=(form,ans)=>form.sections.filter(s=>s.items.some(i=>i.options&&!i.info)).map(s=>{
+  const its=s.items.filter(i=>i.options&&!i.info);
+  return [s.title,its.reduce((a,i)=>a+(ans[i.id]!=null?+ans[i.id]:0),0),its.reduce((a,i)=>a+Math.max(...i.options.map(o=>o.v)),0)];
+});
+const timeVal=v=>v==null||v===''?null:v==='x'?'x':+String(v).replace(',','.');
+const SCALE_FORMS={
+  mmse:{
+    note:'Pontue cada domínio seguindo o protocolo e o caderno oficiais da versão portuguesa do MMSE. O ponto de corte ajusta-se à escolaridade registada.',
+    sections:[
+      {title:'Orientação',items:[sfItem('ot','Orientação temporal (ano, estação, mês, dia, dia da semana)',sfRange(0,5)),sfItem('oe','Orientação espacial (país, distrito, localidade, local, andar)',sfRange(0,5))]},
+      {title:'Retenção',items:[sfItem('ret','Repetir as 3 palavras (1.ª tentativa)',sfRange(0,3))]},
+      {title:'Atenção e cálculo',items:[sfItem('cal','Subtrações seriadas',sfRange(0,5))]},
+      {title:'Evocação',items:[sfItem('evo','Recordar as 3 palavras',sfRange(0,3))]},
+      {title:'Linguagem',items:[sfItem('nom','Nomear 2 objetos',sfRange(0,2)),sfItem('rep','Repetir a frase',sfRange(0,1)),sfItem('ord','Ordem em 3 etapas',sfRange(0,3)),sfItem('lei','Ler e cumprir a ordem escrita',sfRange(0,1)),sfItem('esc','Escrever uma frase',sfRange(0,1))]},
+      {title:'Capacidade construtiva',items:[sfItem('cop','Copiar o desenho',sfRange(0,1))]},
+    ],
+  },
+  moca:{
+    note:'Use o formulário oficial do MoCA (a aplicação requer certificação). Aqui regista a pontuação de cada domínio; o ponto extra de escolaridade é somado e o total não passa de 30.',
+    sections:[
+      {title:'Visuoespacial / executiva',items:[sfItem('trail','Trilho alternado',sfRange(0,1)),sfItem('cube','Copiar o cubo',sfRange(0,1)),sfItem('clock','Desenhar o relógio (contorno, números, ponteiros)',sfRange(0,3))]},
+      {title:'Nomeação',items:[sfItem('name','Nomear os 3 animais',sfRange(0,3))]},
+      {title:'Atenção',items:[sfItem('dig','Sequência de dígitos (direta e inversa)',sfRange(0,2)),sfItem('let','Lista de letras (tocar na letra pedida)',sfRange(0,1)),sfItem('sub','Subtração em série de 7',sfRange(0,3))]},
+      {title:'Linguagem',items:[sfItem('frase','Repetir as 2 frases',sfRange(0,2)),sfItem('flu','Fluência verbal (1 minuto)',sfRange(0,1))]},
+      {title:'Abstração',items:[sfItem('abs','Semelhanças',sfRange(0,2))]},
+      {title:'Evocação diferida',items:[sfItem('evo','Palavras recordadas sem pista',sfRange(0,5))]},
+      {title:'Orientação',items:[sfItem('ori','Data, mês, ano, dia da semana, lugar, localidade',sfRange(0,6))]},
+      {title:'Escolaridade',items:[sfItem('edu','12 ou menos anos de escolaridade (+1 ponto)',sfOpts([1,'Sim'],[0,'Não']))]},
+    ],
+    init:p=>p&&p.education!=null&&p.education!==''?{edu:+p.education<=12?1:0}:{},
+    compute:(f,a)=>({total:Math.min(30,sumItems(f,a))}),
+  },
+  gds:{
+    note:'Leia cada pergunta ao cliente e registe a resposta sobre as últimas duas semanas. Cada resposta sugestiva de depressão vale 1 ponto (já está calculado).',
+    sections:[{title:'Perguntas',items:[
+      sfItem('q1','Está satisfeito(a) com a sua vida?',NAO1),
+      sfItem('q2','Abandonou muitas das suas atividades e interesses?',SIM1),
+      sfItem('q3','Sente que a sua vida está vazia?',SIM1),
+      sfItem('q4','Anda muitas vezes aborrecido(a)?',SIM1),
+      sfItem('q5','Está bem-disposto(a) a maior parte do tempo?',NAO1),
+      sfItem('q6','Tem medo de que lhe aconteça alguma coisa de mal?',SIM1),
+      sfItem('q7','Sente-se feliz a maior parte do tempo?',NAO1),
+      sfItem('q8','Sente-se muitas vezes desamparado(a)?',SIM1),
+      sfItem('q9','Prefere ficar em casa a sair e fazer coisas novas?',SIM1),
+      sfItem('q10','Sente que tem mais problemas de memória do que a maioria das pessoas?',SIM1),
+      sfItem('q11','Acha que é bom estar vivo(a)?',NAO1),
+      sfItem('q12','Sente-se inútil tal como está agora?',SIM1),
+      sfItem('q13','Sente-se cheio(a) de energia?',NAO1),
+      sfItem('q14','Sente que a sua situação não tem esperança?',SIM1),
+      sfItem('q15','Acha que a maioria das pessoas está melhor do que o(a) senhor(a)?',SIM1),
+    ]}],
+  },
+  barthel:{
+    note:'Registe o que a pessoa faz habitualmente, não o que poderia fazer.',
+    sections:[{title:'Atividades de vida diária',items:[
+      sfItem('ali','Alimentação',sfOpts([10,'Independente'],[5,'Precisa de ajuda (ex.: cortar)'],[0,'Dependente'])),
+      sfItem('ban','Banho',sfOpts([5,'Independente'],[0,'Dependente'])),
+      sfItem('hig','Higiene pessoal (cara, cabelo, dentes, barbear)',sfOpts([5,'Independente'],[0,'Precisa de ajuda'])),
+      sfItem('ves','Vestir',sfOpts([10,'Independente'],[5,'Precisa de ajuda, faz metade'],[0,'Dependente'])),
+      sfItem('int','Intestino',sfOpts([10,'Continente'],[5,'Acidente ocasional'],[0,'Incontinente'])),
+      sfItem('bex','Bexiga',sfOpts([10,'Continente'],[5,'Acidente ocasional'],[0,'Incontinente'])),
+      sfItem('wc','Utilização da sanita',sfOpts([10,'Independente'],[5,'Precisa de alguma ajuda'],[0,'Dependente'])),
+      sfItem('tra','Transferências cadeira ↔ cama',sfOpts([15,'Independente'],[10,'Pequena ajuda'],[5,'Grande ajuda, consegue sentar-se'],[0,'Incapaz'])),
+      sfItem('dea','Deambulação',sfOpts([15,'Independente (50 m, pode usar auxiliar)'],[10,'Com ajuda de uma pessoa'],[5,'Independente em cadeira de rodas'],[0,'Imóvel'])),
+      sfItem('esc','Escadas',sfOpts([10,'Independente'],[5,'Precisa de ajuda'],[0,'Incapaz'])),
+    ]}],
+  },
+  berg:{
+    note:'Pontue de 0 a 4 cada tarefa (4 = executa com segurança e sem ajuda). Em caso de dúvida, use a pontuação mais baixa.',
+    sections:[{title:'Tarefas',items:[
+      sfItem('b1','1. Sentado para de pé',BERG_OPTS,'4: levanta-se sem usar as mãos · 0: precisa de ajuda moderada ou máxima'),
+      sfItem('b2','2. De pé sem apoio (2 min)',BERG_OPTS,'4: 2 min com segurança · 0: incapaz 30 s sem apoio'),
+      sfItem('b3','3. Sentado sem encosto, pés no chão (2 min)',BERG_OPTS,'4: 2 min com segurança · 0: incapaz 10 s'),
+      sfItem('b4','4. De pé para sentado',BERG_OPTS,'4: senta-se com segurança, uso mínimo das mãos · 0: precisa de ajuda'),
+      sfItem('b5','5. Transferências',BERG_OPTS,'4: com segurança e uso mínimo das mãos · 0: precisa de duas pessoas'),
+      sfItem('b6','6. De pé com olhos fechados (10 s)',BERG_OPTS,'4: 10 s com segurança · 0: precisa de ajuda para não cair'),
+      sfItem('b7','7. De pé com pés juntos (1 min)',BERG_OPTS,'4: junta os pés sozinho e mantém 1 min · 0: precisa de ajuda'),
+      sfItem('b8','8. Alcançar à frente com o braço estendido',BERG_OPTS,'4: mais de 25 cm · 0: perde o equilíbrio'),
+      sfItem('b9','9. Apanhar um objeto do chão',BERG_OPTS,'4: apanha com facilidade e segurança · 0: incapaz ou precisa de ajuda'),
+      sfItem('b10','10. Virar-se para olhar para trás (dos dois lados)',BERG_OPTS,'4: olha para trás dos dois lados, boa transferência de peso · 0: precisa de ajuda'),
+      sfItem('b11','11. Rodar 360°',BERG_OPTS,'4: 4 s ou menos para cada lado · 0: precisa de ajuda'),
+      sfItem('b12','12. Pés alternados num degrau (8 toques)',BERG_OPTS,'4: 8 toques em 20 s, com segurança · 0: precisa de ajuda'),
+      sfItem('b13','13. Um pé à frente do outro (30 s)',BERG_OPTS,'4: pés em linha 30 s · 0: perde o equilíbrio'),
+      sfItem('b14','14. Apoio num só pé',BERG_OPTS,'4: mais de 10 s · 0: incapaz ou precisa de ajuda'),
+    ]}],
+  },
+  tinetti:{
+    note:'Equilíbrio (16 pontos) e marcha (12 pontos). Na marcha, a pessoa anda ao seu ritmo habitual, com o auxiliar que usa.',
+    sections:[
+      {title:'Equilíbrio',items:[
+        sfItem('e1','Equilíbrio sentado',sfOpts([1,'Estável, seguro'],[0,'Inclina-se ou desliza'])),
+        sfItem('e2','Levantar-se',sfOpts([2,'Sem usar os braços'],[1,'Usa os braços'],[0,'Incapaz sem ajuda'])),
+        sfItem('e3','Tentativas para se levantar',sfOpts([2,'Uma só tentativa'],[1,'Mais de uma tentativa'],[0,'Incapaz sem ajuda'])),
+        sfItem('e4','Equilíbrio imediato de pé (primeiros 5 s)',sfOpts([2,'Estável sem apoio'],[1,'Estável com auxiliar ou apoio'],[0,'Instável'])),
+        sfItem('e5','Equilíbrio de pé',sfOpts([2,'Base estreita, sem apoio'],[1,'Base alargada ou com apoio'],[0,'Instável'])),
+        sfItem('e6','Empurrão ligeiro no esterno (pés juntos)',sfOpts([2,'Estável'],[1,'Oscila, agarra-se'],[0,'Começa a cair'])),
+        sfItem('e7','Olhos fechados (pés juntos)',sfOpts([1,'Estável'],[0,'Instável'])),
+        sfItem('e8','Rodar 360° — passos',sfOpts([1,'Contínuos'],[0,'Descontínuos'])),
+        sfItem('e9','Rodar 360° — estabilidade',sfOpts([1,'Estável'],[0,'Instável'])),
+        sfItem('e10','Sentar-se',sfOpts([2,'Seguro, movimento suave'],[1,'Usa os braços ou movimento brusco'],[0,'Inseguro, deixa-se cair'])),
+      ]},
+      {title:'Marcha',items:[
+        sfItem('m1','Início da marcha',sfOpts([1,'Sem hesitação'],[0,'Hesitação ou várias tentativas'])),
+        sfItem('m2','Pé direito ultrapassa o esquerdo',sfOpts([1,'Sim'],[0,'Não'])),
+        sfItem('m3','Pé direito descola do chão',sfOpts([1,'Sim'],[0,'Não'])),
+        sfItem('m4','Pé esquerdo ultrapassa o direito',sfOpts([1,'Sim'],[0,'Não'])),
+        sfItem('m5','Pé esquerdo descola do chão',sfOpts([1,'Sim'],[0,'Não'])),
+        sfItem('m6','Simetria do passo',sfOpts([1,'Passos iguais'],[0,'Passos desiguais'])),
+        sfItem('m7','Continuidade do passo',sfOpts([1,'Contínuos'],[0,'Paragens ou descontinuidade'])),
+        sfItem('m8','Trajetória',sfOpts([2,'Linha reta sem auxiliar'],[1,'Desvio ligeiro ou usa auxiliar'],[0,'Desvio marcado'])),
+        sfItem('m9','Tronco',sfOpts([2,'Sem oscilação nem flexão'],[1,'Flete joelhos/costas ou afasta os braços'],[0,'Oscilação marcada ou usa auxiliar'])),
+        sfItem('m10','Base de apoio',sfOpts([1,'Calcanhares quase se tocam'],[0,'Calcanhares afastados'])),
+      ]},
+    ],
+  },
+  sppb:{
+    note:'Três provas: equilíbrio, velocidade de marcha em 4 m e levantar da cadeira 5 vezes. Introduza os tempos e a pontuação de cada prova é calculada.',
+    sections:[
+      {title:'Equilíbrio',items:[
+        sfItem('s1','Pés lado a lado (10 s)',sfOpts([1,'Manteve 10 s'],[0,'Não manteve'])),
+        sfItem('s2','Semi-tandem (10 s)',sfOpts([1,'Manteve 10 s'],[0,'Não manteve'])),
+        sfItem('s3','Tandem — pés em linha',sfOpts([2,'10 s ou mais'],[1,'3 a 9,99 s'],[0,'Menos de 3 s / não fez'])),
+      ]},
+      {title:'Marcha 4 m',items:[{id:'gait',label:'Tempo a percorrer 4 m (melhor de 2)',type:'time',unable:true}]},
+      {title:'Levantar da cadeira 5 vezes',items:[{id:'chair',label:'Tempo para 5 levantamentos sem usar os braços',type:'time',unable:true}]},
+    ],
+    compute:(f,a)=>{
+      const bal=['s1','s2','s3'].reduce((t,k)=>t+(a[k]!=null?+a[k]:0),0);
+      const g=timeVal(a.gait),c=timeVal(a.chair);
+      const gs=g==null?null:g==='x'?0:g<4.82?4:g<=6.2?3:g<=8.7?2:1;
+      const cs=c==null?null:c==='x'||c>=60?0:c<=11.19?4:c<=13.69?3:c<=16.69?2:1;
+      const missing=gs==null||cs==null;
+      return {total:missing?null:bal+gs+cs,subs:[['Equilíbrio',bal,4],['Marcha 4 m',gs??'—',4],['Levantar da cadeira',cs??'—',4]]};
+    },
+  },
+  tug:{
+    note:'Levantar de uma cadeira com braços, andar 3 m ao ritmo habitual, virar, voltar e sentar. Conte o tempo desde o "já" até encostar as costas.',
+    sections:[{title:'Prova',items:[
+      {id:'time',label:'Tempo (segundos)',type:'time'},
+      sfItem('aid','Auxiliar de marcha',sfOpts(['nenhum','Nenhum'],['bengala','Bengala'],['canadiana','Canadiana(s)'],['andarilho','Andarilho'])),
+    ]}],
+    info:['aid'],
+    compute:(f,a)=>{const t=timeVal(a.time);return {total:t==null||t==='x'?null:Math.round(t*10)/10};},
+  },
+  chair30:{
+    note:'Cadeira sem braços encostada à parede, braços cruzados no peito. Conte os levantamentos completos em 30 s. Se precisar de usar os braços, o resultado é 0.',
+    sections:[{title:'Prova',items:[
+      {id:'reps',label:'Levantamentos completos em 30 s',type:'count'},
+      sfItem('arms','Precisou de usar os braços?',sfOpts([0,'Não'],[1,'Sim'])),
+    ]}],
+    info:['arms'],
+    compute:(f,a)=>{if(+a.arms===1)return {total:0};const r=a.reps==null||a.reps===''?null:Math.round(+a.reps);return {total:r};},
+  },
+  zarit:{
+    note:'Responde o cuidador principal. Leia cada pergunta do formulário oficial da versão portuguesa (Sequeira, 2010) e marque a frequência: 1 Nunca · 2 Quase nunca · 3 Às vezes · 4 Muitas vezes · 5 Quase sempre.',
+    sections:[{title:'Perguntas 1 a 22',items:Array.from({length:22},(_,i)=>sfItem('z'+(i+1),`Pergunta ${i+1}`,sfOpts([1,'1 Nunca'],[2,'2 Quase nunca'],[3,'3 Às vezes'],[4,'4 Muitas vezes'],[5,'5 Quase sempre'])))}],
+  },
+};
+// Marca os itens que não pontuam (ex.: auxiliar de marcha)
+Object.values(SCALE_FORMS).forEach(f=>(f.info||[]).forEach(id=>f.sections.forEach(s=>s.items.forEach(i=>{if(i.id===id)i.info=true;}))));
+const sfAllItems=f=>f.sections.flatMap(s=>s.items);
+// Resultado do formulário: total, subtotais e itens em falta
+function scaleFormResult(k,ans,patient){
+  const f=SCALE_FORMS[k];
+  const missing=sfAllItems(f).filter(i=>!i.info&&(ans[i.id]==null||ans[i.id]==='')).length;
+  const base=f.compute?f.compute(f,ans,patient):{total:sumItems(f,ans)};
+  const subs=base.subs||(f.sections.length>1?sectionSubs(f,ans):null);
+  return {total:missing?null:base.total,subs,missing};
+}
+// Linhas legíveis dos itens respondidos (para o PDF e o histórico)
+function scaleFormLines(k,ans){
+  const f=SCALE_FORMS[k];if(!f||!ans) return [];
+  return f.sections.flatMap(s=>s.items.map(i=>{
+    const v=ans[i.id];if(v==null||v==='') return [s.title,i.label,'—'];
+    if(i.options){const o=i.options.find(o=>String(o.v)===String(v));return [s.title,i.label,i.info?(o?o.l:v):`${o?o.l:v}${o&&o.l!==String(o.v)?` (${o.v})`:''}`];}
+    return [s.title,i.label,v==='x'?'Não conseguiu':`${String(v).replace('.',',')}${i.type==='time'?' s':''}`];
+  }));
+}
+
+function TimeField({value,onChange,unable,type}){
+  const [run,setRun]=useState(false);
+  const ref=React.useRef(null);
+  useEffect(()=>()=>clearInterval(ref.current),[]);
+  const toggle=()=>{
+    if(run){clearInterval(ref.current);setRun(false);return;}
+    const start=performance.now();setRun(true);
+    ref.current=setInterval(()=>onChange(((performance.now()-start)/1000).toFixed(1)),100);
+  };
+  const isX=value==='x';
+  return(
+    <div style={{display:'flex',gap:8,alignItems:'center',flexWrap:'wrap'}}>
+      <input type="number" inputMode="decimal" step={type==='count'?1:0.1} min={0} value={isX?'':(value??'')} disabled={isX} onChange={e=>onChange(e.target.value)} style={{maxWidth:110}} aria-label={type==='count'?'Número':'Tempo em segundos'}/>
+      <span style={{fontSize:13,color:'#64748b'}}>{type==='count'?'rep.':'s'}</span>
+      {type!=='count'&&!isX&&<button type="button" className={`btn btn-sm ${run?'btn-danger':'btn-secondary'}`} onClick={toggle}>{run?'⏹ Parar':'⏱ Cronometrar'}</button>}
+      {unable&&<label style={{fontSize:13,display:'flex',gap:6,alignItems:'center',margin:0}}><input type="checkbox" checked={isX} onChange={e=>{clearInterval(ref.current);setRun(false);onChange(e.target.checked?'x':'');}}/> Não conseguiu</label>}
+    </div>
+  );
+}
+function ScaleFormItem({item,value,onChange}){
+  return(
+    <div style={{padding:'10px 0',borderBottom:'1px solid #eef2f7'}}>
+      <div style={{fontWeight:600,fontSize:14,color:'#0f172a',marginBottom:item.hint?2:6}}>{item.label}</div>
+      {item.hint&&<div style={{fontSize:12,color:'#64748b',marginBottom:6}}>{item.hint}</div>}
+      {item.options?(
+        <div style={{display:'flex',gap:6,flexWrap:'wrap'}} role="radiogroup" aria-label={item.label}>
+          {item.options.map(o=>{const on=value!=null&&String(value)===String(o.v);return(
+            <button type="button" key={String(o.v)} role="radio" aria-checked={on} className="sf-opt" onClick={()=>onChange(o.v)}
+              style={{padding:'6px 11px',borderRadius:8,fontSize:13,cursor:'pointer',border:`1.5px solid ${on?'#4361EE':'#dbe2ef'}`,background:on?'#4361EE':'#fff',color:on?'#fff':'#334155',fontWeight:on?700:500}}>
+              {o.l}{!item.info&&o.l!==String(o.v)&&<span style={{opacity:.7,marginLeft:5,fontSize:11.5}}>{o.v}</span>}
+            </button>);})}
+        </div>
+      ):<TimeField value={value} onChange={onChange} unable={item.unable} type={item.type}/>}
+    </div>
+  );
+}
+// Formulário completo de uma escala. Com onApply devolve o total à avaliação em curso;
+// sem onApply guarda o registo diretamente no perfil (ou atualiza "assessment").
+function ScaleFormModal({scale,patient,assessment,initial,onApply,onClose}){
+  const store=useStore();
+  const sc=SCALES[scale],f=SCALE_FORMS[scale];
+  const [ans,setAns]=useState(()=>({...(f.init?f.init(patient):{}),...(initial||(assessment&&assessment.items)||{})}));
+  const [date,setDate]=useState(assessment?assessment.date:todayISO());
+  const [notes,setNotes]=useState(assessment?assessment.notes||'':'');
+  const [err,setErr]=useState('');
+  const [saved,setSaved]=useState(null);
+  const r=scaleFormResult(scale,ans,patient);
+  const it=interpretScale(scale,r.total,patient);
+  const set=(id,v)=>{setErr('');setAns(a=>({...a,[id]:v}));};
+  const detail={items:ans,subs:r.subs||undefined};
+  const commit=()=>{
+    if(r.total==null){setErr(r.missing?`Faltam ${pl(r.missing,'item','itens')} por preencher.`:'Preencha a prova para obter o resultado.');return;}
+    if(onApply){onApply(r.total,detail);onClose();return;}
+    if(!date){setErr('Indique a data.');return;}
+    if(assessment){store.updateAssessment(assessment.id,{date,value:r.total,notes:notes.trim(),...detail});setSaved({...assessment,date,value:r.total,notes:notes.trim(),...detail});}
+    else{const a=store.addAssessments(patient.id,date,{[scale]:r.total},notes.trim(),{[scale]:detail});setSaved(a&&a[0]);}
+  };
+  if(saved) return(
+    <Modal title={`${sc.name} guardada`} onClose={onClose}>
+      <div style={{textAlign:'center',padding:'10px 0 4px'}}>
+        <div style={{fontSize:13,color:'#64748b'}}>Registado no perfil de {patient.name} · {fmtDate(saved.date)}</div>
+        <div style={{fontSize:40,fontWeight:800,color:LEVEL_COLOR[it.level]||'#4361EE',margin:'8px 0'}}>{fmtScale(scale,saved.value)}</div>
+        {it.label&&<span className={`badge badge-${LEVEL_BADGE[it.level]}`} style={{fontSize:13}}>{it.label}</span>}
+      </div>
+      <div style={{display:'flex',gap:10,justifyContent:'center',marginTop:18,flexWrap:'wrap'}}>
+        <button className="btn btn-secondary" onClick={()=>deliverPDF(makeScalePDF(patient,saved,store.profile),pdfName(sc.name,patient.name))}>📄 PDF da escala</button>
+        <button className="btn btn-primary" onClick={onClose}>Fechar</button>
+      </div>
+    </Modal>
+  );
+  return(
+    <Modal title={`${sc.name} — ${patient.name||'novo cliente'}`} onClose={onClose} wide>
+      <p style={{fontSize:13,color:'#475569',marginBottom:10}}><strong>{sc.full}.</strong> {f.note}</p>
+      {!onApply&&<div className="grid-2">
+        <div className="form-group"><label>Data *</label><input type="date" value={date} onChange={e=>setDate(e.target.value)}/></div>
+        <div className="form-group"><label>Notas</label><input value={notes} onChange={e=>setNotes(e.target.value)} placeholder="Condições de aplicação, observações..."/></div>
+      </div>}
+      {f.sections.map(s=>(
+        <div key={s.title} style={{marginBottom:6}}>
+          <div style={{fontWeight:700,fontSize:12.5,color:'#4361EE',textTransform:'uppercase',letterSpacing:'.05em',marginTop:12}}>{s.title}</div>
+          {s.items.map(i=><ScaleFormItem key={i.id} item={i} value={ans[i.id]} onChange={v=>set(i.id,v)}/>)}
+        </div>
+      ))}
+      <div className="sf-footer">
+        <div className="sf-sum">
+          <div style={{fontSize:12,color:'#64748b'}}>Total{r.missing?` · faltam ${pl(r.missing,'item','itens')}`:''}</div>
+          <div style={{display:'flex',gap:8,alignItems:'center',flexWrap:'wrap'}}>
+            <strong style={{fontSize:22,color:LEVEL_COLOR[it.level]||'#0f172a'}}>{r.total!=null?fmtScale(scale,r.total):'—'}</strong>
+            {it.label&&<span className={`badge badge-${LEVEL_BADGE[it.level]}`}>{it.label}</span>}
+          </div>
+          {r.subs&&<div style={{fontSize:12,color:'#64748b'}}>{r.subs.map(([l,v,m])=>`${l} ${v}/${m}`).join(' · ')}</div>}
+        </div>
+        {err&&<div style={{color:'#dc2626',fontSize:13,width:'100%'}}>{err}</div>}
+        <div className="sf-btns"><button className="btn btn-secondary" onClick={onClose}>Cancelar</button>
+        <button className="btn btn-primary" onClick={commit}>{onApply?'Usar este resultado':assessment?'Guardar alterações':'Guardar no perfil'}</button></div>
+      </div>
+    </Modal>
+  );
+}
+// Botões de escala no perfil: abre a escala completa para preencher
+function ScaleLauncher({onPick}){
+  return SCALE_GROUPS.map(g=>(
+    <div key={g} style={{marginBottom:8}}>
+      <div style={{fontSize:11.5,fontWeight:700,color:'#64748b',textTransform:'uppercase',letterSpacing:'.05em',marginBottom:5}}>{g}</div>
+      <div style={{display:'flex',gap:8,flexWrap:'wrap'}}>
+        {Object.keys(SCALES).filter(k=>SCALES[k].group===g).map(k=>(
+          <button key={k} className="btn btn-sm btn-secondary" title={SCALES[k].full} onClick={()=>onPick(k)}>📋 {SCALES[k].name}</button>
+        ))}
+      </div>
+    </div>
+  ));
+}
+
+// PDF de um registo de escala preenchida item a item
+function makeScalePDF(patient,a,profile){
+  const g=newBrandedDoc();if(!g) return null;
+  const sc=SCALES[a.scale];const it=interpretScale(a.scale,a.value,patient);
+  pdfTitle(g,sc.name,[sc.full,`Data de aplicação: ${fmtDate(a.date)}`]);
+  pdfSection(g,'Identificação');pdfPatientId(g,patient);
+  pdfSection(g,'Resultado');
+  pdfKV(g,[['Total',fmtScale(a.scale,a.value)],['Interpretação',it.label||'—'],...((a.subs||[]).map(([l,v,m])=>[l,`${v}/${m}`]))]);
+  const lines=scaleFormLines(a.scale,a.items);
+  if(lines.length){pdfSection(g,'Itens');pdfTable(g,['Secção','Item','Resposta / pontos'],lines,[38,84,g.cw-122]);}
+  if(a.notes){pdfSection(g,'Notas');pdfParagraph(g,a.notes);}
+  pdfSignature(g,profile);
+  return g.finish();
 }
 function validateScales(values){
   const parsed={};
@@ -2915,17 +3238,20 @@ function validateScales(values){
   }
   return {parsed};
 }
-function AssessmentModal({patient,onClose}){
+function AssessmentModal({patient,onClose,initialScale}){
   const {addAssessments}=useStore();
   const [date,setDate]=useState(todayISO());
   const [vals,setVals]=useState(()=>Object.fromEntries(Object.keys(SCALES).map(k=>[k,''])));
   const [notes,setNotes]=useState('');
   const [err,setErr]=useState('');
+  const [details,setDetails]=useState({});
+  const [form,setForm]=useState(initialScale||null);
+  const setVal=(k,v,typed)=>{setVals(x=>({...x,[k]:v}));if(typed)setDetails(d=>{const n={...d};delete n[k];return n;});};
   const save=()=>{
     const {parsed,error}=validateScales(vals);
     if(error){setErr(error);return;}
     if(Object.values(parsed).every(v=>v==null)){setErr('Preencha pelo menos uma escala.');return;}
-    addAssessments(patient.id,date,parsed,notes.trim());
+    addAssessments(patient.id,date,parsed,notes.trim(),details);
     onClose();
   };
   return(
@@ -2936,7 +3262,9 @@ function AssessmentModal({patient,onClose}){
         <div className="form-group"><label>Notas</label><input value={notes} onChange={e=>setNotes(e.target.value)} placeholder="Condições de aplicação, observações..."/></div>
       </div>
       {patient.education==null&&<p style={{fontSize:12.5,color:'#64748b'}}>Sem escolaridade registada: o MMSE usa os cortes gerais. Indique os anos de escolaridade em ✏️ Editar dados para usar os cortes portugueses.</p>}
-      <ScaleInputs values={vals} set={(k,v)=>setVals(x=>({...x,[k]:v}))} patient={patient} compact/>
+      <p style={{fontSize:12.5,color:'#64748b',margin:'4px 0'}}>Escreva o total ou carregue no nome da escala (📋) para a preencher item a item.</p>
+      <ScaleInputs values={vals} set={setVal} patient={patient} compact onOpenForm={setForm} details={details}/>
+      {form&&<ScaleFormModal scale={form} patient={patient} initial={details[form]&&details[form].items} onClose={()=>setForm(null)} onApply={(total,d)=>{setVals(x=>({...x,[form]:String(total)}));setDetails(x=>({...x,[form]:d}));}}/>}
       <div style={{display:'flex',gap:10,justifyContent:'flex-end',marginTop:16}}>
         <button className="btn btn-secondary" onClick={onClose}>Cancelar</button>
         <button className="btn btn-primary" onClick={save}>Guardar avaliação</button>
@@ -2962,7 +3290,7 @@ function EditAssessmentModal({assessment,patient,onClose}){
   return(
     <Modal title={`Editar ${sc.name}`} onClose={onClose}>
       {err&&<div className="alert alert-warning">{err}</div>}
-      {confirmDel&&<ConfirmBar text="Eliminar esta avaliação? Os valores atuais e o risco do paciente são recalculados." onNo={()=>setConfirmDel(false)} onYes={()=>{deleteAssessment(assessment.id);onClose();}}/>}
+      {confirmDel&&<ConfirmBar text="Eliminar esta avaliação? Os valores atuais e o risco do cliente são recalculados." onNo={()=>setConfirmDel(false)} onYes={()=>{deleteAssessment(assessment.id);onClose();}}/>}
       <div className="grid-2">
         <div className="form-group"><label>Data</label><input type="date" value={date} onChange={e=>setDate(e.target.value)}/></div>
         <div className="form-group"><label>Resultado ({sc.min}–{sc.max}{sc.unit?' '+sc.unit:''})</label><input type="number" step={sc.step} value={value} onChange={e=>setValue(e.target.value)}/></div>
@@ -3087,14 +3415,14 @@ function AddPlanModal({patient,onClose,preset}){
   );
 }
 
-// ─── DADOS DO PACIENTE (criação e edição) ──────────────────────────────────
+// ─── DADOS DO CLIENTE (criação e edição) ──────────────────────────────────
 const EMPTY_PATIENT={name:'',dob:'',gender:'F',phone:'',email:'',address:'',sns:'',education:'',caregiver:'',caregiverPhone:'',emergencyName:'',emergencyPhone:'',
   diagnosis:'',module:'1',frequency:'weekly',referral:'',medication:'',history:'',falls12m:'',goals:'',notes:'',consent:false,consentDate:''};
 function PatientFields({form,set,section}){
   const F=(k,label,props={})=><div className="form-group"><label>{label}</label><input value={form[k]??''} onChange={e=>set(k,e.target.value)} {...props}/></div>;
   if(section==='personal') return(<>
     <div className="grid-2">
-      {F('name','Nome completo *',{placeholder:'Nome do paciente'})}
+      {F('name','Nome completo *',{placeholder:'Nome do cliente'})}
       {F('dob','Data de nascimento *',{type:'date'})}
       <div className="form-group"><label>Género</label><select value={form.gender} onChange={e=>set('gender',e.target.value)}><option value="F">Feminino</option><option value="M">Masculino</option><option value="O">Outro</option></select></div>
       {F('education','Escolaridade (anos)',{type:'number',min:0,max:25,placeholder:'Ex.: 4'})}
@@ -3137,7 +3465,7 @@ function PatientFields({form,set,section}){
     <div style={{border:'1px solid #e2e8f0',borderRadius:10,padding:12,background:'#f8fafc'}}>
       <label style={{display:'flex',gap:10,alignItems:'flex-start',margin:0,cursor:'pointer'}}>
         <input type="checkbox" checked={!!form.consent} onChange={e=>{set('consent',e.target.checked);if(e.target.checked&&!form.consentDate)set('consentDate',todayISO());}} style={{width:18,height:18,marginTop:2}}/>
-        <span style={{fontWeight:600}}>Consentimento informado obtido <span style={{fontWeight:400,color:'#64748b',display:'block',fontSize:13}}>O paciente (ou representante legal) autorizou o registo e tratamento dos seus dados de saúde para fins de acompanhamento (RGPD, art. 9.º).</span></span>
+        <span style={{fontWeight:600}}>Consentimento informado obtido <span style={{fontWeight:400,color:'#64748b',display:'block',fontSize:13}}>O cliente (ou representante legal) autorizou o registo e tratamento dos seus dados de saúde para fins de acompanhamento (RGPD, art. 9.º).</span></span>
       </label>
       {form.consent&&<div className="form-group" style={{marginTop:10,marginBottom:0,maxWidth:220}}><label>Data do consentimento</label><input type="date" value={form.consentDate} onChange={e=>set('consentDate',e.target.value)}/></div>}
     </div>
@@ -3171,7 +3499,7 @@ function EditPatientModal({patient,onClose}){
     updatePatient(patient.id,data);onClose();
   };
   return(
-    <Modal title="Editar dados do paciente" onClose={onClose} wide>
+    <Modal title="Editar dados do cliente" onClose={onClose} wide>
       {err&&<div className="alert alert-warning">{err}</div>}
       <Section title="Identificação"/><PatientFields form={form} set={set} section="personal"/>
       <Section title="Cuidador e emergência"/><PatientFields form={form} set={set} section="contacts"/>
@@ -3240,7 +3568,7 @@ function DischargeModal({patient,onClose,onDone}){
         </div>
         {patient.goals&&<p style={{fontSize:12.5,color:'#64748b',marginTop:-6,marginBottom:10}}><strong>Objetivos definidos:</strong> {patient.goals}</p>}
         <div className="form-group"><label>Resumo da evolução clínica *</label><textarea rows={4} value={f.summary} onChange={e=>set('summary',e.target.value)} placeholder="Evolução ao longo do acompanhamento, ganhos e limitações que se mantêm."/></div>
-        <div className="form-group"><label>Recomendações</label><textarea rows={3} value={f.recommendations} onChange={e=>set('recommendations',e.target.value)} placeholder="Para o paciente, o cuidador e o médico de família."/></div>
+        <div className="form-group"><label>Recomendações</label><textarea rows={3} value={f.recommendations} onChange={e=>set('recommendations',e.target.value)} placeholder="Para o cliente, o cuidador e o médico de família."/></div>
         <div className="form-group"><label>Encaminhamento</label><input value={f.referral} onChange={e=>set('referral',e.target.value)} placeholder="Ex.: Médico de família; centro de dia; fisioterapia na comunidade"/></div>
         {(patient.plan||[]).length>0&&<label style={{display:'flex',gap:8,alignItems:'center',fontWeight:400,fontSize:14}}><input type="checkbox" checked={f.keepPlan} onChange={e=>set('keepPlan',e.target.checked)} style={{width:18,height:18}}/>Incluir o plano de exercícios atual como plano de manutenção em casa</label>}
       </>)}
@@ -3252,7 +3580,7 @@ function DischargeModal({patient,onClose,onDone}){
   );
 }
 
-// ─── PERFIL DO PACIENTE ────────────────────────────────────────────────────
+// ─── PERFIL DO CLIENTE ────────────────────────────────────────────────────
 function InfoRows({rows}){
   return rows.filter(r=>r).map(([k,v])=>(
     <div key={k} style={{display:'flex',justifyContent:'space-between',gap:12,padding:'8px 0',borderBottom:'1px solid #f1f5f9',fontSize:14}}>
@@ -3346,7 +3674,7 @@ function FamilyShareModal({patient,onClose}){
     <Modal title={`Partilhar com a família — ${patient.name}`} onClose={onClose} wide>
       {err&&<div className="alert alert-warning">{err}</div>}
       {!link?(<>
-        <p style={{fontSize:14,color:'#475569',marginBottom:12}}>Cria um link para a família ver a evolução em linguagem simples, os exercícios de casa e as próximas sessões. O resumo vai cifrado dentro do link e só abre com o PIN; não fica guardado em nenhum servidor. Mostra apenas o primeiro nome do paciente, sem contactos, diagnóstico nem notas clínicas.</p>
+        <p style={{fontSize:14,color:'#475569',marginBottom:12}}>Cria um link para a família ver a evolução em linguagem simples, os exercícios de casa e as próximas sessões. O resumo vai cifrado dentro do link e só abre com o PIN; não fica guardado em nenhum servidor. Mostra apenas o primeiro nome do cliente, sem contactos, diagnóstico nem notas clínicas.</p>
         <Section title="Escalas a mostrar"/>
         {available.length===0?<p style={{fontSize:13,color:'#64748b'}}>Sem avaliações registadas.</p>:
           <div style={{display:'flex',gap:6,flexWrap:'wrap'}}>{available.map(k=><button key={k} type="button" className={`btn btn-sm ${scales.includes(k)?'btn-primary':'btn-secondary'}`} onClick={()=>toggle(k)}>{scales.includes(k)?'✓ ':''}{FAMILY_SCALE[k]} ({SCALES[k].name})</button>)}</div>}
@@ -3682,7 +4010,7 @@ function ProgramModal({patient,onClose}){
       <div className="form-group"><label>Objetivo do programa</label><input value={f.goal} onChange={e=>set('goal',e.target.value)} placeholder={pw?pw.goals[0]:'Ex.: TUG abaixo de 13,5 s no fim das 4 semanas'}/></div>
       <label style={{display:'flex',gap:8,alignItems:'center',fontWeight:400,fontSize:14,cursor:'pointer'}}><input type="checkbox" checked={f.final} onChange={e=>set('final',e.target.checked)}/>Agendar a reavaliação final no último dia ({fmtDate(end)})</label>
       <div className="alert alert-info" style={{marginTop:12,fontSize:13.5}}>Vão ser criadas <strong>{dates.length} sessões</strong> entre {fmtDate(f.start)} e {fmtDate(end)}{f.final?' e a reavaliação final':''}. Registe a avaliação inicial{pw?` (${pw.scales.map(([k])=>SCALES[k].name).join(', ')})`:''} até 7 dias depois do início.</div>
-      {patient.program&&<p style={{fontSize:12.5,color:'#b45309'}}>Este paciente já tem um programa: o atual passa para o histórico.</p>}
+      {patient.program&&<p style={{fontSize:12.5,color:'#b45309'}}>Este cliente já tem um programa: o atual passa para o histórico.</p>}
       <div style={{display:'flex',gap:10,justifyContent:'flex-end',marginTop:12}}>
         <button className="btn btn-secondary" onClick={onClose}>Cancelar</button>
         <button className="btn btn-primary" onClick={save}>Criar programa</button>
@@ -3718,7 +4046,7 @@ function ProgramCard({patient,onAssess}){
         <thead><tr><th>Escala</th><th>Início</th><th>Fim</th><th>Evolução</th></tr></thead>
         <tbody>{s.cmp.filter(c=>c.b&&c.f).map(c=><tr key={c.k}><td style={{fontWeight:600}}>{SCALES[c.k].name}</td><td>{fmtScale(c.k,c.b.value)}</td><td>{fmtScale(c.k,c.f.value)}</td><td><span className={`badge badge-${c.trend==='Melhoria'?'green':c.trend==='Agravamento'?'red':'gray'}`}>{c.trend}</span></td></tr>)}</tbody>
       </table></div>}
-      {confirm&&<ConfirmBar text={confirm==='cancel'?'Cancelar o programa? As sessões futuras do programa são retiradas do calendário.':'Dar o programa por terminado? Fica no histórico do paciente.'} yes={confirm==='cancel'?'Cancelar programa':'Terminar'} onNo={()=>setConfirm(null)} onYes={()=>finish(confirm==='cancel')}/>}
+      {confirm&&<ConfirmBar text={confirm==='cancel'?'Cancelar o programa? As sessões futuras do programa são retiradas do calendário.':'Dar o programa por terminado? Fica no histórico do cliente.'} yes={confirm==='cancel'?'Cancelar programa':'Terminar'} onNo={()=>setConfirm(null)} onYes={()=>finish(confirm==='cancel')}/>}
       <div style={{display:'flex',gap:8,flexWrap:'wrap',marginTop:8}}>
         <button className="btn btn-sm btn-secondary" onClick={()=>setConfirm('finish')}>Terminar programa</button>
         {s.phase!=='terminado'&&<button className="btn btn-sm btn-danger" onClick={()=>setConfirm('cancel')}>Cancelar</button>}
@@ -3780,7 +4108,7 @@ function PatientProfile({patient,setPage}){
           <button className="btn btn-sm btn-primary" onClick={()=>setConfirm('reopen')}>Reabrir processo</button>
         </div>
       )}
-      {confirm==='reopen'&&<ConfirmBar text="Reabrir o processo? O paciente volta a ficar ativo; a nota de alta anterior fica no histórico." yes="Reabrir" onNo={()=>setConfirm(null)} onYes={()=>{setPatientStatus(patient.id,'active',{note:'Processo reaberto'});setConfirm(null);}}/>}
+      {confirm==='reopen'&&<ConfirmBar text="Reabrir o processo? O cliente volta a ficar ativo; a nota de alta anterior fica no histórico." yes="Reabrir" onNo={()=>setConfirm(null)} onYes={()=>{setPatientStatus(patient.id,'active',{note:'Processo reaberto'});setConfirm(null);}}/>}
       {risk.level!=='low'&&active&&<p style={{fontSize:13,color:'#64748b',margin:'0 0 12px'}}><strong>Motivo do risco:</strong> {risk.reasons.join(' · ')}</p>}
       <div className="tab-bar">
         {[['overview','Visão Geral'],['plan',`Plano (${plan.length})`],['assessments',`Avaliações (${pAssess.length})`],['sessions',`Sessões (${pSessions.length})`],['process','Processo']].map(([id,label])=>(
@@ -3854,7 +4182,7 @@ function PatientProfile({patient,setPage}){
             <div style={{textAlign:'center',padding:'28px 10px',color:'#64748b'}}>
               <div style={{fontSize:34,marginBottom:6}}>🏠</div>
               <div style={{fontWeight:700,color:'#0f172a',marginBottom:4}}>Sem exercícios atribuídos</div>
-              <p style={{fontSize:14,marginBottom:14}}>Escolha exercícios dos módulos para gerar uma ficha para o paciente e o cuidador e para os marcar no registo de cada sessão.</p>
+              <p style={{fontSize:14,marginBottom:14}}>Escolha exercícios dos módulos para gerar uma ficha para o cliente e o cuidador e para os marcar no registo de cada sessão.</p>
               <button className="btn btn-primary" onClick={()=>setModal('plan')}>+ Adicionar exercício</button>
             </div>
           ):plan.map((it,i)=>{const f=findExercise(it.exId);if(!f)return null;return(
@@ -3877,6 +4205,10 @@ function PatientProfile({patient,setPage}){
       )}
       {tab==='assessments'&&(
         <div>
+          {active&&<div className="card">
+            <div className="card-header" style={{marginBottom:10}}><div><div className="card-title">Avaliar com escala completa</div><div style={{fontSize:13,color:'#64748b'}}>Escolha a escala, preencha cada item e o total e a interpretação ficam registados no perfil.</div></div></div>
+            <ScaleLauncher onPick={k=>setModal({type:'scale-form',scale:k})}/>
+          </div>}
           <ScaleEvolution assessments={pAssess} patient={patient}/>
           <div className="card">
             <div className="card-header" style={{marginBottom:16}}><div className="card-title">Histórico de Avaliações</div>{active&&<button className="btn btn-sm btn-primary" onClick={()=>setModal('assessment')}>+ Avaliação</button>}</div>
@@ -3885,9 +4217,9 @@ function PatientProfile({patient,setPage}){
               <thead><tr><th>Data</th><th>Escala</th><th>Resultado</th><th>Interpretação</th><th>Notas</th><th></th></tr></thead>
               <tbody>
                 {pAssess.map(a=>{const it=interpretScale(a.scale,a.value,patient);return(
-                  <tr key={a.id}><td>{fmtDate(a.date)}</td><td style={{fontWeight:600}}>{SCALES[a.scale]?.name||a.scale}</td><td style={{fontWeight:700,color:LEVEL_COLOR[it.level]||'#4361EE'}}>{fmtScale(a.scale,a.value)}</td>
+                  <tr key={a.id}><td>{fmtDate(a.date)}</td><td style={{fontWeight:600}}>{a.items&&SCALE_FORMS[a.scale]?<button type="button" className="sf-link" onClick={()=>setModal({type:'scale-form',scale:a.scale,a})} title="Ver e editar os itens">📋 {SCALES[a.scale]?.name}</button>:(SCALES[a.scale]?.name||a.scale)}</td><td style={{fontWeight:700,color:LEVEL_COLOR[it.level]||'#4361EE'}}>{fmtScale(a.scale,a.value)}</td>
                   <td>{it.label&&<span className={`badge badge-${LEVEL_BADGE[it.level]}`}>{it.label}</span>}</td><td style={{fontSize:13,color:'#64748b'}}>{a.notes||'—'}</td>
-                  <td><button className="btn btn-sm btn-secondary" aria-label="Editar avaliação" onClick={()=>setModal({type:'edit-assessment',a})}>✏️</button></td></tr>);})}
+                  <td style={{whiteSpace:'nowrap'}}>{a.items&&<button className="btn btn-sm btn-secondary" aria-label="PDF da escala" title="PDF da escala" style={{marginRight:6}} onClick={()=>deliverPDF(makeScalePDF(patient,a,profile),pdfName(SCALES[a.scale].name,patient.name))}>📄</button>}<button className="btn btn-sm btn-secondary" aria-label="Editar avaliação" onClick={()=>setModal(a.items&&SCALE_FORMS[a.scale]?{type:'scale-form',scale:a.scale,a}:{type:'edit-assessment',a})}>✏️</button></td></tr>);})}
               </tbody>
             </table></div>)}
           </div>
@@ -3939,10 +4271,10 @@ function PatientProfile({patient,setPage}){
             </>)}
           </div>
           <div className="card" style={{gridColumn:'1/-1',border:'1px solid #fecaca',background:'#fef2f2'}}>
-            <div style={{fontWeight:700,color:'#991b1b',marginBottom:6}}>Eliminar paciente</div>
-            <p style={{fontSize:13,color:'#7f1d1d',marginBottom:10}}>Apaga definitivamente o paciente, as sessões, as avaliações e os eventos. Para terminar o acompanhamento, use antes "Dar alta": o processo fica guardado.</p>
+            <div style={{fontWeight:700,color:'#991b1b',marginBottom:6}}>Eliminar cliente</div>
+            <p style={{fontSize:13,color:'#7f1d1d',marginBottom:10}}>Apaga definitivamente o cliente, as sessões, as avaliações e os eventos. Para terminar o acompanhamento, use antes "Dar alta": o processo fica guardado.</p>
             {confirm==='delete'?<ConfirmBar text={`Eliminar ${patient.name} e todo o historial? Não pode ser desfeito.`} onNo={()=>setConfirm(null)} onYes={()=>{deletePatient(patient.id);setPage('patients');}}/>
-              :<button className="btn btn-danger btn-sm" onClick={()=>setConfirm('delete')}>Eliminar paciente</button>}
+              :<button className="btn btn-danger btn-sm" onClick={()=>setConfirm('delete')}>Eliminar cliente</button>}
           </div>
         </div>
       )}
@@ -3950,6 +4282,7 @@ function PatientProfile({patient,setPage}){
       {modal==='session'&&<SessionModal patient={patient} onClose={()=>setModal(null)}/>}
       {modal&&modal.type==='edit-session'&&<SessionModal patient={patient} session={modal.s} onClose={()=>setModal(null)}/>}
       {modal==='assessment'&&<AssessmentModal patient={patient} onClose={()=>setModal(null)}/>}
+      {modal&&modal.type==='scale-form'&&<ScaleFormModal scale={modal.scale} patient={patient} assessment={modal.a} onClose={()=>setModal(null)}/>}
       {modal&&modal.type==='edit-assessment'&&<EditAssessmentModal assessment={modal.a} patient={patient} onClose={()=>setModal(null)}/>}
       {modal==='edit'&&<EditPatientModal patient={patient} onClose={()=>setModal(null)}/>}
       {modal==='family'&&<FamilyShareModal patient={patient} onClose={()=>setModal(null)}/>}
@@ -3966,6 +4299,8 @@ function NewPatientPage({setPage,openPatient}){
   const [err,setErr]=useState('');
   const [form,setForm]=useState({...EMPTY_PATIENT});
   const [scores,setScores]=useState(()=>Object.fromEntries(Object.keys(SCALES).map(k=>[k,''])));
+  const [scoreDetails,setScoreDetails]=useState({});
+  const [scoreForm,setScoreForm]=useState(null);
   const set=(k,v)=>setForm(f=>({...f,[k]:v}));
   const suggested=suggestPathways({diagnosis:form.diagnosis,falls12m:form.falls12m,tug:numOrNull(scores.tug),berg:numOrNull(scores.berg)});
   const [usePw,setUsePw]=useState('auto');
@@ -3993,7 +4328,7 @@ function NewPatientPage({setPage,openPatient}){
     const pw=pwChoice&&pathwayById(pwChoice);
     if(pw) data={...data,...applyPathwayData(data,pw,{goals:pw.goals,planIds:pw.plan.map(x=>x[0])})};
     const p=addPatient(data);
-    addAssessments(p.id,t,parsed,'Avaliação inicial');
+    addAssessments(p.id,t,parsed,'Avaliação inicial',scoreDetails);
     openPatient(p.id);
   };
   const preview={education:numOrNull(form.education)};
@@ -4001,7 +4336,7 @@ function NewPatientPage({setPage,openPatient}){
     <div className="page" style={{maxWidth:760,margin:'0 auto'}}>
       <div style={{display:'flex',alignItems:'center',gap:12,marginBottom:24}}>
         <button className="btn btn-secondary btn-sm" onClick={()=>setPage('patients')}>← Voltar</button>
-        <div><h2 style={{fontSize:20,fontWeight:800,color:'#0f172a'}}>Novo Paciente</h2><p style={{fontSize:13,color:'#64748b'}}>Passo {step} de {steps.length}</p></div>
+        <div><h2 style={{fontSize:20,fontWeight:800,color:'#0f172a'}}>Novo Cliente</h2><p style={{fontSize:13,color:'#64748b'}}>Passo {step} de {steps.length}</p></div>
       </div>
       <div style={{display:'flex',marginBottom:28}}>
         {steps.map((s,i)=>(
@@ -4029,7 +4364,8 @@ function NewPatientPage({setPage,openPatient}){
         {step===3&&(<>
           <div className="card-title" style={{marginBottom:4}}>Avaliação inicial</div>
           <p style={{fontSize:13,color:'#64748b',marginBottom:6}}>Preencha as escalas que aplicou. As restantes podem ser registadas mais tarde.{preview.education!=null?` O MMSE usa o corte para ${preview.education} anos de escolaridade.`:''}</p>
-          <ScaleInputs values={scores} set={(k,v)=>setScores(x=>({...x,[k]:v}))} patient={preview} compact/>
+          <ScaleInputs values={scores} set={(k,v,typed)=>{setScores(x=>({...x,[k]:v}));if(typed)setScoreDetails(d=>{const n={...d};delete n[k];return n;});}} patient={preview} compact onOpenForm={setScoreForm} details={scoreDetails}/>
+          {scoreForm&&<ScaleFormModal scale={scoreForm} patient={{...preview,name:form.name}} initial={scoreDetails[scoreForm]&&scoreDetails[scoreForm].items} onClose={()=>setScoreForm(null)} onApply={(total,d)=>{setScores(x=>({...x,[scoreForm]:String(total)}));setScoreDetails(x=>({...x,[scoreForm]:d}));}}/>}
         </>)}
         {step===4&&(<>
           <div className="card-title" style={{marginBottom:12}}>Plano terapêutico</div>
@@ -4044,7 +4380,7 @@ function NewPatientPage({setPage,openPatient}){
         </>)}
         <div style={{display:'flex',justifyContent:'space-between',marginTop:24}}>
           <button className="btn btn-secondary" onClick={()=>{setErr('');step>1?setStep(s=>s-1):setPage('patients');}}>{step===1?'Cancelar':'← Anterior'}</button>
-          <button className="btn btn-primary" onClick={next}>{step===4?'✓ Criar Paciente':'Seguinte →'}</button>
+          <button className="btn btn-primary" onClick={next}>{step===4?'✓ Criar Cliente':'Seguinte →'}</button>
         </div>
       </div>
     </div>
@@ -4087,7 +4423,7 @@ function CalendarPage({openPatient}){
     if(newEv.type==='group'&&!grp){setEvErr('Escolha o grupo.');return;}
     const title=newEv.title.trim()||(pat?`${pat.name.split(' ')[0]} ${pat.name.split(' ').slice(-1)[0]} - Sessão`:grp?`Grupo: ${grp.name}`:'');
     if(!selDate){setEvErr('Escolha a data.');return;}
-    if(!title){setEvErr('Indique um título ou selecione um paciente.');return;}
+    if(!title){setEvErr('Indique um título ou selecione um cliente.');return;}
     const weeks=Math.max(1,Math.min(52,+newEv.weeks||1));
     const base={title,type:newEv.type,color:typeText[newEv.type]||'#2563eb'};
     if(newEv.time) base.time=newEv.time;
@@ -4164,12 +4500,12 @@ function CalendarPage({openPatient}){
           </div>
           <div className="form-group"><label>Tipo</label>
             <select value={newEv.type} onChange={e=>setNewEv(v=>({...v,type:e.target.value}))}>
-              <option value="session">Sessão com paciente</option><option value="group">Sessão de grupo</option><option value="meeting">Reunião</option><option value="training">Formação</option>
+              <option value="session">Sessão com cliente</option><option value="group">Sessão de grupo</option><option value="meeting">Reunião</option><option value="training">Formação</option>
             </select>
           </div>
           {newEv.type==='group'&&<div className="form-group"><label>Grupo</label><select value={newEv.groupId||''} onChange={e=>{const g=groups.find(x=>x.id===+e.target.value);setNewEv(v=>({...v,groupId:e.target.value,time:v.time||(g&&g.time)||''}));}}><option value="">Selecionar...</option>{groups.map(g=><option key={g.id} value={g.id}>{g.name} ({g.patientIds.length}/{g.capacity})</option>)}</select></div>}
-          {newEv.type==='session'&&<div className="form-group"><label>Paciente</label><select value={newEv.patientId} onChange={e=>{const p=patients.find(x=>x.id===+e.target.value);setNewEv(v=>({...v,patientId:e.target.value,repeat:p&&v.repeat==='none'&&p.frequency==='weekly'?'weekly':p&&v.repeat==='none'&&p.frequency==='biweekly'?'biweekly':p&&v.repeat==='none'&&p.frequency==='3week'?'twice':v.repeat}));}}><option value="">Selecionar...</option>{activePatients.map(p=><option key={p.id} value={p.id}>{p.name}</option>)}</select></div>}
-          <div className="form-group"><label>Título{newEv.type==='session'?' (opcional se escolher paciente)':' *'}</label><input value={newEv.title} onChange={e=>setNewEv(v=>({...v,title:e.target.value}))} placeholder="Descrição do evento"/></div>
+          {newEv.type==='session'&&<div className="form-group"><label>Cliente</label><select value={newEv.patientId} onChange={e=>{const p=patients.find(x=>x.id===+e.target.value);setNewEv(v=>({...v,patientId:e.target.value,repeat:p&&v.repeat==='none'&&p.frequency==='weekly'?'weekly':p&&v.repeat==='none'&&p.frequency==='biweekly'?'biweekly':p&&v.repeat==='none'&&p.frequency==='3week'?'twice':v.repeat}));}}><option value="">Selecionar...</option>{activePatients.map(p=><option key={p.id} value={p.id}>{p.name}</option>)}</select></div>}
+          <div className="form-group"><label>Título{newEv.type==='session'?' (opcional se escolher cliente)':' *'}</label><input value={newEv.title} onChange={e=>setNewEv(v=>({...v,title:e.target.value}))} placeholder="Descrição do evento"/></div>
           <div className="grid-2">
             <div className="form-group"><label>Repetir</label><select value={newEv.repeat} onChange={e=>setNewEv(v=>({...v,repeat:e.target.value}))}>{Object.entries(REPEAT).map(([k,r])=><option key={k} value={k}>{r.label}</option>)}</select></div>
             {newEv.repeat!=='none'&&<div className="form-group"><label>Durante (semanas)</label><input type="number" min={1} max={52} value={newEv.weeks} onChange={e=>setNewEv(v=>({...v,weeks:e.target.value}))}/></div>}
@@ -4185,9 +4521,9 @@ function CalendarPage({openPatient}){
         <Modal title={selEvent.title} onClose={()=>setSelEvent(null)}>
           <div style={{fontSize:14,color:'#334155',lineHeight:1.8}}>
             <div><strong>Data:</strong> {fmtDate(selEvent.date)}{selEvent.time?` às ${selEvent.time}`:''}</div>
-            <div><strong>Tipo:</strong> {selEvent.type==='session'?'Sessão com paciente':selEvent.type==='group'?'Sessão de grupo':selEvent.type==='meeting'?'Reunião':'Formação'}</div>
+            <div><strong>Tipo:</strong> {selEvent.type==='session'?'Sessão com cliente':selEvent.type==='group'?'Sessão de grupo':selEvent.type==='meeting'?'Reunião':'Formação'}</div>
             {selEvent.groupId&&(()=>{const g=groups.find(x=>x.id===selEvent.groupId);return g?<div><strong>Grupo:</strong> {g.name} · {g.patientIds.length}/{g.capacity} participantes</div>:null;})()}
-            {selPatient&&<div><strong>Paciente:</strong> {selPatient.name} {!isActive(selPatient)&&statusBadge(selPatient)}</div>}
+            {selPatient&&<div><strong>Cliente:</strong> {selPatient.name} {!isActive(selPatient)&&statusBadge(selPatient)}</div>}
             {selEvent.seriesId&&<div><strong>Série:</strong> {seriesLeft} eventos por realizar a partir deste</div>}
             {selEvent.done&&<div><strong>Estado:</strong> <span className={`badge badge-${EVENT_DONE[selEvent.done].badge}`}>{EVENT_DONE[selEvent.done].label}</span></div>}
           </div>
@@ -4213,7 +4549,7 @@ function CalendarPage({openPatient}){
           <div style={{display:'flex',gap:10,justifyContent:'space-between',marginTop:20,flexWrap:'wrap'}}>
             <button className="btn btn-danger" onClick={()=>setConfirmDel(true)}>Eliminar</button>
             <div style={{display:'flex',gap:10}}>
-              {selPatient&&openPatient&&<button className="btn btn-secondary" onClick={()=>{const id=selPatient.id;setSelEvent(null);openPatient(id);}}>Ver paciente</button>}
+              {selPatient&&openPatient&&<button className="btn btn-secondary" onClick={()=>{const id=selPatient.id;setSelEvent(null);openPatient(id);}}>Ver cliente</button>}
               <button className="btn btn-secondary" onClick={()=>setSelEvent(null)}>Fechar</button>
             </div>
           </div>
@@ -4263,7 +4599,7 @@ function EbookActivity({a,mod,ex,onAdd}){
             <div style={{background:'#fef2f2',borderRadius:8,padding:'8px 10px'}}><strong style={{color:'#b91c1c'}}>Para dificultar</strong><div>{a.dificultar}</div></div>
           </div>
           {a.dica&&<div style={{background:'#eef1ff',borderRadius:8,padding:'8px 10px'}}>💡 {a.dica}</div>}
-          <div><button className="btn btn-sm btn-primary" onClick={()=>onAdd(mod,ex)}>＋ Juntar ao plano de um paciente</button></div>
+          <div><button className="btn btn-sm btn-primary" onClick={()=>onAdd(mod,ex)}>＋ Juntar ao plano de um cliente</button></div>
         </div>
       )}
     </div>
@@ -4294,7 +4630,7 @@ function LibraryPage({openPatient}){
       <div className="tab-bar">
         {[['ebooks',`Ebooks (${EBOOKS.length})`],['ppt',`PowerPoints (${PPTS.length})`],['paths',`Percursos (${PATHWAYS.length})`]].map(([id,l])=><div key={id} className={`tab${tab===id?' active':''}`} onClick={()=>setTab(id)}>{l}</div>)}
       </div>
-      {added&&<div className="alert alert-success" style={{display:'flex',gap:10,alignItems:'center',flexWrap:'wrap'}}><span style={{flex:1}}>✓ Juntado ao plano de {checkP.name} ({pl((checkP.plan||[]).length,'exercício','exercícios')}).</span><button className="btn btn-sm btn-secondary" onClick={()=>openPatient(checkP.id)}>Ver paciente</button></div>}
+      {added&&<div className="alert alert-success" style={{display:'flex',gap:10,alignItems:'center',flexWrap:'wrap'}}><span style={{flex:1}}>✓ Juntado ao plano de {checkP.name} ({pl((checkP.plan||[]).length,'exercício','exercícios')}).</span><button className="btn btn-sm btn-secondary" onClick={()=>openPatient(checkP.id)}>Ver cliente</button></div>}
       {tab==='ebooks'&&results&&(
         <div style={{display:'flex',flexDirection:'column',gap:10}}>
           <p style={{fontSize:14,color:'#64748b'}}>{results.length} {results.length===1?'atividade encontrada':'atividades encontradas'} para "{q}"</p>
@@ -4337,7 +4673,7 @@ function LibraryPage({openPatient}){
         </div>);})()}
       {tab==='paths'&&(
         <div style={{display:'flex',flexDirection:'column',gap:12}}>
-          <div className="alert alert-info" style={{fontSize:13.5}}>Modelos por condição: escalas recomendadas, objetivos-tipo, plano inicial, cuidados e sinais de alerta. Aplicam-se no perfil do paciente (🧭 Percurso) ou ao criá-lo. São um ponto de partida: adapte sempre à pessoa.</div>
+          <div className="alert alert-info" style={{fontSize:13.5}}>Modelos por condição: escalas recomendadas, objetivos-tipo, plano inicial, cuidados e sinais de alerta. Aplicam-se no perfil do cliente (🧭 Percurso) ou ao criá-lo. São um ponto de partida: adapte sempre à pessoa.</div>
           {PATHWAYS.map(pw=>(
             <details key={pw.id} className="card" style={{marginBottom:0}}>
               <summary style={{cursor:'pointer',fontWeight:800,fontSize:16}}>{pw.icon} {pw.name} <span style={{fontWeight:400,fontSize:13,color:'#64748b'}}>· reavaliar a cada {pw.reassessWeeks} semanas</span></summary>
@@ -4370,8 +4706,8 @@ function LibraryPage({openPatient}){
       )}
       {adding&&(
         <Modal title={`Juntar "${adding.ex.name}" ao plano`} onClose={()=>setAdding(null)}>
-          {active.length===0?<p style={{fontSize:14,color:'#64748b'}}>Não há pacientes ativos.</p>:<>
-            <div className="form-group"><label>Paciente</label><select value={pickId} onChange={e=>setPickId(e.target.value)}><option value="">Selecionar...</option>{active.map(p=><option key={p.id} value={p.id} disabled={(p.plan||[]).some(x=>+x.exId===adding.ex.id)}>{p.name}{(p.plan||[]).some(x=>+x.exId===adding.ex.id)?' (já no plano)':''}</option>)}</select></div>
+          {active.length===0?<p style={{fontSize:14,color:'#64748b'}}>Não há clientes ativos.</p>:<>
+            <div className="form-group"><label>Cliente</label><select value={pickId} onChange={e=>setPickId(e.target.value)}><option value="">Selecionar...</option>{active.map(p=><option key={p.id} value={p.id} disabled={(p.plan||[]).some(x=>+x.exId===adding.ex.id)}>{p.name}{(p.plan||[]).some(x=>+x.exId===adding.ex.id)?' (já no plano)':''}</option>)}</select></div>
             <div style={{display:'flex',gap:10,justifyContent:'flex-end',marginTop:16}}>
               <button className="btn btn-secondary" onClick={()=>setAdding(null)}>Cancelar</button>
               <button className="btn btn-primary" disabled={!pickId} style={{opacity:pickId?1:.5}} onClick={()=>{setPlanFor({patient:active.find(p=>p.id===+pickId),preset:{moduleId:adding.mod.id,exId:adding.ex.id}});setAdding(null);}}>Continuar</button>
@@ -4410,7 +4746,7 @@ function GroupModal({group,onClose}){
   return(
     <Modal title={group?'Editar grupo':'Novo grupo'} onClose={onClose} wide>
       {err&&<div className="alert alert-warning">{err}</div>}
-      {confirmDel&&<ConfirmBar text="Eliminar este grupo? As sessões já registadas ficam no historial de cada paciente; os eventos futuros do grupo são apagados." onNo={()=>setConfirmDel(false)} onYes={()=>{deleteGroup(group.id);onClose();}}/>}
+      {confirmDel&&<ConfirmBar text="Eliminar este grupo? As sessões já registadas ficam no historial de cada cliente; os eventos futuros do grupo são apagados." onNo={()=>setConfirmDel(false)} onYes={()=>{deleteGroup(group.id);onClose();}}/>}
       <div className="grid-2">
         <div className="form-group"><label>Nome *</label><input value={f.name} onChange={e=>set('name',e.target.value)} placeholder="Ex.: Equilíbrio em movimento"/></div>
         <div className="form-group"><label>Tipo</label><select value={f.type} onChange={e=>set('type',e.target.value)}>{Object.entries(GROUP_TYPES).map(([k,t])=><option key={k} value={k}>{t.label}</option>)}</select></div>
@@ -4420,7 +4756,7 @@ function GroupModal({group,onClose}){
         <div className="form-group"><label>Hora</label><input type="time" value={f.time} onChange={e=>set('time',e.target.value)}/></div>
       </div>
       <Section title={`Participantes (${f.patientIds.length}/${cap})`}/>
-      {active.length===0?<p style={{fontSize:14,color:'#64748b'}}>Não há pacientes ativos.</p>:
+      {active.length===0?<p style={{fontSize:14,color:'#64748b'}}>Não há clientes ativos.</p>:
         <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(220px,1fr))',gap:6}}>
           {active.map(p=>{const on=f.patientIds.includes(p.id);const full=!on&&f.patientIds.length>=cap;return(
             <label key={p.id} style={{display:'flex',gap:8,alignItems:'center',fontWeight:400,fontSize:14,padding:'6px 8px',borderRadius:8,border:'1px solid '+(on?'#4361EE':'#e2e8f0'),background:on?'#eef1ff':'#fff',opacity:full?.45:1,cursor:full?'not-allowed':'pointer',margin:0}}>
@@ -4669,7 +5005,7 @@ function SettingsPage(){
       try{
         const json=JSON.parse(r.result);
         const n=(json.data&&json.data.patients||[]).length;
-        if(!confirm(`Importar este backup (${n} pacientes)? Os dados atuais neste browser serão substituídos.`)) return;
+        if(!confirm(`Importar este backup (${n} clientes)? Os dados atuais neste browser serão substituídos.`)) return;
         store.importData(json);flash('success','✓ Backup importado com sucesso.');
       }catch(err){flash('warning','Não foi possível importar: '+err.message);}
     };
@@ -4708,12 +5044,12 @@ function SettingsPage(){
           <div className="card-title" style={{marginBottom:16}}>Preferências clínicas</div>
           <div className="grid-2">
             <div className="form-group"><label>Duração padrão da sessão</label><select value={pdraft.duration} onChange={e=>setPdraft(d=>({...d,duration:e.target.value}))}><option value="30">30 min</option><option value="45">45 min</option><option value="60">60 min</option></select></div>
-            <div className="form-group"><label>Escala cognitiva na lista de pacientes</label><select value={pdraft.scale} onChange={e=>setPdraft(d=>({...d,scale:e.target.value}))}><option value="mmse">MMSE</option><option value="moca">MoCA</option></select></div>
+            <div className="form-group"><label>Escala cognitiva na lista de clientes</label><select value={pdraft.scale} onChange={e=>setPdraft(d=>({...d,scale:e.target.value}))}><option value="mmse">MMSE</option><option value="moca">MoCA</option></select></div>
           </div>
           <div className="card-title" style={{margin:'10px 0 6px'}}>Alertas no dashboard ("Precisa de atenção")</div>
           <p style={{fontSize:13,color:'#64748b',marginBottom:6}}>Os alertas aparecem quando abre a app; não são enviadas notificações para o telemóvel.</p>
           {Toggle('declineAlerts','Declínio entre as duas últimas avaliações (ex.: MMSE −3, Barthel −10, TUG +3 s)')}
-          {Toggle('consentAlerts','Pacientes sem consentimento informado registado')}
+          {Toggle('consentAlerts','Clientes sem consentimento informado registado')}
           <div className="grid-2" style={{marginTop:12}}>
             <div className="form-group"><label>Reavaliação em atraso ao fim de (dias)</label><input type="number" min={0} value={pdraft.reassessDays} onChange={e=>setPdraft(d=>({...d,reassessDays:e.target.value}))}/></div>
             <div className="form-group"><label>Sem sessões nem agendamento há mais de (dias)</label><input type="number" min={0} value={pdraft.inactiveDays} onChange={e=>setPdraft(d=>({...d,inactiveDays:e.target.value}))}/></div>
@@ -4728,7 +5064,7 @@ function SettingsPage(){
             <div className="card-title" style={{marginBottom:8}}>Dados guardados neste browser</div>
             <p style={{fontSize:13,color:'#64748b',marginBottom:14}}>Tudo o que regista fica guardado automaticamente neste browser, neste computador. Não é enviado para nenhum servidor.</p>
             <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(110px,1fr))',gap:10,marginBottom:6}}>
-              {[['Pacientes',patients.length],['Sessões',sessions.length],['Avaliações',assessments.length],['Eventos',events.length],['Grupos',(store.groups||[]).length]].map(([l,v])=>(
+              {[['Clientes',patients.length],['Sessões',sessions.length],['Avaliações',assessments.length],['Eventos',events.length],['Grupos',(store.groups||[]).length]].map(([l,v])=>(
                 <div key={l} style={{textAlign:'center',padding:12,background:'#f8fafc',borderRadius:8,border:'1px solid #e2e8f0'}}><div style={{fontSize:24,fontWeight:800}}>{v}</div><div style={{fontSize:12,color:'#64748b'}}>{l}</div></div>
               ))}
             </div>
@@ -4747,7 +5083,7 @@ function SettingsPage(){
             <div style={{fontWeight:700,color:'#991b1b',marginBottom:10}}>⚠️ Zona de Perigo</div>
             <div style={{display:'flex',gap:10,flexWrap:'wrap'}}>
               <button className="btn btn-secondary btn-sm" onClick={()=>{if(confirm('Repor os dados de demonstração? Os dados atuais serão substituídos.')){store.resetDemo();flash('success','✓ Dados de demonstração repostos.');}}}>Repor dados de demonstração</button>
-              <button className="btn btn-danger btn-sm" onClick={()=>{if(confirm('Apagar TODOS os pacientes, sessões, avaliações e eventos? Recomenda-se exportar um backup antes.')&&confirm('Tem a certeza? Esta ação não pode ser desfeita.')){store.clearAll();flash('success','✓ Dados apagados. Pode começar com dados reais.');}}}>Apagar todos os dados</button>
+              <button className="btn btn-danger btn-sm" onClick={()=>{if(confirm('Apagar TODOS os clientes, sessões, avaliações e eventos? Recomenda-se exportar um backup antes.')&&confirm('Tem a certeza? Esta ação não pode ser desfeita.')){store.clearAll();flash('success','✓ Dados apagados. Pode começar com dados reais.');}}}>Apagar todos os dados</button>
             </div>
           </div>
         </div>
@@ -4794,7 +5130,7 @@ function AppInner(){
   const selectedPatient=patients.find(p=>p.id===selectedPatientId)||null;
   const openPatient=id=>{setSelectedPatientId(id);setPage('patient-profile');};
   useEffect(()=>{window.scrollTo(0,0);},[page]);
-  const titles={dashboard:'Dashboard',modules:'Módulos','module-detail':selectedModule?.name||'Módulo',patients:'Pacientes','patient-profile':selectedPatient?.name||'Paciente','new-patient':'Novo Paciente',calendar:'Calendário',forum:'Fórum Clínico',settings:'Definições',library:'Biblioteca',groups:'Grupos'};
+  const titles={dashboard:'Dashboard',modules:'Módulos','module-detail':selectedModule?.name||'Módulo',patients:'Clientes','patient-profile':selectedPatient?.name||'Cliente','new-patient':'Novo Cliente',calendar:'Calendário',forum:'Fórum Clínico',settings:'Definições',library:'Biblioteca',groups:'Grupos'};
   if(screen==='landing') return <LandingPage onEnter={()=>setScreen('auth')} onTest={()=>{setScreen('test');window.scrollTo(0,0);}}/>;
   if(screen==='test') return <MovementTest onExit={()=>{if(location.hash==='#teste')history.replaceState(null,'',location.pathname);setScreen('landing');}} onEnter={()=>setScreen('auth')}/>;
   if(screen==='auth') return <AuthPage onLogin={()=>setScreen('dashboard')}/>;
